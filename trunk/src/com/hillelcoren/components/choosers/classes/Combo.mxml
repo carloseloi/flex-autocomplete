@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	creationComplete="init()"
+	clipContent="false" 
+	xmlns:components="com.hillelcoren.components.*">
+	
+	<mx:Metadata>
+		[Event("COMBO_ITEM_SELECTED")]		
+	</mx:Metadata>
+		
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.ObjectUtil;
+			import mx.effects.easing.Back;
+			import mx.utils.StringUtil;
+			import com.hillelcoren.utils.StringUtils;
+			import mx.controls.TextInput;
+			import mx.managers.CursorManager;
+			import mx.events.ListEvent;
+			import mx.events.CollectionEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.core.UIComponent;
+			import mx.core.Application;
+			import mx.collections.ArrayCollection;
+			import mx.controls.List;
+			
+			private var _dropDown:List;
+			
+			[Bindable]
+			private var _dataProvider:ArrayCollection;
+			private var _dataProviderChanged:Boolean;
+			
+			private var _filterFunction:Function;
+			private var _selectedItem:Object;
+			private var _labelFunction:Function;
+			private var _dropDownLabelFunction:Function;
+			private var _isEqualFunction:Function;	
+			
+			private var _isMultiSelect:Boolean;
+			private var _isMultiSelectChanged:Boolean;
+			
+			private var _selectedItems:ArrayCollection;
+			
+			private static const ROW_COUNT:uint = 6; 
+			
+			public static const COMBO_ITEM_SELECTED:String = "COMBO_ITEM_SELECTED"; 
+			
+			private function init():void
+			{
+				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );							
+			}
+			
+			override protected function commitProperties():void
+			{
+				super.commitProperties();
+			
+				if (_dataProviderChanged)
+				{
+					_dataProviderChanged = false;
+					
+					if (_dropDown)
+					{
+						_dropDown.dataProvider = _dataProvider;
+					}
+				}
+				
+				if (_isMultiSelectChanged)
+				{
+					_isMultiSelectChanged = false;
+					
+					updateComoText();
+				}
+			}
+			
+			private function createDropDown():void
+			{
+				_dropDown = new List();
+				_dropDown.rowCount		= ROW_COUNT;
+				_dropDown.focusEnabled 	= false;
+				_dropDown.dataProvider 	= _dataProvider;
+				_dropDown.itemRenderer  = new ClassFactory( ChooserItemRenderer );
+				_dropDown.labelFunction = _dropDownLabelFunction;
+				_dropDown.addEventListener( ListEvent.ITEM_CLICK, handleItemClick );
+				
+				systemManager.addEventListener( MouseEvent.CLICK, handleMouseClick );
+			}
+			
+			private function handleKeyDown( event:KeyboardEvent ):void
+			{
+				if (isDropDownVisible())
+				{
+					if (event.keyCode == Keyboard.DOWN)
+					{
+						_dropDown.selectedIndex++;
+						_dropDown.scrollToIndex( _dropDown.selectedIndex );
+						
+						promptTextInput.setTextSelected( false );
+					}
+					else if (event.keyCode == Keyboard.UP)
+					{
+						if (_dropDown.selectedIndex > 0)
+						{
+							_dropDown.selectedIndex--;
+							_dropDown.scrollToIndex( _dropDown.selectedIndex );
+						}
+						
+						promptTextInput.setTextSelected( false );			
+					}
+					else if (event.keyCode == Keyboard.ESCAPE || event.keyCode == Keyboard.TAB)
+					{
+						hideDropDown();
+					}
+					else if (event.keyCode == Keyboard.ENTER)
+					{
+						setSelectedItem( _dropDown.selectedItem );						
+					}
+				}
+				
+				// this messy bit of code make the cursor jump items when the 
+				// combo is in horizontal multiselect mode. ie, if the value of
+				// the textinput is "item1, item2" and the cursor is at the end
+				// pressing left will move the cursor to just before item2
+				if (_isMultiSelect)
+				{
+					if (event.keyCode != Keyboard.LEFT && event.keyCode != Keyboard.RIGHT)
+					{
+						return;
+					}
+					
+					if (_selectedItems.length == 0)
+					{
+						return;
+					}
+					
+					var str:String		= promptTextInput.text;
+					var origIndex:int 	= promptTextInput.textInput.selectionBeginIndex;
+					var newIndex:int 	= -1;
+					
+					var splits:Object = new Object();
+					var item:Object = _selectedItems.getItemAt( 0 );
+					var itemStr:String = _labelFunction( item );
+					
+					splits[0] = { "left":0, "right":itemStr.length + 2 };
+					
+					var counter:int = 0;
+					
+					for (var x:int=0; x<_selectedItems.length; x++)
+					{
+						item 	= _selectedItems.getItemAt( x );
+						itemStr = _labelFunction( item );
+						
+						if (!StringUtil.trim( itemStr ))
+						{
+							break;
+						}
+						
+						var left:int 	= counter;
+						var right:int 	= counter + 2;
+						
+						if (x < _selectedItems.length - 1)
+						{
+							var nextItem:Object = _selectedItems.getItemAt( x+1 );
+							var nextItemStr:String = _labelFunction( nextItem );
+							
+							right += itemStr.length + nextItemStr.length;
+							
+							if (nextItemStr.length > 0)
+							{
+								right += 2;
+							}
+						}
+						
+						counter += itemStr.length + 2;
+						
+						splits[ counter ] = { "left":left, "right":right };
+					}
+					
+					if (event.keyCode == Keyboard.LEFT && splits.hasOwnProperty( origIndex ))
+					{
+						newIndex = splits[ origIndex ][ "left" ];											
+					}
+					else if (event.keyCode == Keyboard.RIGHT && splits.hasOwnProperty( origIndex ))
+					{
+						newIndex = splits[ origIndex ][ "right" ];
+					}
+					
+					if (newIndex >= 0)
+					{
+						promptTextInput.textInput.setSelection( newIndex, newIndex );
+					}
+				}
+			}
+			
+			public function selectText( value:Boolean = true ):void
+			{
+				promptTextInput.setTextSelected( value );
+			}
+			
+			public function setSelectedItem( value:Object, isSilent:Boolean = false ):void
+			{
+				var origItem:Object = _selectedItem;
+				
+				_selectedItem = value;
+				
+				if (_isMultiSelect && _selectedItems.getItemIndex( value ) == -1 && value)
+				{
+					_selectedItems.addItem( value );
+				}
+				
+				updateComoText();
+				
+				if (value != origItem && !isSilent)
+				{
+					dispatchEvent( new Event( COMBO_ITEM_SELECTED ) );
+				}
+				
+				if (isDropDownVisible())
+				{
+					// we're using a callLater here as a workaround for not being
+					// able to prevent the enter keyboard event from bubbling. Delaying
+					// the selection gives the UI a chance to check if the enter key
+					// was clicked while the drop down was visible 
+					callLater( hideDropDown );
+				}					
+			}
+			
+			public function updateComoText( addStr:String = "" ):void
+			{
+				var str:String = "";
+				
+				if (_isMultiSelect)
+				{
+					for each (var item:Object in _selectedItems)
+					{
+						str += "<u>" + _labelFunction( item ) + "</u>, ";
+					}
+					
+					if (addStr)
+					{
+						str += addStr;
+					}
+				}
+				else
+				{
+					if (_selectedItem)
+					{
+						str = "<u>" + _labelFunction( _selectedItem ) + "</u>";
+					}	
+				}
+				
+				promptTextInput.htmlText = (str.length > 0 ? str : null);				
+				promptTextInput.setTextSelected( false );
+			}
+			
+			private function handleItemClick( event:ListEvent ):void
+			{
+				setSelectedItem( _dropDown.selectedItem );
+			}
+			
+			/**
+			 * If the list is visible and we click somewhere else
+			 * we're going to close it
+			 */
+			private function handleMouseClick( event:MouseEvent ):void
+			{
+				if (!isDropDownVisible())
+				{
+					return;
+				}
+				
+				if (!_dropDown.hitTestPoint( event.stageX, event.stageY ))
+				{
+					hideDropDown();
+				}
+			}
+			
+			public function handleChange( event:Event ):void
+			{
+				dispatchEvent( event );
+				
+				if (!_dataProvider)
+				{
+					return;
+				}
+				
+				var removed:Boolean = false;
+				
+				if (isItemSelected)
+				{
+					if (_isMultiSelect)
+					{
+						removed = handleChangeOnceSelectedMulti();
+					}
+					else
+					{
+						handleChangeOnceSelected();
+					}
+				}
+				
+				//var start:Date = new Date();
+				filterData();
+				//var end:Date = new Date();
+				//trace(">> search took: " + (end.getTime() - start.getTime()) + " msecs" );
+				
+				if (_dataProvider.length == 0)
+				{
+					hideDropDown();
+					return;
+				}
+				else if (isPerfectMatch())
+				{
+					return;
+				}
+				
+				if (isDropDownVisible())
+				{
+					if (promptTextInput.text.length == 0)
+					{
+						hideDropDown();
+					}
+				}
+				else
+				{
+					if (promptTextInput.text.length > 0 && !removed)
+					{
+						showDropDown();	
+					}
+				}
+				
+				if (isDropDownVisible())
+				{
+					callLater( positionDropDown );
+					callLater( highlightFirstItem );
+					_dropDown.rowCount = (_dataProvider.length < ROW_COUNT ? _dataProvider.length : ROW_COUNT);
+				}
+			}
+			
+			private function highlightFirstItem():void
+			{
+				_dropDown.selectedIndex = 0;
+			}
+			
+			private function isPerfectMatch():Boolean
+			{
+				if (_dataProvider.length == 1)
+				{
+					var item:Object = _dataProvider.getItemAt( 0 );
+					
+					if (_isEqualFunction != null)
+					{
+						if (_isEqualFunction( item, searchText ))
+						{
+							setSelectedItem( item );
+							return true;
+						}
+					}
+					else
+					{
+						var str:String = _labelFunction( item );
+						
+						if (str.toLowerCase() == searchText.toLowerCase())
+						{
+							setSelectedItem( item );
+							return true;
+						}
+					}
+				}
+				
+				return false;
+			}
+			
+			private function handleChangeOnceSelected():void
+			{
+				var prettyName:String 	= _labelFunction( _selectedItem );
+				var searchStr:String	= promptTextInput.text;	
+				var newSearchStr:String;
+				
+				// user entered more text (ie Bob => Bobd)
+				if (searchStr.substr( 0, prettyName.length ) == prettyName && searchStr.length > prettyName.length)
+				{
+					newSearchStr = searchStr.substring( prettyName.length, searchStr.length ); 
+				}
+				// user hit the backspace key (ie Bob => Bo)
+				else if (searchStr == prettyName.substr( 0, searchStr.length ))
+				{
+					newSearchStr = "";
+				}
+				// user highlighted the text the pressed a key
+				else if (searchStr.length == 1)
+				{
+					newSearchStr = searchStr;
+				}
+				
+				setSelectedItem( null );
+				
+				promptTextInput.text = newSearchStr;
+				promptTextInput.setTextSelected( false );
+			}
+			
+			private function handleChangeOnceSelectedMulti():Boolean
+			{
+				var searchStr:String = promptTextInput.text;
+				var removeItem:Object;
+					
+				var item:Object;
+				var index:int;
+				
+				var addStr:String = checkForAddString();
+				var cursorPos:int = 0;
+				
+				if (addStr == "")
+				{
+					for each (item in _selectedItems)
+					{
+						var itemStr:String = _labelFunction( item );
+						
+						if ( searchStr.substr( cursorPos, itemStr.length + 2) != itemStr + ", " )
+						{
+							removeItem = item;
+							
+							index = _selectedItems.getItemIndex( item );
+							_selectedItems.removeItemAt( index );
+							
+							break;
+						}
+						
+						cursorPos += itemStr.length + 2;																		
+					}					
+				}
+				
+				updateComoText( addStr );
+				
+				if (removeItem != null)
+				{
+					dispatchEvent( new Event( COMBO_ITEM_SELECTED ) );
+					
+					// position the cursor after the removed item
+					promptTextInput.textInput.setSelection( cursorPos, cursorPos );
+					
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			
+			private function checkForAddString():String
+			{
+				var searchStr:String 	= promptTextInput.text;
+				var expectedStr:String  = "";
+				var addStr:String 		= "";
+				
+				for each (var item:Object in _selectedItems)
+				{
+					expectedStr += _labelFunction( item ) + ", ";
+				}
+				
+				if (searchStr.length == expectedStr.length + 1)
+				{
+					for (var x:int=0; x<searchStr.length; x++)
+					{
+						if (searchStr.charAt( x ) != expectedStr.charAt( x ))
+						{
+							return searchStr.charAt( x );
+						}
+					}
+				}
+								
+				var index:int = searchStr.lastIndexOf( ", " );
+				addStr = searchStr.substring( index + 2, searchStr.length ); 
+				
+				if (addStr.substr( addStr.length - 1, 1 ) == ",")
+				{
+					addStr = "";
+				}
+				
+				return addStr;
+			}
+			
+			public function get searchText():String
+			{
+				if (_isMultiSelect)
+				{
+					var text:String = promptTextInput.text;
+					var pos:int = text.lastIndexOf( "," );
+					
+					if (pos == -1)
+					{
+						return text;
+					}
+					else
+					{
+						return text.substring( pos + 2, text.length );
+					}
+				}
+				else
+				{
+					return promptTextInput.text;
+				}
+			}
+			
+			public function filterData():void
+			{
+				_dataProvider.filterFunction = filterFunctionWrapper;
+				_dataProvider.refresh();
+			}
+			
+			private function handleFocusIn():void
+			{
+				if (isItemSelected)
+				{
+					promptTextInput.setTextSelected( false );
+				}
+				else
+				{
+					promptTextInput.setTextSelected( true );					
+				}
+			}
+			
+			private function showDropDown():void
+			{
+				if (_dropDown == null)
+				{
+					createDropDown();
+				}
+				
+				_dropDown.width = promptTextInput.width;
+				_dropDown.owner = this;
+				_dropDown.scrollToIndex(0);
+				
+				PopUpManager.addPopUp( _dropDown, this );				
+			}
+			
+			public function positionDropDown():void
+			{
+				if (!isDropDownVisible())
+				{
+					return;
+				}
+				
+				var localPoint:Point = new Point( 0, promptTextInput.height );
+				var globalPoint:Point = promptTextInput.localToGlobal( localPoint );
+								
+				_dropDown.x = globalPoint.x;
+				
+				// check if it will fit below the textInput 
+				if (Application.application.height - globalPoint.y > dropDown.height)	
+				{
+					_dropDown.y = globalPoint.y;
+				}
+				else
+				{
+					_dropDown.y = globalPoint.y - promptTextInput.height - dropDown.height;
+				}	
+			}
+			
+			private function handleFocusOut( event:FocusEvent ):void
+			{			
+				if (isDropDownVisible())
+				{
+					if (!event.relatedObject || !_dropDown.contains( event.relatedObject ))
+					{
+						hideDropDown();
+					}
+				}
+			}
+			
+			private function hideDropDown():void
+			{
+				PopUpManager.removePopUp( _dropDown );
+			}
+			
+			public function get dropDown():List
+			{
+				return _dropDown;
+			}
+			
+			public function set labelFunction( value:Function ):void
+			{
+				_labelFunction = value;
+			}
+			
+			public function set dropDownLabelFunction( value:Function ):void
+			{
+				_dropDownLabelFunction = value;
+			}
+			
+			public function set filterFunction( value:Function ):void
+			{
+				_filterFunction = value;
+			}
+			
+			public function set selectedItems( value:ArrayCollection ):void
+			{
+				_selectedItems = value;
+			}
+			
+			public function set isMultiSelect( value:Boolean ):void
+			{
+				 _isMultiSelect = value;
+				 _isMultiSelectChanged = true;
+				 
+				 invalidateProperties();
+			}
+			
+			private function filterFunctionWrapper( item:Object ):Boolean
+			{
+				return _filterFunction( item, searchText );
+			}
+			
+			public function set isEqualFunction( value:Function ):void
+			{
+				_isEqualFunction = value;
+			}
+			
+			public function set dataProvider( value:ArrayCollection ):void
+			{
+				_dataProvider = value;
+				_dataProviderChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			public function get dataProvider():ArrayCollection
+			{
+				return _dataProvider;
+			}
+			
+			public function set text( value:String ):void
+			{
+				promptTextInput.text = value;
+			}
+			
+			public function get text():String
+			{
+				return promptTextInput.text;	
+			}
+			
+			public function set htmlText( value:String ):void
+			{
+				promptTextInput.htmlText = value;
+			}
+			
+			public function get htmlText():String
+			{
+				return promptTextInput.htmlText;	
+			}
+			
+			public function isDropDownVisible():Boolean
+			{
+				return _dropDown && _dropDown.parent;
+			}
+			
+			public function get selectedItem():Object
+			{
+				return _selectedItem;
+			}
+			
+			public function get isItemSelected():Boolean
+			{
+				if (_isMultiSelect)
+				{
+					return _selectedItems.length > 0;
+				}
+				else
+				{
+					return _selectedItem != null;
+				}
+			}
+			
+			override public function setFocus():void
+			{
+				promptTextInput.setFocus();
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<components:PromptTextInput id="promptTextInput" width="100%" minWidth="100" 
+		change="handleChange(event)" focusIn="handleFocusIn()" focusOut="handleFocusOut(event)"/>
+	 
+</mx:Canvas>

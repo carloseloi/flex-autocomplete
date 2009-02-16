@@ -1,0 +1,822 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Box
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:hc="com.hillelcoren.components.choosers.classes.*"
+	clipContent="false"
+	width="100%"
+	initialize="init()"
+	implements="mx.controls.listClasses.IDropInListItemRenderer,mx.managers.IFocusManagerComponent">
+	
+	<mx:Metadata>
+		[Event(name="change")]
+		[Event(name="textChange")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.MoveEvent;
+			import mx.utils.StringUtil;
+			import mx.controls.TextInput;
+			import flash.utils.getQualifiedClassName;
+			import mx.controls.listClasses.BaseListData;
+			import mx.controls.dataGridClasses.DataGridListData;
+			import com.hillelcoren.components.choosers.classes.*;
+			import com.hillelcoren.utils.StringUtils;
+			import mx.controls.Button;
+			import mx.core.IFlexDisplayObject;
+			import mx.core.Application;
+			import mx.containers.GridRow;
+			import mx.controls.Label;
+			import mx.utils.ObjectUtil;
+			import mx.controls.scrollClasses.ScrollBar;
+			import mx.effects.Glow;
+			import mx.effects.Effect;
+			import mx.events.CollectionEvent;
+			import mx.events.ListEvent;
+			import mx.binding.utils.BindingUtils;
+			import mx.controls.List;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			import mx.controls.Button;
+			import mx.effects.DefaultListEffect;
+			import mx.collections.ArrayCollection;
+			
+			private var _prompt:String;
+			private var _promptChanged:Boolean;
+			
+			private var _isBrowseable:Boolean;
+			private var _isBrowseableChanged:Boolean;
+			private var _browseButton:Button;
+			
+			private var _isMultiSelect:Boolean;
+			private var _isMultiSelectChanged:Boolean;
+			private var _multiSelectLayout:String = LAYOUT_VERTICAL;
+			private var _multiSelectLayoutChanged:Boolean;
+			private var _multiSelect:MultiSelect;
+			
+			private var _browser:IBrowser;
+			private var _useListBuilder:Boolean;
+			protected var _browserClass:Class = Browser;
+			protected var _listBuilderClass:Class = ListBuilder;
+				
+			private var _browseLabel:String = "Browse";
+			private var _removeLabel:String = "Remove";	
+			
+			[Bindable]			
+			private var _dataProvider:ArrayCollection;
+			private var _dataProviderChanged:Boolean;
+			
+			private var _text:String;
+			private var _textChanged:Boolean;
+									
+			[Bindable]
+			private var _selectedItems:ArrayCollection = new ArrayCollection();
+			private var _selectedItemsChanged:Boolean;
+			private var _initialSelectedItems:ArrayCollection;
+			
+			private var _selectedItem:Object;
+			private var _selectedItemChanged:Boolean;
+			
+			protected var _selectedItemId:Number;
+			private var _selectedItemIdChanged:Boolean;
+			
+			private var _isOrderable:Boolean;
+			private var _isOrderableChanged:Boolean;
+								
+			private var _filterFunction:Function;
+			private var _filterFunctionChanged:Boolean;
+			private var _matchType:String = MATCH_BEGINNING;
+			
+			private var _isEqualFunction:Function;
+			
+			private var _labelField:String;
+			private var _labelFieldChange:Boolean;
+			
+			private var _labelFunction:Function;
+			private var _labelFunctionChanged:Boolean;
+			
+			private var _dropDownLabelFunction:Function;
+			private var _dropDownLabelFunctionChanged:Boolean;
+			
+			private var _keyField:String = "id";
+			private var _listData:DataGridListData;
+			
+			public static const BROWSER_ITEM_SELECTED:String = "BROWSER_ITEM_SELECTED";
+			
+			public static const MATCH_BEGINNING:String 	= "beginning";
+			public static const MATCH_WORD:String		= "word";
+			public static const MATCH_ANY_PART:String	= "anyPart";
+			
+			public static const LAYOUT_VERTICAL:String 		= "vertical";
+			public static const LAYOUT_HORIZONTAL:String 	= "horizontal";
+			
+			private function init():void
+			{
+				addEventListener( FocusEvent.MOUSE_FOCUS_CHANGE, handleMouseFocusChange );
+				addEventListener( MoveEvent.MOVE, handleMove );
+				
+				combo.selectedItems = _selectedItems;
+				combo.addEventListener( Combo.COMBO_ITEM_SELECTED, handleComboItemSelected );
+				combo.addEventListener( Event.CHANGE, handleTextChange );
+				
+				if (_filterFunction == null)
+				{
+					filterFunction = defaultFilterFunction;
+				}
+				
+				if (_labelFunction == null)
+				{
+					labelFunction = defaultLabelFunction;
+				}
+				
+				if (_dropDownLabelFunction == null)
+				{			
+					dropDownLabelFunction = defaultDropDownLabelFunction;
+				}
+			}
+			
+			// check if the focus has moved to the dropdown (otherwise, if we use the 
+			// component as an editor in the datagrid the focus out event will destroy
+			// the editorInstance before the value gets set 
+			private function handleMouseFocusChange( event:FocusEvent ):void
+			{
+				if (combo.isDropDownVisible())
+				{
+					if (event.relatedObject && combo.dropDown.contains( event.relatedObject ))
+					{
+						event.preventDefault();
+					}
+				}				
+			}
+			
+			private function handleMove( event:MoveEvent ):void
+			{
+				combo.positionDropDown();
+			}
+			
+			private function handleTextChange( event:Event ):void
+			{
+				var changeEvent:Event = new Event( "textChange" );
+				dispatchEvent( changeEvent );				
+			}
+						
+			override protected function commitProperties():void
+			{
+				super.commitProperties();
+				
+				var item:Object;
+				
+				if (_textChanged)
+				{
+					_textChanged = false;
+					
+					combo.setSelectedItem( null );
+					combo.text = _text;
+				}	
+				
+				if (_promptChanged)
+				{
+					_promptChanged = false;				
+					combo.promptTextInput.prompt = _prompt;
+				}
+				
+				if (_isBrowseableChanged)
+				{
+					_isBrowseableChanged = false;
+					showBrowseButton( _isBrowseable );
+				}
+				
+				if (_isOrderableChanged)
+				{
+					_isOrderableChanged = false;
+					showOrderingButtons( _isOrderable );
+				}
+				
+				if (_isMultiSelectChanged || _multiSelectLayoutChanged)
+				{
+					if (_isMultiSelectChanged)
+					{
+						_selectedItems.removeAll();	
+						selectedItem = null;					
+					}
+					
+					_isMultiSelectChanged = false;
+					_multiSelectLayoutChanged = false;
+					
+					var isComboMultiSelect:Boolean = (_multiSelectLayout == LAYOUT_HORIZONTAL && _isMultiSelect);
+					combo.isMultiSelect = isComboMultiSelect;
+					
+					var showMultiSelect:Boolean = (_multiSelectLayout == LAYOUT_VERTICAL && _isMultiSelect);
+					showMultiSelectList( showMultiSelect );					
+				}
+				
+				if (_dropDownLabelFunctionChanged)
+				{
+					_dropDownLabelFunctionChanged = false;
+					
+					combo.dropDownLabelFunction = _dropDownLabelFunction;
+				}
+				
+				if (_labelFunctionChanged)
+				{
+					_labelFunctionChanged = false;
+					
+					combo.labelFunction = labelFunction;
+				}
+				
+				if (_filterFunctionChanged)
+				{
+					_filterFunctionChanged = false;
+					
+					combo.filterFunction = _filterFunction;
+				}
+				
+				if (_dataProviderChanged && _dataProvider)
+				{
+					_dataProviderChanged = false;
+					_dataProvider.refresh();
+					
+					combo.dataProvider = new ArrayCollection( _dataProvider.source );
+					combo.dataProvider.sort = _dataProvider.sort;
+					combo.dataProvider.refresh();
+				}		
+				
+				if (_selectedItemChanged && _dataProvider)
+				{
+					_selectedItemChanged = false;
+					
+					combo.setSelectedItem( _selectedItem );
+				}
+				
+				if (_selectedItemIdChanged && _dataProvider)
+				{
+					_selectedItemIdChanged = false;
+					
+					for each (item in _dataProvider)
+					{
+						if (item[ _keyField ] == _selectedItemId)
+						{
+							combo.setSelectedItem( item, true );
+							_selectedItemId = 0;
+							break;
+						}
+					}
+				}
+								
+				if (_selectedItemsChanged && _dataProvider)
+				{
+					_selectedItemsChanged = false;
+					_selectedItems.removeAll();
+					
+					for each (var selectedItem:Object in _initialSelectedItems)
+					{
+						var foundItem:Object = null;
+						
+						for each (item in _dataProvider.source)
+						{
+							if (item == selectedItem)
+							{
+								foundItem = item;
+							}
+							else if (_keyField && item[_keyField] == selectedItem[_keyField])
+							{
+								foundItem = item;
+							}
+							
+							if (foundItem)
+							{
+								_selectedItems.addItem( foundItem );
+								foundItem = true;
+								break;
+							}
+						}
+						
+						if (foundItem == null)
+						{
+							_selectedItems.addItem( selectedItem );
+						}
+					}					
+				}
+			}
+			
+			public function get listData():BaseListData
+            {
+            	return _listData;
+            }
+			
+            public function set listData( value:BaseListData ):void
+            {
+            	combo.promptTextInput.enableClearIcon = false;
+            	
+            	_listData = DataGridListData( value );            	
+            } 
+            
+            override public function set data( value:Object ):void
+            {
+                super.data = value;
+				
+				if (!data || !data[ _listData.dataField ])
+				{
+					return;
+				}
+				
+				selectedItemId = data[ _listData.dataField ][ _keyField ];				
+            }
+			
+			private function showBrowseButton( show:Boolean ):void
+			{
+				if (show && _browseButton == null)
+				{
+					_browseButton = new Button();
+					_browseButton.label = _browseLabel;
+					_browseButton.width = Consts.BUTTON_WIDTH;
+					_browseButton.addEventListener( MouseEvent.CLICK, handleBrowseClick );
+				}
+				
+				if (show)
+				{
+					browseGridItem.addChild( _browseButton );
+					grid.setStyle( "horizontalGap", 5 );
+				}
+				else if ( _browseButton != null )
+				{
+					browseGridItem.removeChild( _browseButton );
+				}
+			}
+			
+			private function showOrderingButtons( show:Boolean ):void
+			{
+				if (!_multiSelect)
+				{
+					return;
+				}
+				
+				_multiSelect.isOrderable = show;
+			}
+			
+			private function showMultiSelectList( show:Boolean ):void
+			{
+				if (show && _multiSelect == null)
+				{
+					_multiSelect = new MultiSelect();
+					_multiSelect.labelFunction = _labelFunction;
+					_multiSelect.addEventListener( Event.CHANGE, handleMultiSelectChange );
+					_multiSelect.dataProvider = _selectedItems;					
+					_multiSelect.isOrderable = _isOrderable;
+					_multiSelect.removeLabel = _removeLabel;
+				}
+				
+				if (show)
+				{
+					grid.addChildAt( _multiSelect, 0 );
+					grid.setStyle( "horizontalGap", 5 );
+					
+					combo.setSelectedItem( null, true );
+				}
+				else if (_multiSelect && _multiSelect.parent)
+				{
+					grid.removeChild( _multiSelect );
+				}											
+			}
+			
+			private function handleMultiSelectChange( event:Event ):void
+			{
+				dispatchEvent( event );
+			}
+			
+			private function handleBrowseClick( event:Event ):void
+			{
+				var useListBuilder:Boolean = _useListBuilder && _isMultiSelect;
+				
+				if (useListBuilder)
+				{
+					_browser = new _listBuilderClass();	
+				}
+				else
+				{
+					_browser = new _browserClass();
+				}
+				
+				var dp:ArrayCollection = new ArrayCollection( _dataProvider.source );
+				dp.sort = _dataProvider.sort;
+				dp.refresh();
+				
+				_browser.dataProvider = dp;
+				
+				_browser.filterFunction = _filterFunction;
+				_browser.title = "Browse";
+				_browser.labelFunction = _labelFunction;
+				_browser.addEventListener( Chooser.BROWSER_ITEM_SELECTED, handleBrowserItemSelected );
+				
+				if (_isMultiSelect || useListBuilder)
+				{
+					_browser.originalSelectedItems = _selectedItems;
+				}
+							
+				PopUpManager.addPopUp( IFlexDisplayObject( _browser ), DisplayObject( Application.application), true );
+				PopUpManager.centerPopUp( IFlexDisplayObject( _browser ) );
+				
+				_browser.init();
+				
+				if (useListBuilder)
+				{
+					ListBuilder( _browser ).isOrderable = _isOrderable;	
+				}
+				else
+				{
+					Browser( _browser ).isMultiSelect = _isMultiSelect;
+				
+					if (!combo.isItemSelected)
+					{
+						Browser( _browser ).searchStr = combo.text;
+					}
+				}										
+			}
+			
+			private function handleComboItemSelected( event:Event ):void
+			{
+				if (isMultiSelect && _multiSelectLayout == LAYOUT_VERTICAL)
+				{
+					if (combo.selectedItem && !isItemSelected( combo.selectedItem ))
+					{
+						_selectedItems.addItemAt( combo.selectedItem, 0 );
+					}
+					
+					combo.setSelectedItem( null, true );					
+				}
+				
+				dispatchEvent( new Event( Event.CHANGE ) );
+			}
+			
+			private function handleBrowserItemSelected( event:Event ):void
+			{
+				var item:Object;
+				
+				if (useListBuilder)
+				{
+					_selectedItems.removeAll();
+					
+					for each (item in _browser.selectedItems)
+					{
+						_selectedItems.addItem( item );
+					}					
+				}
+				else
+				{
+					for each (item in _browser.selectedItems)
+					{
+						if (isMultiSelect)
+						{
+							if (!isItemSelected( item ))
+							{
+								_selectedItems.addItemAt( item, 0 );
+							}
+						}
+						else
+						{
+							combo.setSelectedItem( item );
+						}
+					}
+				}
+				
+				if (_isMultiSelect && _multiSelectLayout == LAYOUT_HORIZONTAL)
+				{
+					combo.updateComoText();
+				}
+				
+				PopUpManager.removePopUp( IFlexDisplayObject( _browser ) );
+				
+				dispatchEvent( new Event( Event.CHANGE ) );
+			}
+			
+			[Inspectable(enumeration="false,true")]
+			public function set isMultiSelect( value:Boolean ):void
+			{
+				_isMultiSelect = value;
+				_isMultiSelectChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			[Inspectable(enumeration="horizontal,vertical")]
+			public function set multiSelectLayout( value:String ):void
+			{
+				_multiSelectLayout = value;
+				_multiSelectLayoutChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			[Inspectable(enumeration="false,true")]
+			public function set isBrowseable( value:Boolean ):void
+			{
+				_isBrowseable = value;
+				_isBrowseableChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			[Inspectable(enumeration="false,true")]
+			public function set isOrderable( value:Boolean ):void
+			{
+				_isOrderable = value;
+				_isOrderableChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			[Inspectable(enumeration="false,true")]
+			public function set useListBuilder( value:Boolean ):void
+			{
+				_useListBuilder = value;
+			}
+			
+			public function get useListBuilder():Boolean
+			{
+				return _useListBuilder;
+			}
+			
+		    public function get isMultiSelect():Boolean
+			{
+				return _isMultiSelect;
+			}
+			
+			public function set dataProvider( value:ArrayCollection ):void
+			{
+				_dataProvider = value;
+				_dataProviderChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			public function get dataProvider():ArrayCollection
+			{
+				return _dataProvider;	
+			}
+			
+			public function set filterFunction( value:Function ):void
+			{
+				_filterFunction = value;
+				_filterFunctionChanged = true;
+				
+				invalidateProperties();
+			}	
+			
+			[Inspectable(enumeration="beginning,word,anyPart")]
+			public function set matchType( value:String ):void
+			{
+				_matchType = value;
+			}
+			
+			public function set selectedItemId( value:Number ):void
+			{
+				_selectedItemId = value;
+				_selectedItemIdChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			public function isSettingValue():Boolean
+			{
+				return _selectedItemId > 0;
+			}
+			
+			public function set selectedItems( value:ArrayCollection ):void
+			{
+				_initialSelectedItems = value;
+				_selectedItemsChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			public function set selectedItem( value:Object ):void
+			{
+				_selectedItem = value;
+				_selectedItemChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			[Bindable(event="change")]
+			public function get selectedItems():ArrayCollection
+			{
+				return _selectedItems;
+			}
+			
+			[Bindable(event="change")]
+			public function get selectedItem():*
+			{
+				if (_isMultiSelect)
+				{
+					if (_selectedItems.length > 0)
+					{
+						if (_multiSelectLayout == LAYOUT_VERTICAL)
+						{
+							return _selectedItems.getItemAt( 0 );
+						}
+						else
+						{
+							return _selectedItems.getItemAt( _selectedItems.length - 1 );
+						}
+					}
+					else
+					{
+						return null;
+					}
+				}
+				else
+				{
+					return combo.selectedItem;
+				}
+			}
+			
+			public function isItemSelected( item:Object ):Boolean
+			{
+				return _selectedItems.getItemIndex( item ) >= 0;
+			}
+			
+			public function get browserClass():Class
+			{
+				return _browserClass;
+			}
+			
+			public function set browserClass( value:Class ):void
+			{
+				_browserClass = value;
+			}
+			
+			public function get text():String
+			{
+				if (combo)
+				{
+					return combo.text;
+				}
+				
+				return "";
+			}
+			
+			public function set text( value:String ):void
+			{
+				_text = value;
+				_textChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			public function set prompt( value:String ):void
+			{
+				_prompt = value;
+				_promptChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			override public function setFocus():void
+			{
+				combo.setFocus();
+			}
+			
+			public function set labelField( value:String ):void
+			{
+				_labelField = value;
+				_labelFieldChange = true;
+				
+				invalidateProperties();
+			}
+			
+			public function set labelFunction( value:Function ):void
+			{
+				_labelFunction = value;
+				_labelFunctionChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			public function set dropDownLabelFunction( value:Function ):void
+			{
+				_dropDownLabelFunction = value;
+				_dropDownLabelFunctionChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			public function get searchText():String
+			{
+				return combo.searchText;
+			}
+			
+			private function defaultFilterFunction( item:Object, searchStr:String ):Boolean
+			{
+				var str:String = labelFunction( item );
+				
+				switch (_matchType)
+				{
+					case MATCH_ANY_PART:
+						return (new RegExp(searchStr, "gi")).test( str );
+					case MATCH_BEGINNING:
+						return StringUtils.beginsWith( str, searchStr );
+					case MATCH_WORD:
+						return StringUtils.anyWordBeginsWIth( str, searchStr );
+				}
+				
+				return false;
+			}
+			
+			private function defaultLabelFunction( item:Object ):String
+			{
+				if (_labelField)
+				{
+					return item[ _labelField ];
+				}
+				else
+				{
+					return item.toString();
+				}
+			}
+			
+			public function defaultDropDownLabelFunction( item:Object ):String
+			{
+				var label:String = _labelFunction( item );
+				
+				var str:String = "";
+				var searchStr:String = combo.searchText;
+				
+				var start:int = label.search(new RegExp(searchStr, "gi"));
+				
+				// we need to make sure if we're matching whole words that we don't 
+				// highlight a part of a word which matches. ie, if the string is
+				// "Test String" and the user searches for "st" we need to highlight
+				// the "st" in "String" (not "Test")
+				if (_matchType == MATCH_WORD && start > 0)
+				{
+					if (label.charAt( start - 1 ) != " ")
+					{
+						start = label.search(new RegExp(" " + searchStr, "gi")) + 1;
+					}
+				}
+				
+				str = label.substring(0, start);
+				str = str + "<b><u>" + label.substr(start, searchStr.length) + "</u></b>";
+				str = str + label.substr(start + searchStr.length, label.length);
+
+				if (isItemSelected( item ))
+    			{
+    				str = "<font color='" + Consts.COLOR_TEXT_DISABLED + "'>" + str + "</font>";
+    			}
+    			
+    			return str;
+			}
+						
+			public function get labelFunction():Function
+			{
+				return _labelFunction;
+			}
+			
+			public function set keyField( value:String ):void
+			{
+				_keyField = value;
+			}
+			
+			public function set isEqualFunction( value:Function ):void
+			{
+				_isEqualFunction = value;
+				combo.isEqualFunction = value;
+			}
+			
+			public function getNextItem():*
+			{
+				combo.filterData();
+				
+				if (combo.dataProvider.length > 0)
+				{
+					return combo.dataProvider.getItemAt( 0 );
+				}
+				else
+				{
+					return null;
+				}
+			}
+			
+			public function set browseLabel( value:String ):void
+			{
+				_browseLabel = value;
+			}
+			
+			public function set removeLabel( value:String ):void
+			{
+				_removeLabel = value;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Grid id="grid" width="100%" horizontalGap="0">
+		<mx:GridRow width="100%">
+			<mx:GridItem width="100%">
+				<hc:Combo id="combo" width="100%"/>
+			</mx:GridItem>
+			<mx:GridItem id="browseGridItem"/>	
+		</mx:GridRow>
+	</mx:Grid>
+	
+</mx:Box>

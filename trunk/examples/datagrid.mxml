@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%" height="100%"
+	verticalAlign="middle" horizontalAlign="center"
+	initialize="init()" xmlns:components="com.hillelcoren.components.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.collections.ArrayCollection;
+			
+			[Bindable]
+			public var employees:ArrayCollection;
+			
+			[Bindable]
+			public var departments:ArrayCollection;
+			
+			private function init():void
+			{
+				var salesDept:Object 		= {"id":1, "name":"Sales"};
+				var supportDept:Object 		= {"id":2, "name":"Support"};
+				var financeDept:Object		= {"id":3, "name":"Finance"};
+				var engineeringDept:Object	= {"id":4, "name":"Engineering"};
+				var marketingDept:Object	= {"id":5, "name":"Marketing"};
+				
+				departments = new ArrayCollection(
+				[
+					salesDept, supportDept, financeDept, engineeringDept, marketingDept
+				]);
+				
+				employees = new ArrayCollection(
+				[
+					{"id":1, "firstName":"Troy", "lastName":"McClure", "department":financeDept},
+					{"id":2, "firstName":"Ralph", "lastName":"Wiggum", "department":marketingDept},
+					{"id":3, "firstName":"Jebediah", "lastName":"Springfield", "department":salesDept},
+					{"id":4, "firstName":"Barney", "lastName":"Gumble", "department":salesDept},
+					{"id":5, "firstName":"Julius", "lastName":"Hibbert", "department":null},
+					{"id":6, "firstName":"Ned", "lastName":"Flanders", "department":supportDept},
+					{"id":7, "firstName":"Selma", "lastName":"Bouvier", "department":financeDept}
+				]);								
+			}	
+			
+			private function departmentLabelFunction( item:Object, column:DataGridColumn ):String
+			{
+				return item.department ? item.department.name : "";
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Component id="chooser">
+		<components:Chooser dataProvider="{ outerDocument.departments }" labelField="name"/>
+	</mx:Component>
+						
+	<mx:Panel width="550" height="400" title="DataGrid Demo"
+			paddingBottom="20" paddingTop="20" paddingLeft="20" paddingRight="20">
+		<mx:DataGrid dataProvider="{ employees }" editable="true" width="100%" height="100%">
+			<mx:columns>
+				<mx:DataGridColumn headerText="Id" dataField="id" editable="false"/>
+				<mx:DataGridColumn headerText="First Name" dataField="firstName"/>
+				<mx:DataGridColumn headerText="Last Name" dataField="lastName"/>
+				<mx:DataGridColumn headerText="Department" labelFunction="departmentLabelFunction" editorUsesEnterKey="true"
+					itemEditor="{ chooser }" editorDataField="selectedItem" dataField="department"/>
+			</mx:columns>
+		</mx:DataGrid>
+	</mx:Panel>
+	
+</mx:Application>
