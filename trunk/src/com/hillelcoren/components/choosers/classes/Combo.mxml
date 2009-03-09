@@ -284,7 +284,7 @@
 						comboTextInput.height = textInput.height;
 						comboTextInput.item = value;
 						comboTextInput.addEventListener( Event.CHANGE, handleComboItemChange );
-						toolBar.addChildAt( comboTextInput, toolBar.numChildren - 1 );												
+						toolBar.addChildAt( comboTextInput, toolBar.numChildren - 1 );									
 					}
 					else
 					{
@@ -329,12 +329,25 @@
 				var index:int = _selectedItems.getItemIndex( comboTextInput.item );
 				
 				var text:String = comboTextInput.text;
-				text = StringUtil.trim( text );
+				text = cleanStr( text );
 				
 				if (text.length > 0)
 				{
+					// check if the user added text after the commma
+					var indexComma:int = text.indexOf( "," );
+					
+					if (indexComma > 0)
+					{
+						var addStr:String = text.substring( indexComma + 1, text.length );
+						text = text.substr( 0, indexComma );
+						comboTextInput.text = text + ",";
+						textInput.text = addStr;
+						textInput.setFocus();
+						textInput.setTextSelected( false );
+					}
+					
 					_selectedItems.setItemAt( text, index );
-					comboTextInput.item = text;
+					comboTextInput.item = text;					
 				}
 				else
 				{
@@ -477,37 +490,7 @@
 				
 				return false;
 			}
-			
-			private function handleChangeOnceSelected():void
-			{
-				/*
-				var prettyName:String 	= _labelFunction( _selectedItem );
-				var searchStr:String	= promptTextInput.text;	
-				var newSearchStr:String;
-				
-				// user entered more text (ie Bob => Bobd)
-				if (searchStr.substr( 0, prettyName.length ) == prettyName && searchStr.length > prettyName.length)
-				{
-					newSearchStr = searchStr.substring( prettyName.length, searchStr.length ); 
-				}
-				// user hit the backspace key (ie Bob => Bo)
-				else if (searchStr == prettyName.substr( 0, searchStr.length ))
-				{
-					newSearchStr = "";
-				}
-				// user highlighted the text the pressed a key
-				else if (searchStr.length == 1)
-				{
-					newSearchStr = searchStr;
-				}
-				
-				setSelectedItem( null );
-				
-				promptTextInput.text = newSearchStr;
-				promptTextInput.setTextSelected( false );
-				*/
-			}
-			
+						
 			public function get searchText():String
 			{
 				return textInput.text;
