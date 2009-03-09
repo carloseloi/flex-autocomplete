@@ -2,7 +2,7 @@
 <hc:CloseableTitleWindow
 	xmlns:hc="com.hillelcoren.components.*"
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	implements="com.hillelcoren.components.choosers.classes.IBrowser"
+	implements="com.hillelcoren.components.choosers.interfaces.IBrowser"
 	layout="absolute" width="500" height="350" 
 	showCloseButton="false" xmlns:classes="com.hillelcoren.components.choosers.classes.*">
 	

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	implements="mx.managers.IFocusManagerComponent,com.hillelcoren.components.choosers.interfaces.iComboItem" y="2"
+	horizontalGap="0" verticalGap="0">
+	
+	<mx:Metadata>
+		[Event(name="change")]	
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.controls.Label;
+			import mx.core.UIComponent;
+			import mx.controls.TextInput;
+			
+			public static const STYLE_NONE:String 		= "STYLE_NONE";
+			public static const STYLE_UNDERLINE:String 	= "STYLE_UNDERLINE";
+			public static const STYLE_OSX:String 		= "STYLE_OSX";
+			public static const STYLE_FACEBOOK:String 	= "STYLE_FACEBOOK";
+			
+			private static const COLOR_OSX_NORMAL:uint 		= 0xDEE7FB;
+			private static const COLOR_OSX_BORDER:uint 		= 0xA4BDEC;
+			private static const COLOR_OSX_OVER:uint 		= 0xBBCEF1;
+			private static const COLOR_OSX_SELECTED:uint 	= 0x598BEC;
+			
+			private var _style:String = STYLE_OSX;
+			private var _styleChanged:Boolean = true;
+			private var _shape:UIComponent;
+			private var _item:Object;
+			
+			override protected function commitProperties():void
+			{
+				super.commitProperties();
+				
+				if (_styleChanged)
+				{
+					_styleChanged = false;
+					
+					redraw();
+				}
+			}
+			
+			public function set style( value:String ):void
+			{
+				_style = value;
+				_styleChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			private function redraw():void
+			{
+				if (_style == STYLE_UNDERLINE)
+				{
+					label = "<u>" + label + "</u>"; 
+				}
+				
+				itemLabel.htmlText = label;
+			}
+			
+			private function handleLabelCreationComplete():void
+			{
+				if (_style == STYLE_OSX)
+				{
+					_shape = new UIComponent();
+					_shape.focusEnabled = true;
+					
+					itemLabel.addEventListener( MouseEvent.MOUSE_OVER, handleMouseOver );
+					itemLabel.addEventListener( MouseEvent.MOUSE_OUT, handleMouseOut );
+					itemLabel.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseDown );
+					
+					addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );
+					addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );			
+								
+					addChildAt( _shape, 0 );
+					drawShape( COLOR_OSX_NORMAL );
+				}					
+			}
+						
+			private function drawShape( color:uint, border:uint = COLOR_OSX_BORDER ):void
+			{
+				var width:uint = itemLabel.width;
+				var height:uint = itemLabel.height;
+				
+				_shape.graphics.clear();
+				_shape.graphics.beginFill( color );
+				_shape.graphics.lineStyle( 1, border );
+				_shape.graphics.drawRoundRect( itemLabel.x, 0, width, height, 20 );
+				_shape.graphics.endFill();				
+			}
+			
+			private function handleMouseOver( event:Event ):void
+			{
+				if (focusManager.getFocus() != this)
+				{
+					drawShape( COLOR_OSX_OVER );
+				}	
+			}
+			
+			private function handleMouseOut( event:Event ):void
+			{
+				if (focusManager && focusManager.getFocus() != this)
+				{
+					drawShape( COLOR_OSX_NORMAL );
+				}	
+			}
+			
+			private function handleMouseDown( event:Event ):void
+			{
+				_shape.setFocus();
+			}
+			
+			private function handleFocusIn( event:Event ):void
+			{
+				if (focusManager && focusManager.getFocus() == this)
+				{
+					drawFocus( false );
+					drawShape( COLOR_OSX_SELECTED, COLOR_OSX_SELECTED );
+					itemLabel.setStyle( "color", 0xFFFFFF );
+				}		
+			}
+			
+			private function handleFocusOut( event:Event ):void
+			{
+				drawShape( COLOR_OSX_NORMAL );
+				itemLabel.clearStyle( "color" );
+			}
+			
+			private function handleTextChange( event:Event ):void
+			{
+				dispatchEvent( event );
+			}
+			
+			public function set item( value:Object ):void
+			{
+				_item = value;				
+			}
+			
+			public function get item():Object
+			{
+				return _item;
+			}
+			
+			public function get newText():String
+			{
+				if (leftTextInput.text)
+				{
+					return leftTextInput.text;
+				}
+				else
+				{
+					return rightTextInput.text;
+				}
+			}
+			
+			public function set newText( value:String ):void
+			{
+				leftTextInput.text = "";
+				rightTextInput.text = "";
+			}
+			
+			public function setTextFocus():void
+			{
+				leftTextInput.setFocus();
+			}
+									
+		]]>
+	</mx:Script>
+	
+	
+	<mx:TextInput id="leftTextInput" width="6" borderStyle="none" 
+		focusThickness="0" change="handleTextChange(event)"/>
+	<mx:Label id="itemLabel" creationComplete="handleLabelCreationComplete()" 
+		paddingLeft="10" paddingRight="10"/>
+	<mx:TextInput id="rightTextInput" width="6" borderStyle="none" 
+		focusThickness="0" change="handleTextChange(event)" visible="false" includeInLayout="false"/>
+	
+</mx:HBox>

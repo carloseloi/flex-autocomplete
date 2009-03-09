@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	creationComplete="init()"
 	clipContent="false" 
-	xmlns:components="com.hillelcoren.components.*">
+	borderStyle="inset"
+	height="{ toolBar.height + 5 }"
+	initialize="init()"
+	xmlns:components="com.hillelcoren.components.*" 
+	xmlns:classes="com.hillelcoren.components.choosers.classes.*">
 	
 	<mx:Metadata>
 		[Event("COMBO_ITEM_SELECTED")]		
@@ -11,6 +14,9 @@
 		
 	<mx:Script>
 		<![CDATA[
+			import com.hillelcoren.components.choosers.interfaces.iComboItem;
+			import mx.core.UITextField;
+			import com.hillelcoren.components.PromptTextInput;
 			import mx.utils.ObjectUtil;
 			import mx.effects.easing.Back;
 			import mx.utils.StringUtil;
@@ -26,6 +32,7 @@
 			import mx.collections.ArrayCollection;
 			import mx.controls.List;
 			
+			private var _searchStr:String;
 			private var _dropDown:List;
 			
 			[Bindable]
@@ -33,7 +40,6 @@
 			private var _dataProviderChanged:Boolean;
 			
 			private var _filterFunction:Function;
-			private var _selectedItem:Object;
 			private var _labelFunction:Function;
 			private var _dropDownLabelFunction:Function;
 			private var _isEqualFunction:Function;	
@@ -41,7 +47,14 @@
 			private var _isMultiSelect:Boolean;
 			private var _isMultiSelectChanged:Boolean;
 			
+			private var _prompt:String;
+			private var _promptChanged:Boolean;
+			
+			private var _enableClearIcon:Boolean;
+			private var _enableClearIconChanged:Boolean;
+			
 			private var _selectedItems:ArrayCollection;
+			private var _selectedItem:Object;
 			
 			private static const ROW_COUNT:uint = 6; 
 			
@@ -49,7 +62,7 @@
 			
 			private function init():void
 			{
-				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );							
+				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
 			}
 			
 			override protected function commitProperties():void
@@ -71,7 +84,7 @@
 					_isMultiSelectChanged = false;
 					
 					updateComoText();
-				}
+				}				
 			}
 			
 			private function createDropDown():void
@@ -96,7 +109,7 @@
 						_dropDown.selectedIndex++;
 						_dropDown.scrollToIndex( _dropDown.selectedIndex );
 						
-						promptTextInput.setTextSelected( false );
+						//promptTextInput.setTextSelected( false );
 					}
 					else if (event.keyCode == Keyboard.UP)
 					{
@@ -106,7 +119,7 @@
 							_dropDown.scrollToIndex( _dropDown.selectedIndex );
 						}
 						
-						promptTextInput.setTextSelected( false );			
+						//promptTextInput.setTextSelected( false );			
 					}
 					else if (event.keyCode == Keyboard.ESCAPE || event.keyCode == Keyboard.TAB)
 					{
@@ -117,101 +130,104 @@
 						setSelectedItem( _dropDown.selectedItem );						
 					}
 				}
-				
-				// this messy bit of code make the cursor jump items when the 
-				// combo is in horizontal multiselect mode. ie, if the value of
-				// the textinput is "item1, item2" and the cursor is at the end
-				// pressing left will move the cursor to just before item2
-				if (_isMultiSelect)
+				else
 				{
-					if (event.keyCode != Keyboard.LEFT && event.keyCode != Keyboard.RIGHT)
+					var comp:UIComponent = determineFocus();
+					var selectedItem:SelectedItem;
+					var index:int = toolBar.getChildIndex( comp );
+				
+					if (event.keyCode == Keyboard.BACKSPACE)
 					{
-						return;
-					}
-					
-					if (_selectedItems.length == 0)
-					{
-						return;
-					}
-					
-					var str:String		= promptTextInput.text;
-					var origIndex:int 	= promptTextInput.textInput.selectionBeginIndex;
-					var newIndex:int 	= -1;
-					
-					var splits:Object = new Object();
-					var item:Object = _selectedItems.getItemAt( 0 );
-					var itemStr:String = _labelFunction( item );
-					
-					splits[0] = { "left":0, "right":itemStr.length + 2 };
-					
-					var counter:int = 0;
-					
-					for (var x:int=0; x<_selectedItems.length; x++)
-					{
-						item 	= _selectedItems.getItemAt( x );
-						itemStr = _labelFunction( item );
-						
-						if (!StringUtil.trim( itemStr ))
+						if (_selectedItems.length == 0)
 						{
-							break;
+							return;
 						}
 						
-						var left:int 	= counter;
-						var right:int 	= counter + 2;
-						
-						if (x < _selectedItems.length - 1)
+						if (textInput.selectionBeginIndex != 0)
 						{
-							var nextItem:Object = _selectedItems.getItemAt( x+1 );
-							var nextItemStr:String = _labelFunction( nextItem );
-							
-							right += itemStr.length + nextItemStr.length;
-							
-							if (nextItemStr.length > 0)
-							{
-								right += 2;
-							}
+							return;
 						}
 						
-						counter += itemStr.length + 2;
+						var focused:DisplayObject = focusManager.getFocus() as DisplayObject;
 						
-						splits[ counter ] = { "left":left, "right":right };
+						if (focused is SelectedItem)
+						{
+							selectedItem = focused as SelectedItem;
+							index = _selectedItems.getItemIndex( selectedItem.item );
+							_selectedItems.removeItemAt( index );
+							
+							toolBar.removeChild( focused );
+							updateComoText();
+							
+							var comboItem:iComboItem = toolBar.getChildAt( index ) as iComboItem;
+							comboItem.setTextFocus();							
+						}
+						else
+						{
+							selectedItem = toolBar.getChildAt( index - 1 ) as SelectedItem;
+							selectedItem.setFocus();
+						}						
 					}
-					
-					if (event.keyCode == Keyboard.LEFT && splits.hasOwnProperty( origIndex ))
+					else if (event.keyCode == Keyboard.LEFT)
 					{
-						newIndex = splits[ origIndex ][ "left" ];											
+						if (textInput.selectionBeginIndex != 0)
+						{
+							return;
+						}
+						
+						if (index > 0)
+						{
+							var prevItem:iComboItem = toolBar.getChildAt( index - 1 ) as iComboItem;
+							prevItem.setTextFocus();
+						}					
 					}
-					else if (event.keyCode == Keyboard.RIGHT && splits.hasOwnProperty( origIndex ))
+					else if (event.keyCode == Keyboard.RIGHT)
 					{
-						newIndex = splits[ origIndex ][ "right" ];
-					}
-					
-					if (newIndex >= 0)
-					{
-						promptTextInput.textInput.setSelection( newIndex, newIndex );
+						if (index < toolBar.numChildren - 1)
+						{
+							var nextItem:iComboItem = toolBar.getChildAt( index + 1 ) as iComboItem;
+							nextItem.setTextFocus();
+						}
 					}
 				}
 			}
-			
-			public function selectText( value:Boolean = true ):void
+						
+			private function determineFocus():UIComponent
 			{
-				promptTextInput.setTextSelected( value );
+				var comp:UIComponent = focusManager.getFocus() as UIComponent;
+				
+				for each (var item:UIComponent in toolBar.getChildren())
+				{
+					if (item.contains( comp ))
+					{
+						return item;
+					}
+				}
+				
+				return null;
 			}
 			
 			public function setSelectedItem( value:Object, isSilent:Boolean = false ):void
 			{
-				var origItem:Object = _selectedItem;
-				
-				_selectedItem = value;
-				
-				if (_isMultiSelect && _selectedItems.getItemIndex( value ) == -1 && value)
-				{
-					_selectedItems.addItem( value );
-				}
+				//dispatchEvent( new Event( COMBO_ITEM_SELECTED ) );
 				
 				updateComoText();
+				textInput.setFocus();
 				
-				if (value != origItem && !isSilent)
+				if (_selectedItems.getItemIndex( value ) == -1 && value)
+				{
+					_selectedItems.addItem( value );
+					
+					textInput.width = 0;
+					
+					var selectedItem:SelectedItem = new SelectedItem();
+					selectedItem.label = _labelFunction( value );
+					selectedItem.item = value;
+					selectedItem.addEventListener( FlexEvent.CREATION_COMPLETE, handleSelectedItemCreationComplete );
+					toolBar.addChildAt( selectedItem, toolBar.numChildren - 1 );
+				}
+				
+				if (!isSilent)
 				{
 					dispatchEvent( new Event( COMBO_ITEM_SELECTED ) );
 				}
@@ -228,30 +244,26 @@
 			
 			public function updateComoText( addStr:String = "" ):void
 			{
-				var str:String = "";
-				
-				if (_isMultiSelect)
+				textInput.text = "";
+				sizeTextInput();
+			}
+			
+			private function handleSelectedItemCreationComplete( event:Event ):void
+			{
+				sizeTextInput();
+			}
+			
+			private function sizeTextInput():void
+			{
+				if (_selectedItems.length > 0)
 				{
-					for each (var item:Object in _selectedItems)
-					{
-						str += "<u>" + _labelFunction( item ) + "</u>, ";
-					}
-					
-					if (addStr)
-					{
-						str += addStr;
-					}
-				}
+					var selectedItem:SelectedItem = toolBar.getChildAt( toolBar.numChildren - 2 ) as SelectedItem;
+					textInput.width = toolBar.width - (selectedItem.x + selectedItem.width);  
+				}				
 				else
 				{
-					if (_selectedItem)
-					{
-						str = "<u>" + _labelFunction( _selectedItem ) + "</u>";
-					}	
-				}
-				
-				promptTextInput.htmlText = (str.length > 0 ? str : null);				
-				promptTextInput.setTextSelected( false );
+					textInput.width = toolBar.width;
+				}	
 			}
 			
 			private function handleItemClick( event:ListEvent ):void
@@ -285,19 +297,8 @@
 					return;
 				}
 				
-				var removed:Boolean = false;
-				
-				if (isItemSelected)
-				{
-					if (_isMultiSelect)
-					{
-						removed = handleChangeOnceSelectedMulti();
-					}
-					else
-					{
-						handleChangeOnceSelected();
-					}
-				}
+				var textInput:PromptTextInput = event.currentTarget as PromptTextInput;
+				_searchStr = textInput.text;
 				
 				//var start:Date = new Date();
 				filterData();
@@ -316,14 +317,14 @@
 				
 				if (isDropDownVisible())
 				{
-					if (promptTextInput.text.length == 0)
+					if (_searchStr.length == 0)
 					{
 						hideDropDown();
 					}
 				}
 				else
 				{
-					if (promptTextInput.text.length > 0 && !removed)
+					if (_searchStr.length > 0 && _dataProvider.length > 0)
 					{
 						showDropDown();	
 					}
@@ -373,6 +374,7 @@
 			
 			private function handleChangeOnceSelected():void
 			{
+				/*
 				var prettyName:String 	= _labelFunction( _selectedItem );
 				var searchStr:String	= promptTextInput.text;	
 				var newSearchStr:String;
@@ -397,109 +399,12 @@
 				
 				promptTextInput.text = newSearchStr;
 				promptTextInput.setTextSelected( false );
-			}
-			
-			private function handleChangeOnceSelectedMulti():Boolean
-			{
-				var searchStr:String = promptTextInput.text;
-				var removeItem:Object;
-					
-				var item:Object;
-				var index:int;
-				
-				var addStr:String = checkForAddString();
-				var cursorPos:int = 0;
-				
-				if (addStr == "")
-				{
-					for each (item in _selectedItems)
-					{
-						var itemStr:String = _labelFunction( item );
-						
-						if ( searchStr.substr( cursorPos, itemStr.length + 2) != itemStr + ", " )
-						{
-							removeItem = item;
-							
-							index = _selectedItems.getItemIndex( item );
-							_selectedItems.removeItemAt( index );
-							
-							break;
-						}
-						
-						cursorPos += itemStr.length + 2;																		
-					}					
-				}
-				
-				updateComoText( addStr );
-				
-				if (removeItem != null)
-				{
-					dispatchEvent( new Event( COMBO_ITEM_SELECTED ) );
-					
-					// position the cursor after the removed item
-					promptTextInput.textInput.setSelection( cursorPos, cursorPos );
-					
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			
-			private function checkForAddString():String
-			{
-				var searchStr:String 	= promptTextInput.text;
-				var expectedStr:String  = "";
-				var addStr:String 		= "";
-				
-				for each (var item:Object in _selectedItems)
-				{
-					expectedStr += _labelFunction( item ) + ", ";
-				}
-				
-				if (searchStr.length == expectedStr.length + 1)
-				{
-					for (var x:int=0; x<searchStr.length; x++)
-					{
-						if (searchStr.charAt( x ) != expectedStr.charAt( x ))
-						{
-							return searchStr.charAt( x );
-						}
-					}
-				}
-								
-				var index:int = searchStr.lastIndexOf( ", " );
-				addStr = searchStr.substring( index + 2, searchStr.length ); 
-				
-				if (addStr.substr( addStr.length - 1, 1 ) == ",")
-				{
-					addStr = "";
-				}
-				
-				return addStr;
+				*/
 			}
 			
 			public function get searchText():String
 			{
-				if (_isMultiSelect)
-				{
-					var text:String = promptTextInput.text;
-					var pos:int = text.lastIndexOf( "," );
-					
-					if (pos == -1)
-					{
-						return text;
-					}
-					else
-					{
-						return text.substring( pos + 2, text.length );
-					}
-				}
-				else
-				{
-					return promptTextInput.text;
-				}
+				return textInput.text;
 			}
 			
 			public function filterData():void
@@ -508,6 +413,7 @@
 				_dataProvider.refresh();
 			}
 			
+			/*
 			private function handleFocusIn():void
 			{
 				if (isItemSelected)
@@ -519,6 +425,7 @@
 					promptTextInput.setTextSelected( true );					
 				}
 			}
+			*/
 			
 			private function showDropDown():void
 			{
@@ -527,7 +434,7 @@
 					createDropDown();
 				}
 				
-				_dropDown.width = promptTextInput.width;
+				_dropDown.width = width;
 				_dropDown.owner = this;
 				_dropDown.scrollToIndex(0);
 				
@@ -541,8 +448,8 @@
 					return;
 				}
 				
-				var localPoint:Point = new Point( 0, promptTextInput.height );
-				var globalPoint:Point = promptTextInput.localToGlobal( localPoint );
+				var localPoint:Point = new Point( 0, height );
+				var globalPoint:Point = localToGlobal( localPoint );
 								
 				_dropDown.x = globalPoint.x;
 				
@@ -553,10 +460,11 @@
 				}
 				else
 				{
-					_dropDown.y = globalPoint.y - promptTextInput.height - dropDown.height;
-				}	
+					_dropDown.y = globalPoint.y - height - dropDown.height;
+				}				
 			}
 			
+			/*
 			private function handleFocusOut( event:FocusEvent ):void
 			{			
 				if (isDropDownVisible())
@@ -567,6 +475,7 @@
 					}
 				}
 			}
+			*/
 			
 			private function hideDropDown():void
 			{
@@ -608,7 +517,7 @@
 			
 			private function filterFunctionWrapper( item:Object ):Boolean
 			{
-				return _filterFunction( item, searchText );
+				return _filterFunction( item, _searchStr );
 			}
 			
 			public function set isEqualFunction( value:Function ):void
@@ -631,27 +540,45 @@
 			
 			public function set text( value:String ):void
 			{
-				promptTextInput.text = value;
+				//promptTextInput.text = value;
 			}
 			
 			public function get text():String
 			{
-				return promptTextInput.text;	
+				return "";
+				//return promptTextInput.text;	
 			}
 			
 			public function set htmlText( value:String ):void
 			{
-				promptTextInput.htmlText = value;
+				//promptTextInput.htmlText = value;
 			}
 			
 			public function get htmlText():String
 			{
-				return promptTextInput.htmlText;	
+				return "";
+				//return promptTextInput.htmlText;	
 			}
 			
 			public function isDropDownVisible():Boolean
 			{
 				return _dropDown && _dropDown.parent;
+			}
+			
+			public function set prompt( value:String ):void
+			{
+				_prompt = value;
+				_promptChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			public function set enableClearIcon( value:Boolean ):void
+			{
+				_enableClearIcon = value;
+				_enableClearIconChanged = true;
+				
+				invalidateProperties();
 			}
 			
 			public function get selectedItem():Object
@@ -661,25 +588,19 @@
 			
 			public function get isItemSelected():Boolean
 			{
-				if (_isMultiSelect)
-				{
-					return _selectedItems.length > 0;
-				}
-				else
-				{
-					return _selectedItem != null;
-				}
+				return _selectedItems.length > 0;
 			}
 			
 			override public function setFocus():void
 			{
-				promptTextInput.setFocus();
+				textInput.setFocus();
 			}
 			
 		]]>
 	</mx:Script>
 	
-	<components:PromptTextInput id="promptTextInput" width="100%" minWidth="100" 
-		change="handleChange(event)" focusIn="handleFocusIn()" focusOut="handleFocusOut(event)"/>
+	<mx:ToolBar id="toolBar" horizontalGap="0" verticalGap="0" width="100%" paddingTop="0" x="2" y="3">
+		<components:PromptTextInput id="textInput" width="{ toolBar.width }" change="handleChange(event)"/>		
+	</mx:ToolBar>
 	 
 </mx:Canvas>

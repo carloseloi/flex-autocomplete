@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas
-	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:mx="http://www.adobe.com/2006/mxml"	
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	implements="com.hillelcoren.components.choosers.interfaces.iComboItem"
+	height="{ textInput.height }"
 	initialize="init()">
 	
 	<mx:Metadata>
@@ -118,6 +121,11 @@
 				{
 					return textInput.htmlText;
 				}
+			}
+			
+			public function get selectionBeginIndex():int
+			{
+				return textInput.selectionBeginIndex;
 			}
 			
 			public function set text( value:String ):void
@@ -269,11 +277,17 @@
 			override public function setFocus():void
 			{
 				textInput.setFocus();
-			}			
+			}	
+			
+			public function setTextFocus():void
+			{
+				setFocus();
+			}		
 					
 		]]>
 	</mx:Script>
 	
-	<mx:TextInput id="textInput" width="100%" paddingRight="20"/>
+	<mx:TextInput id="textInput" width="100%" paddingRight="20" borderStyle="none" 
+		focusThickness="0"/>
 	
 </mx:Canvas>
