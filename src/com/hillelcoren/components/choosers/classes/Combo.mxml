@@ -214,12 +214,24 @@
 							comboItem.setTextFocus();
 						}
 					}
+					else if (event.keyCode == Keyboard.ENTER)
+					{
+						if (comp.isEditable())
+						{
+							setSelectedItem( comp.text, false, true );
+						}
+					}
 				}
 				
 				// check for the comma key	
 				if (event.charCode == 44)
 				{
-					setSelectedItem( textInput.text, false, true );								
+					var input:iComboItem = determineFocus();
+					
+					if (input.isEditable())
+					{
+						setSelectedItem( input.text, false, true );
+					}								
 				}
 			}
 						
@@ -238,10 +250,26 @@
 				return null;
 			}
 			
+			private function cleanStr( value:String ):String
+			{
+				value = StringUtil.trim( value );
+					
+				if (value.charAt( value.length - 1 ) == ",")
+				{
+					value = value.substr( 0, value.length - 1 );
+				}
+					
+				return value;
+			}
+			
 			public function setSelectedItem( value:Object, isSilent:Boolean = false, isNew:Boolean = false ):void
 			{
-				//dispatchEvent( new Event( COMBO_ITEM_SELECTED ) );
+				if (isNew)
+				{
+					value = cleanStr( value as String );
+				}
 				
+				//dispatchEvent( new Event( COMBO_ITEM_SELECTED ) );
 				if (_selectedItems.getItemIndex( value ) == -1 && value)
 				{
 					_selectedItems.addItem( value );
@@ -265,8 +293,16 @@
 						selectedItem.item = value;
 						selectedItem.addEventListener( FlexEvent.CREATION_COMPLETE, sizeTextInput );
 						toolBar.addChildAt( selectedItem, toolBar.numChildren - 1 );
-					}
+					}					
+				}
+				// this means the user entered a comma after a value which has already
+				// been added, in this case we just need to readd the comma
+				else if (_selectedItems.getItemIndex( value ) >= 0 && isNew)
+				{
+					var index:int = _selectedItems.getItemIndex( value );
+					var input:ComboTextInput = toolBar.getChildAt( index ) as ComboTextInput;
 					
+					input.text = cleanStr( input.text ) + ",";													
 				}
 				
 				updateComoText();
@@ -292,10 +328,13 @@
 				var comboTextInput:ComboTextInput = event.currentTarget as ComboTextInput;
 				var index:int = _selectedItems.getItemIndex( comboTextInput.item );
 				
-				if (comboTextInput.text.length > 0)
+				var text:String = comboTextInput.text;
+				text = StringUtil.trim( text );
+				
+				if (text.length > 0)
 				{
-					_selectedItems.setItemAt( comboTextInput.text, index );
-					comboTextInput.item = comboTextInput.text;
+					_selectedItems.setItemAt( text, index );
+					comboTextInput.item = text;
 				}
 				else
 				{

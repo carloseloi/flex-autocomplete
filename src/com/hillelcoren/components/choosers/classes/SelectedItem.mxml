@@ -176,7 +176,15 @@
 				return true;
 			}
 			
+			public function isEditable():Boolean
+			{
+				return false;
+			}			
 			
+			public function get text():String
+			{
+				return label;
+			}
 					
 		]]>
 	</mx:Script>
