@@ -294,7 +294,10 @@
 				return selectionBeginIndex == text.length;
 			}
 
-					
+			public function isEditable():Boolean
+			{
+				return true;
+			}					
 		]]>
 	</mx:Script>
 	

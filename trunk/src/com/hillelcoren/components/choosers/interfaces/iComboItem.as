@@ -7,6 +7,8 @@ package com.hillelcoren.components.choosers.interfaces
 		function setTextFocus():void
 		function contains( x:DisplayObject ):Boolean
 		function isCursorAtBeginning():Boolean
-		function isCursorAtEnd():Boolean;		
+		function isCursorAtEnd():Boolean;
+		function isEditable():Boolean;
+		function get text():String;		
 	}
 }
