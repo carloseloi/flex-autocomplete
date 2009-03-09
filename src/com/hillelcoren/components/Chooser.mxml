@@ -14,6 +14,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.hillelcoren.components.choosers.interfaces.IBrowser;
 			import mx.events.MoveEvent;
 			import mx.utils.StringUtil;
 			import mx.controls.TextInput;
@@ -177,7 +178,7 @@
 				if (_promptChanged)
 				{
 					_promptChanged = false;				
-					combo.promptTextInput.prompt = _prompt;
+					combo.prompt = _prompt;
 				}
 				
 				if (_isBrowseableChanged)
@@ -306,7 +307,7 @@
 			
             public function set listData( value:BaseListData ):void
             {
-            	combo.promptTextInput.enableClearIcon = false;
+            	combo.enableClearIcon = false;
             	
             	_listData = DataGridListData( value );            	
             } 
@@ -435,15 +436,12 @@
 			
 			private function handleComboItemSelected( event:Event ):void
 			{
-				if (isMultiSelect && _multiSelectLayout == LAYOUT_VERTICAL)
+				/*
+				if (combo.selectedItem && !isItemSelected( combo.selectedItem ))
 				{
-					if (combo.selectedItem && !isItemSelected( combo.selectedItem ))
-					{
-						_selectedItems.addItemAt( combo.selectedItem, 0 );
-					}
-					
-					combo.setSelectedItem( null, true );					
+					_selectedItems.addItemAt( combo.selectedItem, 0 );
 				}
+				*/
 				
 				dispatchEvent( new Event( Event.CHANGE ) );
 			}
@@ -606,27 +604,20 @@
 			[Bindable(event="change")]
 			public function get selectedItem():*
 			{
-				if (_isMultiSelect)
+				if (_selectedItems.length > 0)
 				{
-					if (_selectedItems.length > 0)
+					if (_multiSelectLayout == LAYOUT_VERTICAL)
 					{
-						if (_multiSelectLayout == LAYOUT_VERTICAL)
-						{
-							return _selectedItems.getItemAt( 0 );
-						}
-						else
-						{
-							return _selectedItems.getItemAt( _selectedItems.length - 1 );
-						}
+						return _selectedItems.getItemAt( 0 );
 					}
-					else
+					else	
 					{
-						return null;
+						return _selectedItems.getItemAt( _selectedItems.length - 1 );
 					}
 				}
 				else
 				{
-					return combo.selectedItem;
+					return null;
 				}
 			}
 			
@@ -758,7 +749,7 @@
 				str = label.substring(0, start);
 				str = str + "<b><u>" + label.substr(start, searchStr.length) + "</u></b>";
 				str = str + label.substr(start + searchStr.length, label.length);
-
+				
 				if (isItemSelected( item ))
     			{
     				str = "<font color='" + Consts.COLOR_TEXT_DISABLED + "'>" + str + "</font>";

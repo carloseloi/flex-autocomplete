@@ -1,4 +1,4 @@
-package com.hillelcoren.components.choosers.classes
+package com.hillelcoren.components.choosers.interfaces
 {
 	import flash.events.IEventDispatcher;
 	
