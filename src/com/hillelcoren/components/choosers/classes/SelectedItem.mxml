@@ -165,7 +165,19 @@
 			{
 				leftTextInput.setFocus();
 			}
-									
+			
+			public function isCursorAtBeginning():Boolean
+			{
+				return true;
+			}
+			
+			public function isCursorAtEnd():Boolean
+			{
+				return true;
+			}
+			
+			
+					
 		]]>
 	</mx:Script>
 	

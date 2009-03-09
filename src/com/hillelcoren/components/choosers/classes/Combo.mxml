@@ -14,6 +14,9 @@
 		
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.Text;
+			import mx.controls.TextArea;
+			import com.hillelcoren.utils.KeyboardUtil;
 			import com.hillelcoren.components.choosers.interfaces.iComboItem;
 			import mx.core.UITextField;
 			import com.hillelcoren.components.PromptTextInput;
@@ -125,6 +128,8 @@
 					{
 						hideDropDown();
 					}
+					// charCode 44 is a comma
+					//else if (event.keyCode == Keyboard.ENTER || event.charCode == 44)
 					else if (event.keyCode == Keyboard.ENTER)
 					{
 						setSelectedItem( _dropDown.selectedItem );						
@@ -132,9 +137,9 @@
 				}
 				else
 				{
-					var comp:UIComponent = determineFocus();
-					var selectedItem:SelectedItem;
-					var index:int = toolBar.getChildIndex( comp );
+					var comp:iComboItem = determineFocus();
+					var comboItem:iComboItem;
+					var index:int = toolBar.getChildIndex( comp as DisplayObject );
 				
 					if (event.keyCode == Keyboard.BACKSPACE)
 					{
@@ -143,7 +148,7 @@
 							return;
 						}
 						
-						if (textInput.selectionBeginIndex != 0)
+						if (!comp.isCursorAtBeginning())
 						{
 							return;
 						}
@@ -152,67 +157,90 @@
 						
 						if (focused is SelectedItem)
 						{
-							selectedItem = focused as SelectedItem;
+							var selectedItem:SelectedItem = focused as SelectedItem;
 							index = _selectedItems.getItemIndex( selectedItem.item );
 							_selectedItems.removeItemAt( index );
 							
 							toolBar.removeChild( focused );
 							updateComoText();
 							
-							var comboItem:iComboItem = toolBar.getChildAt( index ) as iComboItem;
+							comboItem = toolBar.getChildAt( index ) as iComboItem;
 							comboItem.setTextFocus();							
 						}
 						else
 						{
-							selectedItem = toolBar.getChildAt( index - 1 ) as SelectedItem;
-							selectedItem.setFocus();
+							if (index == 0)
+							{
+								return;
+							}
+							
+							var prevItem:UIComponent = toolBar.getChildAt( index - 1 ) as UIComponent;
+							prevItem.setFocus();
+							
+							if (prevItem is ComboTextInput)
+							{
+								ComboTextInput( prevItem ).setSelectionEnd();
+							}
 						}						
 					}
 					else if (event.keyCode == Keyboard.LEFT)
 					{
-						if (textInput.selectionBeginIndex != 0)
-						{
-							return;
-						}
-						
 						if (index > 0)
 						{
-							var prevItem:iComboItem = toolBar.getChildAt( index - 1 ) as iComboItem;
-							prevItem.setTextFocus();
+							if (!comp.isCursorAtBeginning())
+							{
+								return;
+							}
+						
+							comboItem = toolBar.getChildAt( index - 1 ) as iComboItem;
+							comboItem.setTextFocus();
+							
+							if (comboItem is ComboTextInput)
+							{
+								ComboTextInput( comboItem ).setSelectionEnd();
+							}
 						}					
 					}
 					else if (event.keyCode == Keyboard.RIGHT)
 					{
 						if (index < toolBar.numChildren - 1)
 						{
-							var nextItem:iComboItem = toolBar.getChildAt( index + 1 ) as iComboItem;
-							nextItem.setTextFocus();
+							if (!comp.isCursorAtEnd())
+							{
+								return;
+							}							
+							
+							comboItem = toolBar.getChildAt( index + 1 ) as iComboItem;
+							comboItem.setTextFocus();
 						}
 					}
 				}
+				
+				// check for the comma key	
+				if (event.charCode == 44)
+				{
+					setSelectedItem( textInput.text, false, true );								
+				}
 			}
 						
-			private function determineFocus():UIComponent
+			private function determineFocus():iComboItem
 			{
 				var comp:UIComponent = focusManager.getFocus() as UIComponent;
 				
-				for each (var item:UIComponent in toolBar.getChildren())
+				for each (var item:iComboItem in toolBar.getChildren())
 				{
 					if (item.contains( comp ))
 					{
 						return item;
-					}
+					}	
 				}
 				
 				return null;
 			}
 			
-			public function setSelectedItem( value:Object, isSilent:Boolean = false ):void
+			public function setSelectedItem( value:Object, isSilent:Boolean = false, isNew:Boolean = false ):void
 			{
 				//dispatchEvent( new Event( COMBO_ITEM_SELECTED ) );
-				
-				updateComoText();
-				textInput.setFocus();
 				
 				if (_selectedItems.getItemIndex( value ) == -1 && value)
 				{
@@ -220,12 +248,29 @@
 					
 					textInput.width = 0;
 					
-					var selectedItem:SelectedItem = new SelectedItem();
-					selectedItem.label = _labelFunction( value );
-					selectedItem.item = value;
-					selectedItem.addEventListener( FlexEvent.CREATION_COMPLETE, handleSelectedItemCreationComplete );
-					toolBar.addChildAt( selectedItem, toolBar.numChildren - 1 );
+					if (isNew)
+					{
+						var comboTextInput:ComboTextInput = new ComboTextInput();
+						comboTextInput.text = value + ",";
+						comboTextInput.width = measureText( value as String ).width + 10;
+						comboTextInput.height = textInput.height;
+						comboTextInput.item = value;
+						comboTextInput.addEventListener( Event.CHANGE, handleComboItemChange );
+						toolBar.addChildAt( comboTextInput, toolBar.numChildren - 1 );												
+					}
+					else
+					{
+						var selectedItem:SelectedItem = new SelectedItem();
+						selectedItem.label = _labelFunction( value );
+						selectedItem.item = value;
+						selectedItem.addEventListener( FlexEvent.CREATION_COMPLETE, sizeTextInput );
+						toolBar.addChildAt( selectedItem, toolBar.numChildren - 1 );
+					}
+					
 				}
+				
+				updateComoText();
+				textInput.setFocus();
 				
 				if (!isSilent)
 				{
@@ -242,23 +287,45 @@
 				}					
 			}
 			
-			public function updateComoText( addStr:String = "" ):void
+			private function handleComboItemChange( event:Event ):void
+			{
+				var comboTextInput:ComboTextInput = event.currentTarget as ComboTextInput;
+				var index:int = _selectedItems.getItemIndex( comboTextInput.item );
+				
+				if (comboTextInput.text.length > 0)
+				{
+					_selectedItems.setItemAt( comboTextInput.text, index );
+					comboTextInput.item = comboTextInput.text;
+				}
+				else
+				{
+					_selectedItems.removeItemAt( index );
+					toolBar.removeChild( comboTextInput );
+					
+					var comboItem:iComboItem = toolBar.getChildAt( index ) as iComboItem;
+					comboItem.setTextFocus();
+				}
+			}
+			
+			public function updateComoText():void
+			{
+				callLater( _updateComoText );
+			}
+			
+			private function _updateComoText():void
 			{
 				textInput.text = "";
-				sizeTextInput();
+				textInput.validateNow();
+				
+				sizeTextInput();				
 			}
 			
-			private function handleSelectedItemCreationComplete( event:Event ):void
-			{
-				sizeTextInput();
-			}
-			
-			private function sizeTextInput():void
+			private function sizeTextInput( event:Event = null ):void
 			{
 				if (_selectedItems.length > 0)
 				{
-					var selectedItem:SelectedItem = toolBar.getChildAt( toolBar.numChildren - 2 ) as SelectedItem;
-					textInput.width = toolBar.width - (selectedItem.x + selectedItem.width);  
+					var comboItem:UIComponent = toolBar.getChildAt( toolBar.numChildren - 2 ) as UIComponent;
+					textInput.width = toolBar.width - (comboItem.x + comboItem.width);  
 				}				
 				else
 				{
@@ -600,7 +667,7 @@
 	</mx:Script>
 	
 	<mx:ToolBar id="toolBar" horizontalGap="0" verticalGap="0" width="100%" paddingTop="0" x="2" y="3">
-		<components:PromptTextInput id="textInput" width="{ toolBar.width }" change="handleChange(event)"/>		
+		<components:PromptTextInput id="textInput" width="{ toolBar.width }" change="handleChange(event)" borderStyle="solid" move="sizeTextInput()"/>		
 	</mx:ToolBar>
 	 
 </mx:Canvas>
