@@ -2,7 +2,7 @@
 <mx:Canvas
 	xmlns:mx="http://www.adobe.com/2006/mxml"	
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
-	implements="com.hillelcoren.components.choosers.interfaces.iComboItem"
+	implements="com.hillelcoren.components.autoComplete.interfaces.iComboItem"
 	height="{ textInput.height }"
 	initialize="init()">
 	

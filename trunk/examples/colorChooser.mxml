@@ -165,9 +165,9 @@
 				] );
 			}			
 			
-			private function handleChooserChange():void
+			private function handleChange():void
 			{
-				var color:Object = chooser.selectedItem;
+				var color:Object = autocomplete.selectedItem;
 
 				if (color != null)
 				{
@@ -177,17 +177,17 @@
 			
 			private function handleMatchTypeComboChange():void
 			{
-				chooser.matchType = matchTypeCombo.selectedItem.data;
+				autocomplete.matchType = matchTypeCombo.selectedItem.data;
 			}
 			
 			private function handleLayoutComboChange():void
     		{
-    			chooser.multiSelectLayout = multiSelectLayout.selectedItem.data;
+    			autocomplete.multiSelectLayout = multiSelectLayout.selectedItem.data;
     		}
 		]]>
 	</mx:Script>
 
-	<mx:Panel width="550" height="400" title="Color Chooser Demo"
+	<mx:Panel width="550" height="400" title="Color Demo"
 			paddingBottom="20" paddingTop="20" paddingLeft="20" paddingRight="20">
 		<mx:HBox>		
 
@@ -195,21 +195,21 @@
 				<mx:CheckBox id="browesable" label="Browesable"/>
 				<mx:CheckBox id="multiselect" label="Multiselect"/>
 				<mx:ComboBox id="multiSelectLayout" change="handleLayoutComboChange()" enabled="{ multiselect.selected }">					
-					<mx:Object label="Horizontal" data="{ Chooser.LAYOUT_HORIZONTAL }"/>
-					<mx:Object label="Vertical" data="{ Chooser.LAYOUT_VERTICAL }"/>										
+					<mx:Object label="Horizontal" data="{ AutoComplete.LAYOUT_HORIZONTAL }"/>
+					<mx:Object label="Vertical" data="{ AutoComplete.LAYOUT_VERTICAL }"/>										
 				</mx:ComboBox>
 				<mx:CheckBox id="orderable" label="Orderable" enabled="{ multiselect.selected }"/>
 				<mx:CheckBox id="listBuilder" label="List Builder" enabled="{ browesable.selected &amp;&amp; multiselect.selected }"/>
 				<mx:ComboBox id="matchTypeCombo" change="handleMatchTypeComboChange()">
-					<mx:Object label="Match Any Part" data="{ Chooser.MATCH_ANY_PART }"/>
-					<mx:Object label="Match Beginning" data="{ Chooser.MATCH_BEGINNING }"/>
-					<mx:Object label="Match Word" data="{ Chooser.MATCH_WORD }"/>					
+					<mx:Object label="Match Any Part" data="{ AutoComplete.MATCH_ANY_PART }"/>
+					<mx:Object label="Match Beginning" data="{ AutoComplete.MATCH_BEGINNING }"/>
+					<mx:Object label="Match Word" data="{ AutoComplete.MATCH_WORD }"/>					
 				</mx:ComboBox>											
 			</mx:VBox>		
 			
 			<mx:VBox>
-				<hc:Chooser id="chooser" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
-					prompt="Choose your favorite Crayola crayon" width="320" change="handleChooserChange()"
+				<hc:AutoComplete id="autocomplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
+					prompt="Choose your favorite Crayola crayon" width="320" change="handleChange()"
 					isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }"
 					isOrderable="{ orderable.selected }" useListBuilder="{ listBuilder.selected }"
 					multiSelectLayout="horizontal"/>					

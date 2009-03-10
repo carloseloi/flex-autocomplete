@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Box
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:hc="com.hillelcoren.components.choosers.classes.*"
+	xmlns:hc="com.hillelcoren.components.autoComplete.classes.*"
 	clipContent="false"
 	width="100%"
 	initialize="init()"
@@ -15,14 +15,14 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.hillelcoren.components.choosers.interfaces.IBrowser;
+			import com.hillelcoren.components.autoComplete.interfaces.IBrowser;
 			import mx.events.MoveEvent;
 			import mx.utils.StringUtil;
 			import mx.controls.TextInput;
 			import flash.utils.getQualifiedClassName;
 			import mx.controls.listClasses.BaseListData;
 			import mx.controls.dataGridClasses.DataGridListData;
-			import com.hillelcoren.components.choosers.classes.*;
+			import com.hillelcoren.components.autoComplete.classes.*;
 			import com.hillelcoren.utils.StringUtils;
 			import mx.controls.Button;
 			import mx.core.IFlexDisplayObject;
@@ -58,6 +58,12 @@
 			
 			private var _allowNewValues:Boolean;
 			private var _allowNewValuesChanged:Boolean;
+			
+			private var _style:String;
+			private var _styleChanged:Boolean;
+			
+			private var _enableItemClearIcon:Boolean;
+			private var _enableItemClearIconChanged:Boolean;
 			
 			private var _browser:IBrowser;
 			private var _useListBuilder:Boolean;
@@ -107,6 +113,11 @@
 			private var _listData:DataGridListData;
 			
 			public static const BROWSER_ITEM_SELECTED:String = "BROWSER_ITEM_SELECTED";
+			
+			public static const STYLE_NONE:String 		= "none";
+			public static const STYLE_UNDERLINE:String 	= "underline";
+			public static const STYLE_OSX:String 		= "osx";
+			public static const STYLE_FACEBOOK:String 	= "facebook";
 			
 			public static const MATCH_BEGINNING:String 	= "beginning";
 			public static const MATCH_WORD:String		= "word";
@@ -203,6 +214,18 @@
 					combo.allowNewValues = _allowNewValues;
 				}
 				
+				if (_styleChanged)
+				{
+					_styleChanged = false;
+					combo.style = _style;
+				}
+				
+				if (_enableItemClearIconChanged)
+				{
+					_enableItemClearIconChanged = false;
+					combo.enableItemClearIcon = _enableItemClearIcon;
+				}
+				
 				if (_isMultiSelectChanged || _multiSelectLayoutChanged)
 				{
 					if (_isMultiSelectChanged)
@@ -223,22 +246,19 @@
 				
 				if (_dropDownLabelFunctionChanged)
 				{
-					_dropDownLabelFunctionChanged = false;
-					
+					_dropDownLabelFunctionChanged = false;					
 					combo.dropDownLabelFunction = _dropDownLabelFunction;
 				}
 				
 				if (_labelFunctionChanged)
 				{
-					_labelFunctionChanged = false;
-					
+					_labelFunctionChanged = false;				
 					combo.labelFunction = labelFunction;
 				}
 				
 				if (_filterFunctionChanged)
 				{
-					_filterFunctionChanged = false;
-					
+					_filterFunctionChanged = false;					
 					combo.filterFunction = _filterFunction;
 				}
 				
@@ -417,7 +437,7 @@
 				_browser.filterFunction = _filterFunction;
 				_browser.title = "Browse";
 				_browser.labelFunction = _labelFunction;
-				_browser.addEventListener( Chooser.BROWSER_ITEM_SELECTED, handleBrowserItemSelected );
+				_browser.addEventListener( AutoComplete.BROWSER_ITEM_SELECTED, handleBrowserItemSelected );
 				
 				if (_isMultiSelect || useListBuilder)
 				{
@@ -676,6 +696,22 @@
 			{
 				_prompt = value;
 				_promptChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			public function set style( value:String ):void
+			{
+				_style = value;
+				_styleChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			public function set enableItemClearIcon( value:Boolean ):void
+			{
+				_enableItemClearIcon = value;
+				_enableItemClearIconChanged = true;
 				
 				invalidateProperties();
 			}

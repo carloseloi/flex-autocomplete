@@ -2,9 +2,9 @@
 <hc:CloseableTitleWindow
 	xmlns:hc="com.hillelcoren.components.*"
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	implements="com.hillelcoren.components.choosers.interfaces.IBrowser"
+	implements="com.hillelcoren.components.autoComplete.interfaces.IBrowser"
 	layout="absolute" width="500" height="350" 
-	showCloseButton="false" xmlns:classes="com.hillelcoren.components.choosers.classes.*">
+	showCloseButton="false" xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
 	
 	<mx:Metadata>
 		[Event("BROWSER_ITEM_SELECTED")]
@@ -12,7 +12,7 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.hillelcoren.components.Chooser;
+			import com.hillelcoren.components.AutoComplete;
 			import com.hillelcoren.utils.StringUtils;
 			import mx.utils.ObjectUtil;
 			import mx.controls.dataGridClasses.DataGridColumn;
@@ -56,14 +56,14 @@
 			
 			private function handleDoubleClick( event:ListEvent ):void
 			{
-				dispatchEvent( new Event( Chooser.BROWSER_ITEM_SELECTED ) );
+				dispatchEvent( new Event( AutoComplete.BROWSER_ITEM_SELECTED ) );
 			}
 			
 			private function handleKeyDown( event:KeyboardEvent ):void
 			{
 				if (dataGrid.selectedIndex > -1 && event.keyCode == Keyboard.ENTER)
 				{
-					dispatchEvent( new Event( Chooser.BROWSER_ITEM_SELECTED ) );
+					dispatchEvent( new Event( AutoComplete.BROWSER_ITEM_SELECTED ) );
 				}
 			}
 			
@@ -74,7 +74,7 @@
 			
 			private function handleSelectClick():void
 			{
-				dispatchEvent( new Event( Chooser.BROWSER_ITEM_SELECTED ) );
+				dispatchEvent( new Event( AutoComplete.BROWSER_ITEM_SELECTED ) );
 			}
 			
 			public function set originalSelectedItems( value:ArrayCollection ):void

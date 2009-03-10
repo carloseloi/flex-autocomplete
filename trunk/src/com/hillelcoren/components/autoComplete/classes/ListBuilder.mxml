@@ -2,7 +2,7 @@
 <hc:CloseableTitleWindow
 	xmlns:hc="com.hillelcoren.components.*"
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	implements="com.hillelcoren.components.choosers.interfaces.IBrowser"
+	implements="com.hillelcoren.components.autoComplete.interfaces.IBrowser"
 	layout="absolute" width="450" height="350" 
 	showCloseButton="false">
 	
@@ -21,7 +21,7 @@
 			import mx.collections.IList;
 			import mx.events.DragEvent;
 			import mx.collections.ArrayCollection;
-			import com.hillelcoren.components.Chooser;
+			import com.hillelcoren.components.AutoComplete;
 			
 			[Bindable]
 			private var _dataProvider:ArrayCollection;
@@ -139,7 +139,7 @@
 			
 			private function handleOkClick():void
 			{
-				var event:Event = new Event( Chooser.BROWSER_ITEM_SELECTED );
+				var event:Event = new Event( AutoComplete.BROWSER_ITEM_SELECTED );
 				dispatchEvent( event );
 			}
 			

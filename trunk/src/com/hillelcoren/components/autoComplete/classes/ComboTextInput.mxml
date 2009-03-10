@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TextArea 
-	implements="com.hillelcoren.components.choosers.interfaces.iComboItem"
+	implements="com.hillelcoren.components.autoComplete.interfaces.iComboItem"
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	initialize="init()"
 	borderStyle="none" focusThickness="0">

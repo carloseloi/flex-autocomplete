@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	implements="mx.managers.IFocusManagerComponent,com.hillelcoren.components.autoComplete.interfaces.iComboItem" y="2"
+	verticalGap="0" horizontalGap="0" verticalAlign="middle"
+	creationComplete="init()">
+	
+	<mx:Metadata>
+		[Event(name="change")]	
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.hillelcoren.components.AutoComplete;
+			import mx.events.FlexEvent;
+			import mx.controls.Label;
+			import mx.core.UIComponent;
+			import mx.controls.TextInput;
+			
+			private static const COLOR_OSX_NORMAL:uint 		= 0xDEE7FB;
+			private static const COLOR_OSX_BORDER:uint 		= 0xA4BDEC;
+			private static const COLOR_OSX_OVER:uint 		= 0xBBCEF1;
+			private static const COLOR_OSX_SELECTED:uint 	= 0x598BEC;
+			
+			private static const COLOR_FACEBOOK_NORMAL:uint 	= 0xEFF2F7;
+			private static const COLOR_FACEBOOK_BORDER:uint 	= 0xCCD5E4;
+			private static const COLOR_FACEBOOK_OVER:uint 		= 0xD8DFEA;
+			private static const COLOR_FACEBOOK_SELECTED:uint 	= 0x5670A6;
+			private static const COLOR_FACEBOOK_SELECTED_BORDER:uint = 0x3B5998;
+			
+			private var _style:String = AutoComplete.STYLE_OSX;
+			private var _styleChanged:Boolean = true;
+			
+			private var _shape:UIComponent;
+			private var _item:Object;
+			private var _text:String;
+			private var _isMouseOver:Boolean;		
+			
+			[Bindable]			
+			private var _enableClearIcon:Boolean = true;
+			
+			override protected function commitProperties():void
+			{
+				super.commitProperties();
+				
+				if (_styleChanged)
+				{
+					_styleChanged = false;
+					
+					redraw();
+				}
+			}
+			
+			public function set style( value:String ):void
+			{
+				_style = value;
+				_styleChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			private function redraw():void
+			{
+				var label:String;
+				var padding:uint;
+				
+				if (_style == AutoComplete.STYLE_UNDERLINE)
+				{
+					label = "<u>" + _text + "</u>"; 
+				}
+				else
+				{
+					label = _text;
+				}
+				
+				if (_style == AutoComplete.STYLE_UNDERLINE || _style == AutoComplete.STYLE_NONE)
+				{
+					label += ",";
+					padding = 0;					
+				}
+				else
+				{
+					padding = _style == AutoComplete.STYLE_OSX ? 10 : 4;
+					
+					if (focusManager && focusManager.getFocus() == this)
+					{
+						itemLabel.setStyle( "color", 0xFFFFFF );
+					}
+					else
+					{
+						itemLabel.clearStyle( "color" );
+					}
+				}
+				
+				itemLabel.htmlText = label;
+				itemLabel.setStyle( "paddingLeft", padding );
+				rightSpacer.width = padding;
+				
+				redrawShape();
+			}
+				
+			private function redrawShape():void
+			{
+				if (!_shape)
+				{
+					return;
+				}
+				
+				_shape.graphics.clear();
+					
+				if (_style == AutoComplete.STYLE_OSX || _style == AutoComplete.STYLE_FACEBOOK)
+				{
+					var width:uint = itemLabel.width + rightSpacer.width;
+					var height:uint = itemLabel.height;
+					
+					if (_enableClearIcon)
+					{
+						width += clearIcon.width;
+					}
+					
+					
+					var color:uint;
+					var border:uint;
+					
+					if (focusManager && focusManager.getFocus() == this)
+					{
+						color = _style == AutoComplete.STYLE_OSX ? COLOR_OSX_SELECTED : COLOR_FACEBOOK_SELECTED;
+						border = _style == AutoComplete.STYLE_OSX ? COLOR_OSX_SELECTED : COLOR_FACEBOOK_SELECTED_BORDER;
+					}
+					else if (_isMouseOver)
+					{
+						color = _style == AutoComplete.STYLE_OSX ? COLOR_OSX_OVER : COLOR_FACEBOOK_OVER;
+						border = _style == AutoComplete.STYLE_OSX ? COLOR_OSX_BORDER : COLOR_FACEBOOK_BORDER;
+					}
+					else
+					{
+						color = _style == AutoComplete.STYLE_OSX ? COLOR_OSX_NORMAL : COLOR_FACEBOOK_NORMAL;
+						border = _style == AutoComplete.STYLE_OSX ? COLOR_OSX_BORDER : COLOR_FACEBOOK_BORDER;
+					}
+					
+					var radius:uint = _style == AutoComplete.STYLE_OSX ? 20 : 10;
+					var x:int = itemLabel.x;
+					var y:int = -itemLabel.height / 2;
+					
+					_shape.graphics.beginFill( color );
+					_shape.graphics.lineStyle( 1, border );
+					_shape.graphics.drawRoundRect( x, y, width, height, radius );
+					_shape.graphics.endFill();
+				}
+			}
+			
+			private function init():void
+			{
+				_shape = new UIComponent();
+				_shape.focusEnabled = true;
+					
+				itemLabel.addEventListener( MouseEvent.MOUSE_OVER, handleMouseOver );
+				itemLabel.addEventListener( MouseEvent.MOUSE_OUT, handleMouseOut );
+				itemLabel.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseDown );
+					
+				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );
+				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );			
+								
+				addChildAt( _shape, 0 );
+				redrawShape();								
+			}
+			
+			private function handleMouseOver( event:Event ):void
+			{
+				_isMouseOver = true;
+				redraw();	
+			}
+			
+			private function handleMouseOut( event:Event ):void
+			{
+				_isMouseOver = false;
+				redraw();	
+			}
+			
+			private function handleMouseDown( event:Event ):void
+			{
+				_shape.setFocus();
+			}
+			
+			private function handleFocusIn( event:Event ):void
+			{
+				drawFocus( false );
+				redraw();				
+			}
+			
+			private function handleFocusOut( event:Event ):void
+			{
+				redraw();
+			}
+			
+			private function handleTextChange( event:Event ):void
+			{
+				dispatchEvent( event );
+			}
+			
+			public function set item( value:Object ):void
+			{
+				_item = value;				
+			}
+			
+			public function get item():Object
+			{
+				return _item;
+			}
+			
+			public function get newText():String
+			{
+				if (leftTextInput.text)
+				{
+					return leftTextInput.text;
+				}
+				else
+				{
+					return rightTextInput.text;
+				}
+			}
+			
+			public function set newText( value:String ):void
+			{
+				leftTextInput.text = "";
+				rightTextInput.text = "";
+			}
+			
+			public function setTextFocus():void
+			{
+				leftTextInput.setFocus();
+			}
+			
+			public function isCursorAtBeginning():Boolean
+			{
+				return true;
+			}
+			
+			public function isCursorAtEnd():Boolean
+			{
+				return true;
+			}
+			
+			public function isEditable():Boolean
+			{
+				return false;
+			}			
+			
+			public function set text( value:String ):void
+			{
+				_text = value;
+			}
+			
+			public function get text():String
+			{
+				return _text;
+			}
+					
+			public function set enableClearIcon( value:Boolean ):void
+			{
+				_enableClearIcon = value;
+			}
+			
+
+		]]>
+	</mx:Script>
+	
+	
+	<mx:TextInput id="leftTextInput" width="5" borderStyle="none" 
+		focusThickness="0" change="handleTextChange(event)"/>
+	<mx:Label id="itemLabel" updateComplete="redrawShape()"/>
+	<mx:Image id="clearIcon" source="@Embed('/com/hillelcoren/assets/smallClear.png')" 
+		visible="{ _enableClearIcon }" includeInLayout="{ _enableClearIcon }"/>
+	<mx:Spacer id="rightSpacer"/>
+	<mx:TextInput id="rightTextInput" width="5" borderStyle="none" 
+		focusThickness="0" change="handleTextChange(event)" visible="false" includeInLayout="false"/>		
+	
+</mx:HBox>

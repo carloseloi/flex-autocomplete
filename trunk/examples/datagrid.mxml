@@ -49,8 +49,8 @@
 		]]>
 	</mx:Script>
 	
-	<mx:Component id="chooser">
-		<components:Chooser dataProvider="{ outerDocument.departments }" labelField="name"/>
+	<mx:Component id="autocomplete">
+		<components:AutoComplete dataProvider="{ outerDocument.departments }" labelField="name"/>
 	</mx:Component>
 						
 	<mx:Panel width="550" height="400" title="DataGrid Demo"
@@ -61,7 +61,7 @@
 				<mx:DataGridColumn headerText="First Name" dataField="firstName"/>
 				<mx:DataGridColumn headerText="Last Name" dataField="lastName"/>
 				<mx:DataGridColumn headerText="Department" labelFunction="departmentLabelFunction" editorUsesEnterKey="true"
-					itemEditor="{ chooser }" editorDataField="selectedItem" dataField="department"/>
+					itemEditor="{ autocomplete }" editorDataField="selectedItem" dataField="department"/>
 			</mx:columns>
 		</mx:DataGrid>
 	</mx:Panel>
