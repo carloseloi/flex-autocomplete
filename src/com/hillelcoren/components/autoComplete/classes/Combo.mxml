@@ -15,6 +15,7 @@
 		
 	<mx:Script>
 		<![CDATA[
+			import com.hillelcoren.components.AutoComplete;
 			import com.hillelcoren.components.autoComplete.interfaces.iComboItem;
 			import mx.controls.Text;
 			import mx.controls.TextArea;
@@ -46,12 +47,13 @@
 			private var _filterFunction:Function;
 			private var _labelFunction:Function;
 			private var _dropDownLabelFunction:Function;
+			private var _dropDownItemRenderer:IFactory;
 			private var _isEqualFunction:Function;	
 			
 			private var _isMultiSelect:Boolean;
 			private var _isMultiSelectChanged:Boolean;
 			
-			private var _allowNewValues:Boolean;
+			private var _isStrict:Boolean;
 					
 			private var _prompt:String;
 			private var _promptChanged:Boolean;
@@ -121,10 +123,10 @@
 				_dropDown.rowCount		= ROW_COUNT;
 				_dropDown.focusEnabled 	= false;
 				_dropDown.dataProvider 	= _dataProvider;
-				_dropDown.itemRenderer  = new ClassFactory( DropDownItemRenderer );
 				_dropDown.labelFunction = _dropDownLabelFunction;
+				_dropDown.itemRenderer  = _dropDownItemRenderer ? _dropDownItemRenderer : new ClassFactory( DropDownItemRenderer );
 				_dropDown.addEventListener( ListEvent.ITEM_CLICK, handleItemClick );
-				
+
 				systemManager.addEventListener( MouseEvent.CLICK, handleMouseClick );
 			}
 			
@@ -199,8 +201,12 @@
 							
 							if (prevItem is ComboTextInput)
 							{
-								ComboTextInput( prevItem ).setSelectionEnd();
-							}
+								ComboTextInput( prevItem ).setSelectionEnd();								
+							}							
+							else if (prevItem is SelectedItem && _style == AutoComplete.STYLE_UNDERLINE)
+							{
+								removeItem( prevItem );	
+							}							
 						}						
 					}
 					else if (event.keyCode == Keyboard.LEFT)
@@ -236,7 +242,7 @@
 					}
 					else if (event.keyCode == Keyboard.ENTER)
 					{
-						if (_allowNewValues && comp.isEditable())
+						if (!_isStrict && comp.isEditable())
 						{
 							setSelectedItem( comp.text, false, true );
 						}
@@ -248,7 +254,7 @@
 				{
 					var input:iComboItem = determineFocus();
 					
-					if (_allowNewValues && input.isEditable())
+					if (!_isStrict && input.isEditable())
 					{
 						setSelectedItem( input.text, false, true );
 					}								
@@ -674,14 +680,19 @@
 				_dropDownLabelFunction = value;
 			}
 			
+			public function set dropDownItemRenderer( value:IFactory ):void
+			{
+				_dropDownItemRenderer = value;
+			}
+			
 			public function set filterFunction( value:Function ):void
 			{
 				_filterFunction = value;
 			}
 			
-			public function set allowNewValues( value:Boolean ):void
+			public function set isStrict( value:Boolean ):void
 			{
-				_allowNewValues = value;
+				_isStrict = value;
 			}
 			
 			public function set selectedItems( value:ArrayCollection ):void

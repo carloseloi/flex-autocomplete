@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:hc="com.hillelcoren.components.*"
+	width="100%" height="100%"
+	verticalAlign="middle" horizontalAlign="center"
+	color="#000000"
+	initialize="init()" xmlns:local="*">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+
+			[Bindable]
+			public var colors:ArrayCollection;
+
+			private function init():void
+			{
+				colors = new ArrayCollection(
+				[
+					{ "name":"Almond", "hex":0xEED9C4 },
+					{ "name":"Antique Brass", "hex":0xC88A65 },
+					{ "name":"Apricot", "hex":0xFDD5B1 },
+					{ "name":"Aquamarine", "hex":0x71D9E2 },
+					{ "name":"Asparagus", "hex":0x7BA05B },
+					{ "name":"Atomic Tangerine", "hex":0xFF9966 },
+					{ "name":"Awesome", "hex":0xFF2052 },
+					{ "name":"Banana Mania", "hex":0xFBE7B2 },
+					{ "name":"Beaver", "hex":0x926F5B },
+					{ "name":"Bear Hug", "hex":0x6B655A },
+					{ "name":"Best Friends", "hex":0xD600FF },
+					{ "name":"Bittersweet", "hex":0xFE6F5E },
+					{ "name":"Black", "hex":0x000000 },
+					{ "name":"Blizzard Blue", "hex":0xA3E3ED },
+					{ "name":"Blue", "hex":0x0066FF },
+					{ "name":"Blue Bell", "hex":0x9999CC },
+					{ "name":"Blue Gray", "hex":0x333366 },
+					{ "name":"Blue Green", "hex":0x0095B6 },
+					{ "name":"Blue Violet", "hex":0x6456B7 },
+					{ "name":"Brick Red", "hex":0xC62D42 },
+					{ "name":"Brink Pink", "hex":0xFB607F },
+					{ "name":"Brown", "hex":0xAF593E },
+					{ "name":"Burnt Orange", "hex":0xFF7034 },
+					{ "name":"Burnt Sienna", "hex":0xE97451 },
+					{ "name":"Cadet Blue", "hex":0xA9B2C3 },
+					{ "name":"Canary", "hex":0xFFFF99 },
+					{ "name":"Caribbean Green", "hex":0x00CC99 },
+					{ "name":"Carnation Pink", "hex":0xFFA6C9 },
+					{ "name":"Cerise", "hex":0xDA3287 },
+					{ "name":"Cerulean", "hex":0x02A4D3 },
+					{ "name":"Chartreuse", "hex":0x7FFF00 },
+					{ "name":"Chestnut", "hex":0xB94E48 },
+					{ "name":"Copper", "hex":0xDA8A67 },
+					{ "name":"Cornflower", "hex":0x93CCEA },
+					{ "name":"Cotton Candy", "hex":0xFFB7D5 },
+					{ "name":"Cranberry", "hex":0xDB5079 },
+					{ "name":"Dandelion", "hex":0xFED85D },
+					{ "name":"Denim", "hex":0x1560BD },
+					{ "name":"Dark Gray", "hex":0x4A4340 },
+					{ "name":"Desert Sand", "hex":0xEDC9AF },
+					{ "name":"Eggplant", "hex":0x614051 },
+					{ "name":"Electric Lime", "hex":0xCCFF00 },
+					{ "name":"Famous", "hex":0xE72094 },
+					{ "name":"Fern", "hex":0x63B76C },
+					{ "name":"Flesh", "hex":0xFFCBA4 },
+					{ "name":"Forest Green", "hex":0x5FA777 },
+					{ "name":"Fuchsia", "hex":0xC154C1 },
+					{ "name":"Fun in the Sun", "hex":0xFF5500 },
+					{ "name":"Fuzzy Wuzzy Brown", "hex":0xC45655 },
+					{ "name":"Giving Tree", "hex":0x21E339 },
+					{ "name":"Gold", "hex":0xE6BE8A },
+					{ "name":"Goldenrod", "hex":0xFCD667 },
+					{ "name":"Granny Smith Apple", "hex":0x9DE093 },
+					{ "name":"Gray", "hex":0x8B8680 },
+					{ "name":"Green", "hex":0x01A368 },
+					{ "name":"Green Yellow", "hex":0xF1E788 },
+					{ "name":"Happy Ever After", "hex":0x218EB5 },
+					{ "name":"Hot Magenta", "hex":0xFF00CC },
+					{ "name":"Inch Worm", "hex":0xB0E313 },
+					{ "name":"Indian Red", "hex":0xB94E48 },
+					{ "name":"Indigo", "hex":0x4F69C6 },
+					{ "name":"Jazzberry Jam", "hex":0xA50B5E },
+					{ "name":"Jungle Green", "hex":0x29AB87 },
+					{ "name":"Laser Lemon", "hex":0xFFFF66 },
+					{ "name":"Lavender", "hex":0xFBAED2 },
+					{ "name":"Macaroni and Cheese", "hex":0xFFB97B },
+					{ "name":"Magenta", "hex":0xF653A6 },
+					{ "name":"Magic Mint", "hex":0xAAF0D1 },
+					{ "name":"Mahogany", "hex":0xCA3435 },
+					{ "name":"Maize", "hex":0xFFCC00 },
+					{ "name":"Manatee", "hex":0x8D90A1 },
+					{ "name":"Mango Tango", "hex":0xE77200 },
+					{ "name":"Maroon", "hex":0xC32148 },
+					{ "name":"Mauvelous", "hex":0xF091A9 },
+					{ "name":"Melon", "hex":0xFEBAAD },
+					{ "name":"Midnight Blue", "hex":0x003366 },
+					{ "name":"Mountain Meadow", "hex":0x1AB385 },
+					{ "name":"Mulberry", "hex":0xC54B8C },
+					{ "name":"Navy Blue", "hex":0x0066CC },
+					{ "name":"Neon Carrot", "hex":0xFF9933 },
+					{ "name":"Olive Green", "hex":0xB5B35C },
+					{ "name":"Orange", "hex":0xFF681F },
+					{ "name":"Orchid", "hex":0xE29CD2 },
+					{ "name":"Outer Space", "hex":0x2D383A },
+					{ "name":"Outrageous Orange", "hex":0xFF6037 },
+					{ "name":"Pacific Blue", "hex":0x009DC4 },
+					{ "name":"Peach", "hex":0xFFCBA4 },
+					{ "name":"Periwinkle", "hex":0xC3CDE6 },
+					{ "name":"Pig Pink", "hex":0xFDD7E4 },
+					{ "name":"Pine Green", "hex":0x01796F },
+					{ "name":"Pink Flamingo", "hex":0xFF66FF },
+					{ "name":"Plum", "hex":0x843179 },
+					{ "name":"Prussian Blue", "hex":0x003366 },
+					{ "name":"Purple Heart", "hex":0x652DC1 },
+					{ "name":"Purple Mountain's Majesty", "hex":0x9678B6 },
+					{ "name":"Purple Pizzazz", "hex":0xFF00CC },
+					{ "name":"Radical Red", "hex":0xFF355E },
+					{ "name":"Raw Sienna", "hex":0xD27D46 },
+					{ "name":"Raw Goggin", "hex":0xFF355F },
+					{ "name":"Razzle Dazzle Rose", "hex":0xFF33CC },
+					{ "name":"Razzmatazz", "hex":0xE30B5C },
+					{ "name":"Red", "hex":0xED0A3F },
+					{ "name":"Red Orange", "hex":0xFF3F34 },
+					{ "name":"Red Violet", "hex":0xBB3385 },
+					{ "name":"Robin's Egg Blue", "hex":0x00CCCC },
+					{ "name":"Royal Purple", "hex":0x6B3FA0 },
+					{ "name":"Salmon", "hex":0xFF91A4 },
+					{ "name":"Scarlet", "hex":0xFD0E35 },
+					{ "name":"Screamin' Green", "hex":0x66FF66 },
+					{ "name":"Sea Green", "hex":0x93DFB8 },
+					{ "name":"Sepia", "hex":0x9E5B40 },
+					{ "name":"Shadow", "hex":0x837050 },
+					{ "name":"Shamrock", "hex":0x33CC99 },
+					{ "name":"Shocking Pink", "hex":0xFF6FFF },
+					{ "name":"Silver", "hex":0xC9C0BB },
+					{ "name":"Sky Blue", "hex":0x76D7EA },
+					{ "name":"Spring Green", "hex":0xECEBBD },
+					{ "name":"Sunglow", "hex":0xFFCC33 },
+					{ "name":"Sunset Orange", "hex":0xFE4C40 },
+					{ "name":"Super Happy", "hex":0xFFFF21 },
+					{ "name":"Tan", "hex":0xFA9D5A },
+					{ "name":"Tickle Me Pink", "hex":0xFC80A5 },
+					{ "name":"Timberwolf", "hex":0xD9D6CF },
+					{ "name":"Torch Red", "hex":0xFD0E35 },
+					{ "name":"Tropical Rain Forest", "hex":0x00755E },
+					{ "name":"Tumbleweed", "hex":0xDEA681 },
+					{ "name":"Turquoise Blue", "hex":0x6CDAE7 },
+					{ "name":"Ultra Green", "hex":0x66FF66 },
+					{ "name":"Ultra Orange", "hex":0xFF6037 },
+					{ "name":"Ultra Pink", "hex":0xFF6FFF },
+					{ "name":"Ultra Red", "hex":0xFD5B78 },
+					{ "name":"Ultra Yellow", "hex":0xFFFF66 },
+					{ "name":"Unmellow Yellow", "hex":0xFFFF66 },
+					{ "name":"Violet (Purple)", "hex":0x8359A3 },
+					{ "name":"Violet Red", "hex":0xF7468A },
+					{ "name":"Vivid Tangerine", "hex":0xFF9980 },
+					{ "name":"Vivid Violet", "hex":0x803790 },
+					{ "name":"White", "hex":0xFFFFFF },
+					{ "name":"Wild Blue Yonder", "hex":0x7A89B8 },
+					{ "name":"Wild Strawberry", "hex":0xFF3399 },
+					{ "name":"Wild Watermelon", "hex":0xFD5B78 },
+					{ "name":"Wisteria", "hex":0xC9A0DC },
+					{ "name":"Yellow", "hex":0xFBE870 },
+					{ "name":"Yellow Green", "hex":0xC5E17A },
+					{ "name":"Yellow Orange", "hex":0xFFAE42 }
+				] );
+			}			
+			
+			private function handleAutoCompleteChange():void
+			{
+				var color:Object = autoComplete.selectedItem;
+
+				if (color != null && color.hasOwnProperty( "hex" ))
+				{
+					setStyle( "backgroundColor", color.hex );
+				}
+			}
+			
+			private function handleMatchTypeComboChange():void
+			{
+				autoComplete.matchType = matchTypeCombo.selectedItem.data;
+			}
+			
+			private function handleLayoutComboChange():void
+    		{
+    			autoComplete.multiSelectLayout = multiSelectLayout.selectedItem.data;
+    		}
+    		
+    		private function handleStyleComboChange():void
+    		{
+    			autoComplete.style = style.selectedItem.data;
+    			autoComplete.enableRemoveIcon = style.selectedItem.data == AutoComplete.STYLE_FACEBOOK;
+    		}
+		]]>
+	</mx:Script>
+
+
+	<mx:Component id="dropDownItemRenderer">
+		<local:ColorItemRenderer selectedItems="{ outerDocument.autoComplete.selectedItems }" />
+	</mx:Component>
+
+	<mx:Panel width="550" height="400" title="Color Demo"
+			paddingBottom="20" paddingTop="20" paddingLeft="20" paddingRight="20">
+		<mx:HBox>		
+
+			<mx:VBox horizontalAlign="left">
+				<mx:ComboBox id="style" change="handleStyleComboChange()">					
+					<mx:Object label="OS X" data="{ AutoComplete.STYLE_OSX }"/>
+					<mx:Object label="Facebook" data="{ AutoComplete.STYLE_FACEBOOK }"/>
+					<mx:Object label="Underline" data="{ AutoComplete.STYLE_UNDERLINE }"/>																		
+				</mx:ComboBox>
+				<mx:CheckBox id="strict" label="Strict"/>
+				<mx:CheckBox id="browesable" label="Browesable"/>
+				<mx:CheckBox id="multiselect" label="Multiselect" selected="true"/>
+				<mx:ComboBox id="multiSelectLayout" change="handleLayoutComboChange()" enabled="{ multiselect.selected }">					
+					<mx:Object label="Horizontal" data="{ AutoComplete.LAYOUT_HORIZONTAL }"/>
+					<mx:Object label="Vertical" data="{ AutoComplete.LAYOUT_VERTICAL }"/>										
+				</mx:ComboBox>
+				<mx:CheckBox id="orderable" label="Orderable" enabled="{ multiselect.selected }"/>
+				<mx:CheckBox id="listBuilder" label="List Builder" enabled="{ browesable.selected &amp;&amp; multiselect.selected }"/>
+				<mx:ComboBox id="matchTypeCombo" change="handleMatchTypeComboChange()">
+					<mx:Object label="Match Any Part" data="{ AutoComplete.MATCH_ANY_PART }"/>
+					<mx:Object label="Match Beginning" data="{ AutoComplete.MATCH_BEGINNING }"/>
+					<mx:Object label="Match Word" data="{ AutoComplete.MATCH_WORD }"/>					
+				</mx:ComboBox>											
+			</mx:VBox>		
+			
+			<mx:VBox>
+				<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
+					prompt="Choose your favorite Crayola crayon" width="320" change="handleAutoCompleteChange()"
+					allowNewValues="{ strict.selected }" style="{ AutoComplete.STYLE_OSX }" 
+					isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }"
+					isOrderable="{ orderable.selected }" useListBuilder="{ listBuilder.selected }"
+					multiSelectLayout="horizontal" dropDownItemRenderer="{ dropDownItemRenderer }"/>
+			</mx:VBox>						
+			
+		</mx:HBox>
+	</mx:Panel>
+</mx:Application>

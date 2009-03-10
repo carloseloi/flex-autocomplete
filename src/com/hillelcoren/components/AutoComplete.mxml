@@ -56,8 +56,8 @@
 			private var _multiSelectLayoutChanged:Boolean;
 			private var _multiSelect:MultiSelect;
 			
-			private var _allowNewValues:Boolean;
-			private var _allowNewValuesChanged:Boolean;
+			private var _isStrict:Boolean;
+			private var _isStrictChanged:Boolean;
 			
 			private var _style:String;
 			private var _styleChanged:Boolean;
@@ -109,12 +109,14 @@
 			private var _dropDownLabelFunction:Function;
 			private var _dropDownLabelFunctionChanged:Boolean;
 			
+			private var _dropDownItemRenderer:IFactory;
+			private var _dropDownItemRendererChanged:Boolean;
+			
 			private var _keyField:String = "id";
 			private var _listData:DataGridListData;
 			
 			public static const BROWSER_ITEM_SELECTED:String = "BROWSER_ITEM_SELECTED";
 			
-			public static const STYLE_NONE:String 		= "none";
 			public static const STYLE_UNDERLINE:String 	= "underline";
 			public static const STYLE_OSX:String 		= "osx";
 			public static const STYLE_FACEBOOK:String 	= "facebook";
@@ -208,10 +210,10 @@
 					showOrderingButtons( _isOrderable );
 				}
 				
-				if (_allowNewValuesChanged)
+				if (_isStrictChanged)
 				{
-					_allowNewValuesChanged = false;
-					combo.allowNewValues = _allowNewValues;
+					_isStrictChanged = false;
+					combo.isStrict = _isStrict;
 				}
 				
 				if (_styleChanged)
@@ -248,6 +250,12 @@
 				{
 					_dropDownLabelFunctionChanged = false;					
 					combo.dropDownLabelFunction = _dropDownLabelFunction;
+				}
+				
+				if (_dropDownItemRendererChanged)
+				{
+					_dropDownItemRendererChanged = false;
+					combo.dropDownItemRenderer = _dropDownItemRenderer;
 				}
 				
 				if (_labelFunctionChanged)
@@ -668,8 +676,8 @@
 			
 			public function set allowNewValues( value:Boolean ):void
 			{
-				_allowNewValues = value;
-				_allowNewValuesChanged = true;
+				_isStrict = value;
+				_isStrictChanged = true;
 				
 				invalidateProperties();
 			}
@@ -741,6 +749,14 @@
 			{
 				_dropDownLabelFunction = value;
 				_dropDownLabelFunctionChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			public function set dropDownItemRenderer( value:IFactory ):void
+			{
+				_dropDownItemRenderer = value;
+				_dropDownItemRendererChanged = true;
 				
 				invalidateProperties();
 			}

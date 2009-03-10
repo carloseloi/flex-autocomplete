@@ -75,7 +75,7 @@
 					label = _text;
 				}
 				
-				if (_style == AutoComplete.STYLE_UNDERLINE || _style == AutoComplete.STYLE_NONE)
+				if (_style == AutoComplete.STYLE_UNDERLINE)
 				{
 					label += ",";
 					padding = 0;					
