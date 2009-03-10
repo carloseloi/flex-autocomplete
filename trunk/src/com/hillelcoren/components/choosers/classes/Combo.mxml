@@ -2,9 +2,10 @@
 <mx:Canvas 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	clipContent="false" 
-	borderStyle="inset"
+	borderStyle="inset" borderThickness="1"
 	height="{ toolBar.height + 5 }"
 	initialize="init()"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	xmlns:components="com.hillelcoren.components.*" 
 	xmlns:classes="com.hillelcoren.components.choosers.classes.*">
 	
@@ -50,6 +51,8 @@
 			private var _isMultiSelect:Boolean;
 			private var _isMultiSelectChanged:Boolean;
 			
+			private var _allowNewValues:Boolean;
+					
 			private var _prompt:String;
 			private var _promptChanged:Boolean;
 			
@@ -86,6 +89,7 @@
 				{
 					_isMultiSelectChanged = false;
 					
+					clear();
 					updateComoText();
 				}				
 			}
@@ -132,7 +136,10 @@
 					//else if (event.keyCode == Keyboard.ENTER || event.charCode == 44)
 					else if (event.keyCode == Keyboard.ENTER)
 					{
-						setSelectedItem( _dropDown.selectedItem );						
+						if (setSelectedItem( _dropDown.selectedItem ))
+						{
+							return;
+						}						
 					}
 				}
 				else
@@ -216,7 +223,7 @@
 					}
 					else if (event.keyCode == Keyboard.ENTER)
 					{
-						if (comp.isEditable())
+						if (_allowNewValues && comp.isEditable())
 						{
 							setSelectedItem( comp.text, false, true );
 						}
@@ -224,11 +231,11 @@
 				}
 				
 				// check for the comma key	
-				if (event.charCode == 44)
+				if (event.charCode == 44 || event.keyCode == Keyboard.ENTER)
 				{
 					var input:iComboItem = determineFocus();
 					
-					if (input.isEditable())
+					if (_allowNewValues && input.isEditable())
 					{
 						setSelectedItem( input.text, false, true );
 					}								
@@ -253,17 +260,24 @@
 			private function cleanStr( value:String ):String
 			{
 				value = StringUtil.trim( value );
-					
-				if (value.charAt( value.length - 1 ) == ",")
+				
+				while (value.length > 0 && value.charAt(0) == ",")
 				{
-					value = value.substr( 0, value.length - 1 );
+					value = value.substring( 1, value.length );
 				}
-					
+				
+				while (value.length > 0 && value.charAt( value.length - 1 ) == ",")
+				{
+					value = value.substring( 0, value.length - 1);
+				}
+				
 				return value;
 			}
 			
-			public function setSelectedItem( value:Object, isSilent:Boolean = false, isNew:Boolean = false ):void
+			public function setSelectedItem( value:Object, isSilent:Boolean = false, isNew:Boolean = false ):Boolean
 			{
+				var validItem:Boolean = true;
+				
 				if (isNew)
 				{
 					value = cleanStr( value as String );
@@ -283,7 +297,7 @@
 						comboTextInput.width = measureText( value as String ).width + 10;
 						comboTextInput.height = textInput.height;
 						comboTextInput.item = value;
-						comboTextInput.addEventListener( Event.CHANGE, handleComboItemChange );
+						comboTextInput.addEventListener( Event.CHANGE, handleComboItemChange, false, 0, true );
 						toolBar.addChildAt( comboTextInput, toolBar.numChildren - 1 );									
 					}
 					else
@@ -291,7 +305,7 @@
 						var selectedItem:SelectedItem = new SelectedItem();
 						selectedItem.label = _labelFunction( value );
 						selectedItem.item = value;
-						selectedItem.addEventListener( FlexEvent.CREATION_COMPLETE, sizeTextInput );
+						selectedItem.addEventListener( FlexEvent.CREATION_COMPLETE, sizeTextInput, false, 0, true );
 						toolBar.addChildAt( selectedItem, toolBar.numChildren - 1 );
 					}					
 				}
@@ -304,13 +318,21 @@
 					
 					input.text = cleanStr( input.text ) + ",";													
 				}
+				else
+				{
+					validItem = false;
+				}
 				
 				updateComoText();
-				textInput.setFocus();
 				
-				if (!isSilent)
+				if (validItem)
 				{
-					dispatchEvent( new Event( COMBO_ITEM_SELECTED ) );
+					textInput.setFocus();
+				
+					if (!isSilent)
+					{
+						dispatchEvent( new Event( COMBO_ITEM_SELECTED ) );
+					}
 				}
 				
 				if (isDropDownVisible())
@@ -320,7 +342,9 @@
 					// the selection gives the UI a chance to check if the enter key
 					// was clicked while the drop down was visible 
 					callLater( hideDropDown );
-				}					
+				}				
+				
+				return validItem;	
 			}
 			
 			private function handleComboItemChange( event:Event ):void
@@ -366,7 +390,7 @@
 			
 			private function _updateComoText():void
 			{
-				textInput.text = "";
+				textInput.text = null;
 				textInput.validateNow();
 				
 				sizeTextInput();				
@@ -374,15 +398,19 @@
 			
 			private function sizeTextInput( event:Event = null ):void
 			{
-				if (_selectedItems.length > 0)
+				if (_selectedItems.length > 0 && textInput.textInput.horizontalScrollPosition == 0)
 				{
 					var comboItem:UIComponent = toolBar.getChildAt( toolBar.numChildren - 2 ) as UIComponent;
-					textInput.width = toolBar.width - (comboItem.x + comboItem.width);  
+					var width:int = toolBar.width - (comboItem.x + comboItem.width);
+					
+					if (width > measureText( textInput.text ).width)
+					{
+						textInput.width = width;
+						return;
+					}
 				}				
-				else
-				{
-					textInput.width = toolBar.width;
-				}	
+				
+				textInput.width = toolBar.width;					
 			}
 			
 			private function handleItemClick( event:ListEvent ):void
@@ -407,8 +435,25 @@
 				}
 			}
 			
+			private function clear():void
+			{
+				_selectedItems.removeAll();
+					
+				for (var x:int=0; x<toolBar.numChildren - 1; x++)
+				{
+					toolBar.removeChildAt( x );
+				}
+			}
+			
 			public function handleChange( event:Event ):void
 			{
+				if (!_isMultiSelect)
+				{
+					clear();		
+				}
+				
+				sizeTextInput();
+				
 				dispatchEvent( event );
 				
 				if (!_dataProvider)
@@ -591,6 +636,11 @@
 				_filterFunction = value;
 			}
 			
+			public function set allowNewValues( value:Boolean ):void
+			{
+				_allowNewValues = value;
+			}
+			
 			public function set selectedItems( value:ArrayCollection ):void
 			{
 				_selectedItems = value;
@@ -689,7 +739,7 @@
 	</mx:Script>
 	
 	<mx:ToolBar id="toolBar" horizontalGap="0" verticalGap="0" width="100%" paddingTop="0" x="2" y="3">
-		<components:PromptTextInput id="textInput" width="{ toolBar.width }" change="handleChange(event)" borderStyle="solid" move="sizeTextInput()"/>		
+		<components:PromptTextInput id="textInput" width="{ toolBar.width }" change="handleChange(event)" borderStyle="none" move="sizeTextInput()"/>		
 	</mx:ToolBar>
 	 
 </mx:Canvas>
