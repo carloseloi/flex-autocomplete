@@ -7,7 +7,7 @@
 	initialize="init()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	xmlns:components="com.hillelcoren.components.*" 
-	xmlns:classes="com.hillelcoren.components.choosers.classes.*">
+	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
 	
 	<mx:Metadata>
 		[Event("COMBO_ITEM_SELECTED")]		
@@ -15,10 +15,10 @@
 		
 	<mx:Script>
 		<![CDATA[
+			import com.hillelcoren.components.autoComplete.interfaces.iComboItem;
 			import mx.controls.Text;
 			import mx.controls.TextArea;
 			import com.hillelcoren.utils.KeyboardUtil;
-			import com.hillelcoren.components.choosers.interfaces.iComboItem;
 			import mx.core.UITextField;
 			import com.hillelcoren.components.PromptTextInput;
 			import mx.utils.ObjectUtil;
@@ -59,8 +59,14 @@
 			private var _enableClearIcon:Boolean;
 			private var _enableClearIconChanged:Boolean;
 			
+			private var _enableItemClearIcon:Boolean;
+			private var _enableItemClearIconChanged:Boolean;
+			
 			private var _selectedItems:ArrayCollection;
 			private var _selectedItem:Object;
+			
+			private var _style:String;
+			private var _styleChanged:Boolean;
 			
 			private static const ROW_COUNT:uint = 6; 
 			
@@ -92,6 +98,21 @@
 					clear();
 					updateComoText();
 				}				
+				
+				if (_styleChanged || _enableItemClearIconChanged)
+				{
+					_styleChanged = false;
+					_enableItemClearIconChanged = false;
+						
+					for each (var item:Object in toolBar.getChildren())
+					{
+						if (item is SelectedItem)
+						{
+							SelectedItem( item ).style = _style;
+							SelectedItem( item ).enableClearIcon = _enableItemClearIcon;		
+						}
+					}
+				}
 			}
 			
 			private function createDropDown():void
@@ -100,7 +121,7 @@
 				_dropDown.rowCount		= ROW_COUNT;
 				_dropDown.focusEnabled 	= false;
 				_dropDown.dataProvider 	= _dataProvider;
-				_dropDown.itemRenderer  = new ClassFactory( ChooserItemRenderer );
+				_dropDown.itemRenderer  = new ClassFactory( DropDownItemRenderer );
 				_dropDown.labelFunction = _dropDownLabelFunction;
 				_dropDown.addEventListener( ListEvent.ITEM_CLICK, handleItemClick );
 				
@@ -303,8 +324,10 @@
 					else
 					{
 						var selectedItem:SelectedItem = new SelectedItem();
-						selectedItem.label = _labelFunction( value );
+						selectedItem.text = _labelFunction( value );
 						selectedItem.item = value;
+						selectedItem.style = _style;
+						selectedItem.enableClearIcon = _enableItemClearIcon;
 						selectedItem.addEventListener( FlexEvent.CREATION_COMPLETE, sizeTextInput, false, 0, true );
 						toolBar.addChildAt( selectedItem, toolBar.numChildren - 1 );
 					}					
@@ -664,6 +687,14 @@
 				_isEqualFunction = value;
 			}
 			
+			public function set style( value:String ):void
+			{
+				_style = value;
+				_styleChanged = true;
+				
+				invalidateProperties();
+			}
+			
 			public function set dataProvider( value:ArrayCollection ):void
 			{
 				_dataProvider = value;
@@ -716,6 +747,14 @@
 			{
 				_enableClearIcon = value;
 				_enableClearIconChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			public function set enableItemClearIcon( value:Boolean ):void
+			{
+				_enableItemClearIcon = value;
+				_enableItemClearIconChanged = true;
 				
 				invalidateProperties();
 			}

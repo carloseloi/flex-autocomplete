@@ -1,4 +1,4 @@
-package com.hillelcoren.components.choosers.interfaces
+package com.hillelcoren.components.autoComplete.interfaces
 {
 	import flash.display.DisplayObject;
 	
