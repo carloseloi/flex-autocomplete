@@ -281,6 +281,7 @@
 			
 			public function setTextFocus():void
 			{
+				textInput.setSelection( 0, 0 );
 				setFocus();
 			}	
 			

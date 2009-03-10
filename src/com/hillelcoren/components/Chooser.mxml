@@ -5,6 +5,7 @@
 	clipContent="false"
 	width="100%"
 	initialize="init()"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	implements="mx.controls.listClasses.IDropInListItemRenderer,mx.managers.IFocusManagerComponent">
 	
 	<mx:Metadata>
@@ -54,6 +55,9 @@
 			private var _multiSelectLayout:String = LAYOUT_VERTICAL;
 			private var _multiSelectLayoutChanged:Boolean;
 			private var _multiSelect:MultiSelect;
+			
+			private var _allowNewValues:Boolean;
+			private var _allowNewValuesChanged:Boolean;
 			
 			private var _browser:IBrowser;
 			private var _useListBuilder:Boolean;
@@ -191,6 +195,12 @@
 				{
 					_isOrderableChanged = false;
 					showOrderingButtons( _isOrderable );
+				}
+				
+				if (_allowNewValuesChanged)
+				{
+					_allowNewValuesChanged = false;
+					combo.allowNewValues = _allowNewValues;
 				}
 				
 				if (_isMultiSelectChanged || _multiSelectLayoutChanged)
@@ -636,6 +646,14 @@
 				_browserClass = value;
 			}
 			
+			public function set allowNewValues( value:Boolean ):void
+			{
+				_allowNewValues = value;
+				_allowNewValuesChanged = true;
+				
+				invalidateProperties();
+			}
+			
 			public function get text():String
 			{
 				if (combo)
@@ -715,7 +733,7 @@
 			
 			private function defaultLabelFunction( item:Object ):String
 			{
-				if (_labelField)
+				if (_labelField && item.hasOwnProperty( _labelField ))
 				{
 					return item[ _labelField ];
 				}
