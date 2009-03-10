@@ -62,8 +62,8 @@
 			private var _style:String;
 			private var _styleChanged:Boolean;
 			
-			private var _enableItemClearIcon:Boolean;
-			private var _enableItemClearIconChanged:Boolean;
+			private var _enableRemoveIcon:Boolean;
+			private var _enableRemoveIconChanged:Boolean;
 			
 			private var _browser:IBrowser;
 			private var _useListBuilder:Boolean;
@@ -220,10 +220,10 @@
 					combo.style = _style;
 				}
 				
-				if (_enableItemClearIconChanged)
+				if (_enableRemoveIconChanged)
 				{
-					_enableItemClearIconChanged = false;
-					combo.enableItemClearIcon = _enableItemClearIcon;
+					_enableRemoveIconChanged = false;
+					combo.enableRemoveIcon = _enableRemoveIcon;
 				}
 				
 				if (_isMultiSelectChanged || _multiSelectLayoutChanged)
@@ -708,10 +708,10 @@
 				invalidateProperties();
 			}
 			
-			public function set enableItemClearIcon( value:Boolean ):void
+			public function set enableRemoveIcon( value:Boolean ):void
 			{
-				_enableItemClearIcon = value;
-				_enableItemClearIconChanged = true;
+				_enableRemoveIcon = value;
+				_enableRemoveIconChanged = true;
 				
 				invalidateProperties();
 			}

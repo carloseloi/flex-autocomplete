@@ -6,11 +6,13 @@
 	creationComplete="init()">
 	
 	<mx:Metadata>
-		[Event(name="change")]	
+		[Event(name="change")]
+		[Event(name="remove")]
 	</mx:Metadata>
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.core.UITextField;
 			import com.hillelcoren.components.AutoComplete;
 			import mx.events.FlexEvent;
 			import mx.controls.Label;
@@ -37,7 +39,7 @@
 			private var _isMouseOver:Boolean;		
 			
 			[Bindable]			
-			private var _enableClearIcon:Boolean = true;
+			private var _enableRemoveIcon:Boolean = true;
 			
 			override protected function commitProperties():void
 			{
@@ -113,7 +115,7 @@
 					var width:uint = itemLabel.width + rightSpacer.width;
 					var height:uint = itemLabel.height;
 					
-					if (_enableClearIcon)
+					if (_enableRemoveIcon)
 					{
 						width += clearIcon.width;
 					}
@@ -154,10 +156,10 @@
 				_shape = new UIComponent();
 				_shape.focusEnabled = true;
 					
-				itemLabel.addEventListener( MouseEvent.MOUSE_OVER, handleMouseOver );
-				itemLabel.addEventListener( MouseEvent.MOUSE_OUT, handleMouseOut );
-				itemLabel.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseDown );
-					
+				addEventListener( MouseEvent.MOUSE_OVER, handleMouseOver );
+				addEventListener( MouseEvent.MOUSE_OUT, handleMouseOut );
+				addEventListener( MouseEvent.MOUSE_DOWN, handleMouseDown );
+				
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );			
 								
@@ -167,18 +169,33 @@
 			
 			private function handleMouseOver( event:Event ):void
 			{
+				if (leftTextInput.contains( event.target as DisplayObject ))
+				{
+					return;
+				}
+				
 				_isMouseOver = true;
 				redraw();	
 			}
 			
 			private function handleMouseOut( event:Event ):void
 			{
+				if (leftTextInput.contains( event.target as DisplayObject ))
+				{
+					return;
+				}
+				
 				_isMouseOver = false;
 				redraw();	
 			}
 			
 			private function handleMouseDown( event:Event ):void
 			{
+				if (leftTextInput.contains( event.target as DisplayObject ))
+				{
+					return;
+				}
+				
 				_shape.setFocus();
 			}
 			
@@ -256,12 +273,17 @@
 				return _text;
 			}
 					
-			public function set enableClearIcon( value:Boolean ):void
+			public function set enableRemoveIcon( value:Boolean ):void
 			{
-				_enableClearIcon = value;
+				_enableRemoveIcon = value;
 			}
 			
-
+			public function handleRemoveClick():void
+			{
+				var event:Event = new Event( FlexEvent.REMOVE );
+				dispatchEvent( event );
+			}
+			
 		]]>
 	</mx:Script>
 	
@@ -269,8 +291,8 @@
 	<mx:TextInput id="leftTextInput" width="5" borderStyle="none" 
 		focusThickness="0" change="handleTextChange(event)"/>
 	<mx:Label id="itemLabel" updateComplete="redrawShape()"/>
-	<mx:Image id="clearIcon" source="@Embed('/com/hillelcoren/assets/smallClear.png')" 
-		visible="{ _enableClearIcon }" includeInLayout="{ _enableClearIcon }"/>
+	<mx:Image id="clearIcon" source="@Embed('/com/hillelcoren/assets/remove.png')" 
+		visible="{ _enableRemoveIcon }" includeInLayout="{ _enableRemoveIcon }" click="handleRemoveClick()"/>
 	<mx:Spacer id="rightSpacer"/>
 	<mx:TextInput id="rightTextInput" width="5" borderStyle="none" 
 		focusThickness="0" change="handleTextChange(event)" visible="false" includeInLayout="false"/>		
