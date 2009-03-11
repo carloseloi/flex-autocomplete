@@ -53,6 +53,7 @@
 			
 			private var _isMultiSelect:Boolean;
 			private var _isMultiSelectChanged:Boolean;
+			private var _multiSelectLayout:String;
 			
 			private var _isStrict:Boolean;
 					
@@ -98,7 +99,7 @@
 				{
 					_isMultiSelectChanged = false;
 					
-					clear();
+					clearFlowBox();
 					updateComoText();
 				}				
 				
@@ -340,14 +341,24 @@
 					value = cleanStr( value as String );
 				}
 				
-				//dispatchEvent( new Event( COMBO_ITEM_SELECTED ) );
 				if (_selectedItems.getItemIndex( value ) == -1 && value)
 				{
-					_selectedItems.addItem( value );
+					if (_multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL)
+					{ 
+						_selectedItems.addItem( value );
+					}
+					else
+					{
+						_selectedItems.addItemAt( value, 0 );
+					}
 					
 					textInput.width = 0;
 					
-					if (isNew)
+					if (_isMultiSelect && _multiSelectLayout == AutoComplete.LAYOUT_VERTICAL)
+					{
+						// do nothing
+					}
+					else if (isNew)
 					{
 						var comboTextInput:ComboTextInput = new ComboTextInput();
 						comboTextInput.text = value + ",";
@@ -462,30 +473,47 @@
 			
 			private function sizeTextInput( event:Event = null ):void
 			{
-				if (_selectedItems.length > 0 
-					&& flowBox.numChildren > 1
-					&& textInput.textInput.horizontalScrollPosition == 0)
+				var width:int = -1;
+				
+				if (textInput.textInput.horizontalScrollPosition > 0)
 				{
+					width = flowBox.width;
+				}
+				else if (_selectedItems.length > 0)
+				{ 
 					var comboItem:UIComponent = flowBox.getChildAt( flowBox.numChildren - 2 ) as UIComponent;
-					var width:int = flowBox.width - (comboItem.x + comboItem.width);
+					var availableWidth:int = flowBox.width - (comboItem.x + comboItem.width);
 					
+					// if the last combo item width is 0 it means it has been 
+					// created but not yet added (so we don't yet know how wide to
+					// make the text input)
 					if (comboItem.width == 0)
 					{
-						textInput.width = 0;
-						return;
+						width = 0;						
 					}
-					else if (width > measureText( textInput.text ).width)
+					else if (availableWidth > textInput.measureText( textInput.text ).width + 30)
 					{
-						textInput.width = width;
-						return;
+						width = availableWidth;
+					}
+					else
+					{
+						width = flowBox.width;
+					}
+				}				
+				else if (flowBox.width > 0)
+				{
+					width = flowBox.width;
+				}
+				
+				if (width >= 0)
+				{
+					if (width && width < flowBox.width * .2)
+					{
+						width = flowBox.width;
 					}
 					
-				}				
-				
-				if (flowBox.width > 0)
-				{
-					textInput.width = flowBox.width;
-				}					
+					textInput.width = width;
+				}
 			}
 			
 			private function handleItemClick( event:ListEvent ):void
@@ -510,10 +538,8 @@
 				}
 			}
 			
-			public function clear():void
+			public function clearFlowBox():void
 			{
-				_selectedItems.removeAll();
-				
 				while (flowBox.numChildren > 1)
 				{
 					flowBox.removeChildAt( 0 );
@@ -524,7 +550,7 @@
 			{
 				if (!_isMultiSelect)
 				{
-					clear();		
+					setSelectedItem( null );		
 				}
 				
 				sizeTextInput();
@@ -839,6 +865,11 @@
 			public function set onBackspace( value:String ):void
 			{
 				_onBackspace = value;
+			}
+			
+			public function set multiSelectLayout( value:String ):void
+			{
+				_multiSelectLayout = value;
 			}
 			
 		]]>
