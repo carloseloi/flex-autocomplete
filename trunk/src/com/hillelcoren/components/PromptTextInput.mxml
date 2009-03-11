@@ -142,7 +142,7 @@
 				{
 					hidePrompt();
 					textInput.text = value;							
-				}
+				}								
 			}
 			
 			public function set htmlText( value:String ):void
@@ -315,7 +315,6 @@
 		]]>
 	</mx:Script>
 	
-	<mx:TextInput id="textInput" width="100%" paddingRight="20" 
-		borderStyle="none" focusThickness="0"/>
+	<mx:TextInput id="textInput" width="100%" paddingRight="20"/>
 	
 </mx:Canvas>
