@@ -41,7 +41,7 @@
 				//_list.setStyle( "alternatingItemColors", [0xFFFFFF, 0xEEEEEE] );
 				
 				nameLabel.htmlText = _list.labelFunction( _color );
-				hexLabel.htmlText = "Hex: #" + String( _color.hex.toString(16) ).toUpperCase();											
+				hexLabel.htmlText = "Hex: #" + hexToString( _color.hex );										
 				colorBox.setStyle( "backgroundColor", _color.hex );
 				
 				if (_selectedItems && _selectedItems.getItemIndex( value ) >= 0)
@@ -52,7 +52,18 @@
 				{
 					this.clearStyle( "color" );
 				}				
-
+			}
+			
+			private function hexToString( value:uint ):String
+			{
+				var str:String = value.toString( 16 );
+				
+				while (str.length < 6)
+				{
+					str = "0" + str;	
+				}
+				
+				return str.toUpperCase();
 			}
 			
 		]]>

@@ -178,6 +178,11 @@
 				}
 			}
 			
+			private function handleTextInput( event:TextEvent ):void
+			{
+				trace(">> " + event.text);
+			}
+			
 			private function handleMatchTypeComboChange():void
 			{
 				autoComplete.matchType = matchTypeCombo.selectedItem.data;
@@ -236,8 +241,9 @@
 					isOrderable="{ orderable.selected }" useListBuilder="{ listBuilder.selected }"
 					multiSelectLayout="horizontal" dropDownItemRenderer="{ dropDownItemRenderer }"/>
 					
+					<mx:TextInput text="{ autoComplete.searchText }"/>
 					<!--
-					<mx:TextInput text="{ autoComplete.text }"/>
+					<mx:TextInput textInput="{ handleTextInput(event) }"/>
 					<mx:List dataProvider="{ autoComplete.selectedItems }" labelField="name"/>
 					-->
 					

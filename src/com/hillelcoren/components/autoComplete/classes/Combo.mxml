@@ -10,7 +10,8 @@
 	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
 	
 	<mx:Metadata>
-		[Event("change")]		
+		[Event("change")]
+		[Event("searchChange")]		
 	</mx:Metadata>
 		
 	<mx:Script>
@@ -72,10 +73,15 @@
 			private var _style:String = AutoComplete.STYLE_OSX;
 			private var _styleChanged:Boolean;
 			
+			public static const SEARCH_CHANGE:String = "searchChange";
+			
 			private static const ROW_COUNT:uint = 6; 
 			
 			private function init():void
 			{
+				textInput.textInput.setStyle( "borderStyle", "none" ); 
+				textInput.textInput.setStyle( "focusThickness", 0 );
+				
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
 			}
 			
@@ -139,22 +145,31 @@
 				{
 					if (event.keyCode == Keyboard.DOWN)
 					{
-						_dropDown.selectedIndex++;
-						_dropDown.scrollToIndex( _dropDown.selectedIndex );
+						if (_dropDown.selectedIndex == _dataProvider.length - 1)
+						{
+							_dropDown.selectedIndex = 0;
+						}
+						else
+						{
+							_dropDown.selectedIndex++;
+						}
 						
-						textInput.setCursorPosition( textInput.selectionBeginIndex );
-						//promptTextInput.setTextSelected( false );
+						_dropDown.scrollToIndex( _dropDown.selectedIndex );
+						textInput.setCursorPosition( textInput.selectionBeginIndex );						
 					}
 					else if (event.keyCode == Keyboard.UP)
 					{
-						if (_dropDown.selectedIndex > 0)
+						if (_dropDown.selectedIndex == 0)
 						{
-							_dropDown.selectedIndex--;
-							_dropDown.scrollToIndex( _dropDown.selectedIndex );
+							_dropDown.selectedIndex = _dataProvider.length - 1;
+						}
+						else
+						{
+							_dropDown.selectedIndex--;						
 						}
 						
-						textInput.setCursorPosition( textInput.selectionBeginIndex );
-						//promptTextInput.setTextSelected( false );			
+						_dropDown.scrollToIndex( _dropDown.selectedIndex );
+						textInput.setCursorPosition( textInput.selectionBeginIndex );							
 					}
 					else if (event.keyCode == Keyboard.ESCAPE || event.keyCode == Keyboard.TAB)
 					{
@@ -472,6 +487,9 @@
 				textInput.text = null;
 				textInput.validateNow();
 				
+				var event:Event = new Event( SEARCH_CHANGE );
+				dispatchEvent( event );
+				
 				sizeTextInput();				
 			}
 			
@@ -582,6 +600,9 @@
 				//var end:Date = new Date();
 				//trace(">> search took: " + (end.getTime() - start.getTime()) + " msecs" );
 				
+				var event:Event = new Event( SEARCH_CHANGE );
+				dispatchEvent( event );
+				
 				if (_dataProvider.length == 0)
 				{
 					hideDropDown();
@@ -612,12 +633,7 @@
 					callLater( positionDropDown );
 					callLater( highlightFirstItem );
 					_dropDown.rowCount = (_dataProvider.length < ROW_COUNT ? _dataProvider.length : ROW_COUNT);
-				}
-			}
-			
-			private function handleMove():void
-			{
-				sizeTextInput();
+				}				
 			}
 			
 			private function highlightFirstItem():void
@@ -881,9 +897,12 @@
 		]]>
 	</mx:Script>
 	
-	<classes:FlowBox id="flowBox" horizontalGap="0" verticalGap="0" width="100%" height="100%" x="2" y="3" >
+	<classes:FlowBox id="flowBox" horizontalGap="0" verticalGap="0" width="100%" 
+		height="100%" x="2" y="3" resize="sizeTextInput()" updateComplete="sizeTextInput()">
+
 		<components:PromptTextInput id="textInput" width="{ flowBox.width }" paddingTop="0" enableClearIcon="false"
-			change="handleChange(event)" move="handleMove()"/>		
+			change="handleChange(event)" move="sizeTextInput()"/>		
+
 	</classes:FlowBox>
 	 
 </mx:Canvas>
