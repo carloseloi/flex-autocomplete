@@ -68,7 +68,12 @@
 				
 				if (_style == AutoComplete.STYLE_UNDERLINE)
 				{
-					label = "<u>" + _text + "</u>"; 
+					label = "<u>" + _text + "</u>";
+					
+					if (focusManager && focusManager.getFocus() == this)
+					{
+						label = "<b>" + label + "</b>";
+					}
 				}
 				else
 				{
@@ -117,7 +122,7 @@
 					
 					if (_enableRemoveIcon)
 					{
-						width += clearIcon.width;
+						width += removeIcon.width;
 					}
 					
 					
@@ -291,8 +296,8 @@
 	<mx:TextInput id="leftTextInput" width="5" borderStyle="none" 
 		focusThickness="0" change="handleTextChange(event)"/>
 	<mx:Label id="itemLabel" updateComplete="redrawShape()"/>
-	<mx:Image id="clearIcon" source="@Embed('/com/hillelcoren/assets/remove.png')" 
-		visible="{ _enableRemoveIcon }" includeInLayout="{ _enableRemoveIcon }" click="handleRemoveClick()"/>
+	<mx:Image id="removeIcon" source="@Embed('/com/hillelcoren/assets/remove.png')" 
+			visible="{ _enableRemoveIcon }" includeInLayout="{ _enableRemoveIcon }" click="handleRemoveClick()"/>
 	<mx:Spacer id="rightSpacer"/>
 	<mx:TextInput id="rightTextInput" width="5" borderStyle="none" 
 		focusThickness="0" change="handleTextChange(event)" visible="false" includeInLayout="false"/>		
