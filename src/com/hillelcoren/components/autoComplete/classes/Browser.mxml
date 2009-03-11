@@ -12,6 +12,9 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.listClasses.ListBase;
+			import mx.controls.List;
+			import mx.controls.DataGrid;
 			import com.hillelcoren.components.AutoComplete;
 			import com.hillelcoren.utils.StringUtils;
 			import mx.utils.ObjectUtil;
@@ -40,14 +43,50 @@
 			private var _labelFunction:Function;
 			private var _itemRenderer:IFactory;
 			
+			[Bindable]
+			private var _list:ListBase;
+						
 			public function init():void
 			{
-				dataGrid.doubleClickEnabled = true;
-				dataGrid.itemRenderer = _itemRenderer ? _itemRenderer : browserItemRenderer;
-				dataGrid.addEventListener( ListEvent.ITEM_DOUBLE_CLICK, handleDoubleClick );
-				dataGrid.addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
+				if (getListType() == List)
+				{
+					_list = new List();
+					_list.setStyle( "alternatingItemColors", [0xEEEEEE, 0xFFFFFF] );					
+				}
+				else
+				{
+					_list = new DataGrid();
+				}
 				
+				_list.percentWidth = 100;
+				_list.percentHeight = 100;
+				_list.dataProvider = _dataProvider;
+				_list.doubleClickEnabled = true;
+				_list.itemRenderer = _itemRenderer ? _itemRenderer : browserItemRenderer;
+				_list.addEventListener( ListEvent.ITEM_DOUBLE_CLICK, handleDoubleClick );
+				_list.addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
+				vBox.addChildAt( _list, 0 );
+								
 				searchTextInput.setFocus();					
+			}
+			
+			private function getListType():Class
+			{
+				if (!_dataProvider || _dataProvider.length == 0)
+				{
+					return List;
+				}
+				
+				var item:Object = _dataProvider.getItemAt( 0 );
+				
+				if (item is String)
+				{
+					return List;
+				}
+				else
+				{
+					return DataGrid;
+				}
 			}
 			
 			public function set filterFunction( value:Function ):void
@@ -62,7 +101,7 @@
 			
 			private function handleKeyDown( event:KeyboardEvent ):void
 			{
-				if (dataGrid.selectedIndex > -1 && event.keyCode == Keyboard.ENTER)
+				if (_list.selectedIndex > -1 && event.keyCode == Keyboard.ENTER)
 				{
 					dispatchEvent( new Event( AutoComplete.BROWSER_ITEM_SELECTED ) );
 				}
@@ -96,7 +135,7 @@
 			
 			public function get selectedItems():Array
 			{
-				return dataGrid.selectedItems;	
+				return _list.selectedItems;	
 			}
 			
 			public function set dataProvider( value:ArrayCollection ):void
@@ -135,14 +174,21 @@
 				if (_isMultiSelectChanged)
 				{
 					_isMultiSelectChanged = false;
-					dataGrid.allowMultipleSelection = _isMultiSelect;					
+					
+					if (_list)
+					{
+						_list.allowMultipleSelection = _isMultiSelect;
+					}
+					else if (_list)
+					{
+						_list.allowMultipleSelection = _isMultiSelect;
+					}					
 				}
 					
 				if (_dataProviderChanged)
 				{
 					_dataProviderChanged = false;
 					
-					dataGrid.dataProvider = _dataProvider;
 					_dataProvider.filterFunction = filterFunctionWrapper;
 					_dataProvider.refresh();
 				}
@@ -175,16 +221,14 @@
 		<classes:BrowserItemRenderer selectedItems="{ outerDocument.originalSelectedItems }" />
 	</mx:Component>
 		
-	<mx:VBox width="100%" height="100%">
-	
-		<mx:DataGrid id="dataGrid" width="100%" height="100%"/>
+	<mx:VBox id="vBox" width="100%" height="100%">
 	
 		<mx:HBox verticalAlign="middle" width="100%" 
 			paddingRight="10" paddingLeft="10" paddingBottom="20" paddingTop="20">
 			<mx:Label text="Search"/>
 			<mx:TextInput id="searchTextInput" change="handleSearchChange()"/>
 			<mx:Spacer width="100%"/>
-			<mx:Button id="selectButton" label="Select" click="handleSelectClick()" enabled="{ dataGrid.selectedIndex > -1 } " width="{ Consts.BUTTON_WIDTH }"/>
+			<mx:Button id="selectButton" label="Select" click="handleSelectClick()" enabled="{ _list.selectedIndex > -1 } " width="{ Consts.BUTTON_WIDTH }"/>
 			<mx:Button label="Cancel" click="handleCancelClick()" width="{ Consts.BUTTON_WIDTH }"/>
 		</mx:HBox>
 	</mx:VBox>

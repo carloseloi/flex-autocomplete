@@ -15,6 +15,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.events.FlexEvent;
 			import com.hillelcoren.components.autoComplete.interfaces.IBrowser;
 			import mx.events.MoveEvent;
 			import mx.utils.StringUtil;
@@ -142,8 +143,7 @@
 				addEventListener( MoveEvent.MOVE, handleMove );
 				
 				combo.selectedItems = _selectedItems;
-				combo.addEventListener( Combo.COMBO_ITEM_SELECTED, handleComboItemSelected );
-				combo.addEventListener( Event.CHANGE, handleTextChange );
+				combo.addEventListener( Event.CHANGE, handleComboItemSelected );
 				
 				if (_filterFunction == null)
 				{
@@ -179,13 +179,7 @@
 			{
 				combo.positionDropDown();
 			}
-			
-			private function handleTextChange( event:Event ):void
-			{
-				var changeEvent:Event = new Event( "textChange" );
-				dispatchEvent( changeEvent );				
-			}
-						
+									
 			override protected function commitProperties():void
 			{
 				super.commitProperties();
@@ -455,7 +449,6 @@
 				dp.refresh();
 				
 				_browser.dataProvider = dp;
-				
 				_browser.filterFunction = _filterFunction;
 				_browser.title = "Browse";
 				_browser.labelFunction = _labelFunction;
@@ -481,7 +474,7 @@
 				
 					if (!combo.isItemSelected)
 					{
-						Browser( _browser ).searchStr = combo.text;
+						Browser( _browser ).searchStr = searchText;
 					}
 				}										
 			}
@@ -502,7 +495,7 @@
 			{
 				var item:Object;
 				
-				if (useListBuilder)
+				if (useListBuilder || !_isMultiSelect)
 				{
 					_selectedItems.removeAll();
 					combo.clearFlowBox();
@@ -680,14 +673,19 @@
 				invalidateProperties();
 			}
 			
+			[Bindable(event="change")]
 			public function get text():String
 			{
-				if (combo)
+				var str:String = "";
+				
+				for each (var item:Object in _selectedItems)
 				{
-					return combo.text;
+					str += _labelFunction( item ) + ", ";
 				}
 				
-				return "";
+				str = str.substring( 0, str.length - 2);
+				
+				return str; 
 			}
 			
 			public function set text( value:String ):void
@@ -706,6 +704,7 @@
 				invalidateProperties();
 			}
 			
+			[Inspectable(enumeration="osx,facebook,underline")]
 			public function set style( value:String ):void
 			{
 				_style = value;
@@ -714,6 +713,7 @@
 				invalidateProperties();
 			}
 			
+			[Inspectable(enumeration="true,false")]
 			public function set enableRemoveIcon( value:Boolean ):void
 			{
 				_enableRemoveIcon = value;

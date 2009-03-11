@@ -30,7 +30,7 @@
 			private static const COLOR_FACEBOOK_SELECTED:uint 	= 0x5670A6;
 			private static const COLOR_FACEBOOK_SELECTED_BORDER:uint = 0x3B5998;
 			
-			private var _style:String = AutoComplete.STYLE_OSX;
+			private var _style:String;
 			private var _styleChanged:Boolean = true;
 			
 			private var _shape:UIComponent;
