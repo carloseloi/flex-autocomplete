@@ -7,7 +7,7 @@
 	showCloseButton="false" xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
 	
 	<mx:Metadata>
-		[Event("BROWSER_ITEM_SELECTED")]
+		[Event("change")]
 	</mx:Metadata>	
 	
 	<mx:Script>
@@ -96,14 +96,16 @@
 			
 			private function handleDoubleClick( event:ListEvent ):void
 			{
-				dispatchEvent( new Event( AutoComplete.BROWSER_ITEM_SELECTED ) );
+				var changeEvent:Event = new Event( Event.CHANGE );
+				dispatchEvent( changeEvent );
 			}
 			
 			private function handleKeyDown( event:KeyboardEvent ):void
 			{
 				if (_list.selectedIndex > -1 && event.keyCode == Keyboard.ENTER)
 				{
-					dispatchEvent( new Event( AutoComplete.BROWSER_ITEM_SELECTED ) );
+					var changeEvent:Event = new Event( Event.CHANGE );
+					dispatchEvent( changeEvent );
 				}
 			}
 			
@@ -114,7 +116,8 @@
 			
 			private function handleSelectClick():void
 			{
-				dispatchEvent( new Event( AutoComplete.BROWSER_ITEM_SELECTED ) );
+				var changeEvent:Event = new Event( Event.CHANGE );
+				dispatchEvent( changeEvent );				
 			}
 			
 			public function set originalSelectedItems( value:ArrayCollection ):void

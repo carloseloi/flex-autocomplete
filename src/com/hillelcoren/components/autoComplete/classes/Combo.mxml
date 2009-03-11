@@ -50,7 +50,7 @@
 			private var _dropDownLabelFunction:Function;
 			private var _dropDownItemRenderer:IFactory;
 			private var _isEqualFunction:Function;	
-			private var _onBackspace:String;
+			private var _backspaceAction:String;
 			
 			private var _isMultiSelect:Boolean;
 			private var _isMultiSelectChanged:Boolean;
@@ -70,7 +70,7 @@
 			private var _selectedItems:ArrayCollection;
 			private var _selectedItem:Object;
 			
-			private var _style:String = AutoComplete.STYLE_OSX;
+			private var _style:String = AutoComplete.STYLE_MAC_MAIL;
 			private var _styleChanged:Boolean;
 			
 			public static const SEARCH_CHANGE:String = "searchChange";
@@ -171,13 +171,11 @@
 						_dropDown.scrollToIndex( _dropDown.selectedIndex );
 						textInput.setCursorPosition( textInput.selectionBeginIndex );							
 					}
-					else if (event.keyCode == Keyboard.ESCAPE || event.keyCode == Keyboard.TAB)
+					else if (event.keyCode == Keyboard.ESCAPE)
 					{
 						hideDropDown();
 					}
-					// charCode 44 is a comma
-					//else if (event.keyCode == Keyboard.ENTER || event.charCode == 44)
-					else if (event.keyCode == Keyboard.ENTER || event.keyCode == Keyboard.TAB)
+					else if (event.keyCode == Keyboard.ENTER || event.keyCode == Keyboard.TAB || event.charCode == 44)
 					{
 						setSelectedItem( _dropDown.selectedItem );	
 						return;											
@@ -188,7 +186,8 @@
 					var comp:iComboItem = determineFocus();
 					var comboItem:iComboItem;
 					var index:int = flowBox.getChildIndex( comp as DisplayObject );
-				
+					var pos:Point;
+					
 					if (event.keyCode == Keyboard.BACKSPACE)
 					{
 						if (_selectedItems.length == 0)
@@ -221,7 +220,7 @@
 							{
 								ComboTextInput( prevItem ).setSelectionEnd();								
 							}							
-							else if (_onBackspace == AutoComplete.BACKSPACE_REMOVE)
+							else if (_backspaceAction == AutoComplete.BACKSPACE_REMOVE)
 							{
 								removeItem( prevItem );	
 							}							
@@ -229,26 +228,26 @@
 					}
 					else if (event.keyCode == Keyboard.UP)
 					{
-						var pos:Point = flowBox.getItemPosition( comp );
+						pos = flowBox.getItemPosition( comp );
 						pos.y--;
 							
-						var item:iComboItem = flowBox.getItemByPosition( pos );
+						comboItem = flowBox.getItemByPosition( pos );
 						
-						if (item)
+						if (comboItem)
 						{
-							item.setTextFocus();
+							comboItem.setTextFocus();
 						}
 					}
 					else if (event.keyCode == Keyboard.DOWN)
 					{
-						var pos:Point = flowBox.getItemPosition( comp );
+						pos = flowBox.getItemPosition( comp );
 						pos.y++;
 						
-						var item:iComboItem = flowBox.getItemByPosition( pos );
+						comboItem = flowBox.getItemByPosition( pos );
 						
-						if (item)
+						if (comboItem)
 						{
-							item.setTextFocus();
+							comboItem.setTextFocus();
 						}
 					}
 					else if (event.keyCode == Keyboard.LEFT)
@@ -508,7 +507,7 @@
 				{
 					width = flowBox.width;
 				}
-				else if (_selectedItems.length > 0)
+				else if (flowBox.getChildren().length > 1)
 				{ 
 					var comboItem:UIComponent = flowBox.getChildAt( flowBox.numChildren - 2 ) as UIComponent;
 					var availableWidth:int = flowBox.width - (comboItem.x + comboItem.width);
@@ -884,9 +883,9 @@
 				textInput.setFocus();
 			}
 			
-			public function set onBackspace( value:String ):void
+			public function set backspaceAction( value:String ):void
 			{
-				_onBackspace = value;
+				_backspaceAction = value;
 			}
 			
 			public function set multiSelectLayout( value:String ):void
