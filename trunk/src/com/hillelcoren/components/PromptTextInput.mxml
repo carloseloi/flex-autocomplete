@@ -298,7 +298,20 @@
 			public function isEditable():Boolean
 			{
 				return true;
-			}					
+			}
+			
+			public function setCursorPosition( value:int ):void
+			{
+				_setCursorPosition( value );
+				callLater( _setCursorPosition, [value] );
+			}	
+			
+			private function _setCursorPosition( value:int ):void
+			{
+				textInput.selectionBeginIndex = value;
+				textInput.selectionEndIndex = value;
+			}
+			
 		]]>
 	</mx:Script>
 	
