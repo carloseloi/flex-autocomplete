@@ -3,7 +3,7 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	clipContent="false" 
 	borderStyle="inset" borderThickness="1"
-	height="{ toolBar.height + 5 }"
+	height="{ flowBox.height + 5 }"
 	initialize="init()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	xmlns:components="com.hillelcoren.components.*" 
@@ -108,19 +108,16 @@
 					textInput.enableClearIcon = _enableClearIcon;
 				}
 				
-				if (_styleChanged || _enableRemoveIconChanged)
+				if (_styleChanged)
 				{
 					_styleChanged = false;
+					flowBox.style = _style;
+				}
+				
+				if (_enableRemoveIconChanged)
+				{
 					_enableRemoveIconChanged = false;
-						
-					for each (var item:Object in toolBar.getChildren())
-					{
-						if (item is SelectedItem)
-						{
-							SelectedItem( item ).style = _style;
-							SelectedItem( item ).enableRemoveIcon = _enableRemoveIcon;		
-						}
-					}
+					flowBox.enableRemoveIcon = _enableRemoveIcon;
 				}
 			}
 			
@@ -174,7 +171,7 @@
 				{
 					var comp:iComboItem = determineFocus();
 					var comboItem:iComboItem;
-					var index:int = toolBar.getChildIndex( comp as DisplayObject );
+					var index:int = flowBox.getChildIndex( comp as DisplayObject );
 				
 					if (event.keyCode == Keyboard.BACKSPACE)
 					{
@@ -201,7 +198,7 @@
 								return;
 							}
 							
-							var prevItem:UIComponent = toolBar.getChildAt( index - 1 ) as UIComponent;
+							var prevItem:UIComponent = flowBox.getChildAt( index - 1 ) as UIComponent;
 							prevItem.setFocus();
 							
 							if (prevItem is ComboTextInput)
@@ -216,10 +213,10 @@
 					}
 					else if (event.keyCode == Keyboard.UP)
 					{
-						var pos:Point = getItemPosition( comp );
+						var pos:Point = flowBox.getItemPosition( comp );
 						pos.y--;
 							
-						var item:iComboItem = getItemByPosition( pos );
+						var item:iComboItem = flowBox.getItemByPosition( pos );
 						
 						if (item)
 						{
@@ -228,10 +225,10 @@
 					}
 					else if (event.keyCode == Keyboard.DOWN)
 					{
-						var pos:Point = getItemPosition( comp );
+						var pos:Point = flowBox.getItemPosition( comp );
 						pos.y++;
 						
-						var item:iComboItem = getItemByPosition( pos );
+						var item:iComboItem = flowBox.getItemByPosition( pos );
 						
 						if (item)
 						{
@@ -247,7 +244,7 @@
 								return;
 							}
 						
-							comboItem = toolBar.getChildAt( index - 1 ) as iComboItem;
+							comboItem = flowBox.getChildAt( index - 1 ) as iComboItem;
 							comboItem.setTextFocus();
 							
 							if (comboItem is ComboTextInput)
@@ -258,14 +255,14 @@
 					}
 					else if (event.keyCode == Keyboard.RIGHT)
 					{
-						if (index < toolBar.numChildren - 1)
+						if (index < flowBox.numChildren - 1)
 						{
 							if (!comp.isCursorAtEnd())
 							{
 								return;
 							}							
 							
-							comboItem = toolBar.getChildAt( index + 1 ) as iComboItem;
+							comboItem = flowBox.getChildAt( index + 1 ) as iComboItem;
 							comboItem.setTextFocus();
 						}
 					}
@@ -280,60 +277,6 @@
 				}
 			}
 			
-			private function getItemPosition( comboItem:iComboItem ):Point
-			{
-				var lastY:int;
-				var col:uint;
-				var row:uint;
-				
-				for each (var item:UIComponent in toolBar.getChildren())
-				{
-					if (item.y > lastY)
-					{
-						col = 0;
-						row++;
-						lastY = item.y;
-					}
-					
-					if (item == comboItem)
-					{
-						return new Point( col, row );
-					}
-					
-					col++;
-				}
-				
-				return null;
-			}
-			
-			private function getItemByPosition( pos:Point ):iComboItem
-			{
-				var lastY:int;
-				var row:uint;
-				var col:int;
-				var lastItem:UIComponent;
-				
-				for each (var item:UIComponent in toolBar.getChildren())
-				{
-					if (item.y > lastY)
-					{
-						col = 0;
-						lastY = item.y;
-						row++;
-					}
-					
-					if (row == pos.y && col == pos.x)
-					{
-						return item as iComboItem;
-					}
-					
-					lastItem = item;
-					col++;
-				}
-				
-				return null;	
-			}					
-		
 			private function removeItem( item:UIComponent ):void
 			{
 				if (item is SelectedItem)
@@ -349,10 +292,10 @@
 					_selectedItems.removeItemAt( index );
 				}
 								
-				toolBar.removeChild( item  );
+				flowBox.removeChild( item  );
 				updateComoText();
 				
-				var comboItem:iComboItem = toolBar.getChildAt( index ) as iComboItem;
+				var comboItem:iComboItem = flowBox.getChildAt( index ) as iComboItem;
 				comboItem.setTextFocus();	
 			}			
 			
@@ -360,7 +303,7 @@
 			{
 				var comp:UIComponent = focusManager.getFocus() as UIComponent;
 				
-				for each (var item:iComboItem in toolBar.getChildren())
+				for each (var item:iComboItem in flowBox.getChildren())
 				{
 					if (item.contains( comp ))
 					{
@@ -412,7 +355,7 @@
 						comboTextInput.height = textInput.height;
 						comboTextInput.item = value;
 						comboTextInput.addEventListener( Event.CHANGE, handleComboItemChange, false, 0, true );
-						toolBar.addChildAt( comboTextInput, toolBar.numChildren - 1 );									
+						flowBox.addChildAt( comboTextInput, flowBox.numChildren - 1 );									
 					}
 					else
 					{
@@ -424,7 +367,7 @@
 						selectedItem.enableRemoveIcon = _enableRemoveIcon;
 						selectedItem.addEventListener( FlexEvent.CREATION_COMPLETE, sizeTextInput, false, 0, true );
 						selectedItem.addEventListener( FlexEvent.REMOVE, handleItemRemove, false, 0, true );
-						toolBar.addChildAt( selectedItem, toolBar.numChildren - 1 );
+						flowBox.addChildAt( selectedItem, flowBox.numChildren - 1 );
 					}					
 				}
 				// this means the user entered a comma after a value which has already
@@ -432,7 +375,7 @@
 				else if (_selectedItems.getItemIndex( value ) >= 0 && isNew)
 				{
 					var index:int = _selectedItems.getItemIndex( value );
-					var input:ComboTextInput = toolBar.getChildAt( index ) as ComboTextInput;
+					var input:ComboTextInput = flowBox.getChildAt( index ) as ComboTextInput;
 					
 					input.text = cleanStr( input.text ) + ",";													
 				}
@@ -497,9 +440,9 @@
 				else
 				{
 					_selectedItems.removeItemAt( index );
-					toolBar.removeChild( comboTextInput );
+					flowBox.removeChild( comboTextInput );
 					
-					var comboItem:iComboItem = toolBar.getChildAt( index ) as iComboItem;
+					var comboItem:iComboItem = flowBox.getChildAt( index ) as iComboItem;
 					comboItem.setTextFocus();
 				}
 			}
@@ -520,11 +463,11 @@
 			private function sizeTextInput( event:Event = null ):void
 			{
 				if (_selectedItems.length > 0 
-					&& toolBar.numChildren > 1
+					&& flowBox.numChildren > 1
 					&& textInput.textInput.horizontalScrollPosition == 0)
 				{
-					var comboItem:UIComponent = toolBar.getChildAt( toolBar.numChildren - 2 ) as UIComponent;
-					var width:int = toolBar.width - (comboItem.x + comboItem.width);
+					var comboItem:UIComponent = flowBox.getChildAt( flowBox.numChildren - 2 ) as UIComponent;
+					var width:int = flowBox.width - (comboItem.x + comboItem.width);
 					
 					if (comboItem.width == 0)
 					{
@@ -539,9 +482,9 @@
 					
 				}				
 				
-				if (toolBar.width > 0)
+				if (flowBox.width > 0)
 				{
-					textInput.width = toolBar.width;
+					textInput.width = flowBox.width;
 				}					
 			}
 			
@@ -571,9 +514,9 @@
 			{
 				_selectedItems.removeAll();
 				
-				while (toolBar.numChildren > 1)
+				while (flowBox.numChildren > 1)
 				{
-					toolBar.removeChildAt( 0 );
+					flowBox.removeChildAt( 0 );
 				}
 			}
 			
@@ -901,9 +844,9 @@
 		]]>
 	</mx:Script>
 	
-	<mx:ToolBar id="toolBar" horizontalGap="0" verticalGap="0" width="100%" height="100%" x="2" y="3" >
+	<classes:FlowBox id="flowBox" horizontalGap="0" verticalGap="0" width="100%" height="100%" x="2" y="3" >
 		<components:PromptTextInput id="textInput" width="100" paddingTop="0" enableClearIcon="false"
 			change="handleChange(event)" move="handleMove()"/>		
-	</mx:ToolBar>
+	</classes:FlowBox>
 	 
 </mx:Canvas>

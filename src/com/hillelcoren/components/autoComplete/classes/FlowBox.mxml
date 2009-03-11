@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ToolBar
+	xmlns:mx="http://www.adobe.com/2006/mxml">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.core.UIComponent;
+			import com.hillelcoren.components.autoComplete.interfaces.iComboItem;
+			
+			private var _style:String;
+			private var _styleChanged:Boolean;
+			
+			private var _enableRemoveIcon:Boolean;
+			private var _enableRemoveIconChanged:Boolean;
+						
+			override protected function commitProperties():void
+			{
+				super.commitProperties();
+				
+				if (_styleChanged || _enableRemoveIconChanged)
+				{
+					_styleChanged = false;
+					_enableRemoveIconChanged = false;
+					
+					for each (var item:iComboItem in getChildren())
+					{
+						if (item is SelectedItem)
+						{
+							SelectedItem( item ).style = _style;
+							SelectedItem( item ).enableRemoveIcon = _enableRemoveIcon;	
+						}						
+					}
+				}
+			}
+			
+			internal function getItemPosition( comboItem:iComboItem ):Point
+			{
+				var lastY:int;
+				var col:uint;
+				var row:uint;
+				
+				for each (var item:UIComponent in getChildren())
+				{
+					if (item.y > lastY)
+					{
+						col = 0;
+						row++;
+						lastY = item.y;
+					}
+					
+					if (item == comboItem)
+					{
+						return new Point( col, row );
+					}
+					
+					col++;
+				}
+				
+				return null;
+			}
+			
+			internal function getItemByPosition( pos:Point ):iComboItem
+			{
+				var lastY:int;
+				var row:uint;
+				var col:int;
+				var lastItem:UIComponent;
+				
+				for each (var item:UIComponent in getChildren())
+				{
+					if (item.y > lastY)
+					{
+						col = 0;
+						lastY = item.y;
+						row++;
+					}
+					
+					if (row == pos.y && col == pos.x)
+					{
+						return item as iComboItem;
+					}
+					
+					lastItem = item;
+					col++;
+				}
+				
+				return null;	
+			}								
+			
+			internal function set style( value:String ):void
+			{
+				_style = value;
+				_styleChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			internal function set enableRemoveIcon( value:Boolean ):void
+			{
+				_enableRemoveIcon = value;
+				_enableRemoveIconChanged = true;
+				
+				invalidateProperties();
+			}
+			
+		]]>
+	</mx:Script>
+</mx:ToolBar>
