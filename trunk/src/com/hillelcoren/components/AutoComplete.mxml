@@ -2,8 +2,7 @@
 <mx:Box
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:hc="com.hillelcoren.components.autoComplete.classes.*"
-	clipContent="false"
-	width="100%"
+	clipContent="false" width="250"
 	initialize="init()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	implements="mx.controls.listClasses.IDropInListItemRenderer,mx.managers.IFocusManagerComponent">
@@ -113,18 +112,16 @@
 			private var _dropDownItemRenderer:IFactory;
 			private var _dropDownItemRendererChanged:Boolean;
 			
-			private var _onBackspace:String
-			private var _onBackspaceChanged:Boolean;
+			private var _backspaceAction:String
+			private var _backspaceActionChanged:Boolean;
 			
 			private var _browserItemRenderer:IFactory;
 			
 			private var _keyField:String = "id";
 			private var _listData:DataGridListData;
 			
-			public static const BROWSER_ITEM_SELECTED:String = "BROWSER_ITEM_SELECTED";
-			
 			public static const STYLE_UNDERLINE:String 	= "underline";
-			public static const STYLE_OSX:String 		= "osx";
+			public static const STYLE_MAC_MAIL:String 	= "macMail";
 			public static const STYLE_FACEBOOK:String 	= "facebook";
 			
 			public static const MATCH_BEGINNING:String 	= "beginning";
@@ -143,8 +140,13 @@
 				addEventListener( MoveEvent.MOVE, handleMove );
 				
 				combo.selectedItems = _selectedItems;
-				combo.addEventListener( Event.CHANGE, handleComboItemSelected );
+				combo.addEventListener( Event.CHANGE, handleComboChange );
 				combo.addEventListener( Combo.SEARCH_CHANGE, handleComboSearchChange );
+				
+				if (_dataProvider == null)
+				{
+					_dataProvider = new ArrayCollection();
+				}
 				
 				if (_filterFunction == null)
 				{
@@ -159,7 +161,7 @@
 				if (_dropDownLabelFunction == null)
 				{			
 					dropDownLabelFunction = defaultDropDownLabelFunction;
-				}
+				}								
 			}
 			
 			// check if the focus has moved to the dropdown (otherwise, if we use the 
@@ -213,10 +215,10 @@
 					showOrderingButtons( _isOrderable );
 				}
 				
-				if (_onBackspaceChanged)
+				if (_backspaceActionChanged)
 				{
-					_onBackspaceChanged = false;
-					combo.onBackspace = _onBackspace;
+					_backspaceActionChanged = false;
+					combo.backspaceAction = _backspaceAction;
 				}
 				
 				if (_isStrictChanged)
@@ -453,7 +455,7 @@
 				_browser.filterFunction = _filterFunction;
 				_browser.title = "Browse";
 				_browser.labelFunction = _labelFunction;
-				_browser.addEventListener( AutoComplete.BROWSER_ITEM_SELECTED, handleBrowserItemSelected );
+				_browser.addEventListener( Event.CHANGE, handleBrowserChange );
 				
 				if (_isMultiSelect || useListBuilder)
 				{
@@ -480,15 +482,8 @@
 				}										
 			}
 			
-			private function handleComboItemSelected( event:Event ):void
+			private function handleComboChange( event:Event ):void
 			{
-				/*
-				if (combo.selectedItem && !isItemSelected( combo.selectedItem ))
-				{
-					_selectedItems.addItemAt( combo.selectedItem, 0 );
-				}
-				*/
-				
 				dispatchEvent( new Event( Event.CHANGE ) );
 			}
 			
@@ -498,7 +493,7 @@
 				dispatchEvent( changeEvent );
 			}
 			
-			private function handleBrowserItemSelected( event:Event ):void
+			private function handleBrowserChange( event:Event ):void
 			{
 				var item:Object;
 				
@@ -711,7 +706,7 @@
 				invalidateProperties();
 			}
 			
-			[Inspectable(enumeration="osx,facebook,underline")]
+			[Inspectable(enumeration="macMail,facebook,underline")]
 			public function set style( value:String ):void
 			{
 				_style = value;
@@ -875,10 +870,10 @@
 			}
 			
 			[Inspectable(enumeration="focus,remove")]
-			public function set onBackspace( value:String ):void
+			public function set backspaceAction( value:String ):void
 			{
-				_onBackspace = value;
-				_onBackspaceChanged = true;
+				_backspaceAction = value;
+				_backspaceActionChanged = true;
 				
 				invalidateProperties();
 			}

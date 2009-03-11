@@ -213,7 +213,7 @@
 
 			<mx:VBox horizontalAlign="left">
 				<mx:ComboBox id="style" change="handleStyleComboChange()">					
-					<mx:Object label="OS X" data="{ AutoComplete.STYLE_OSX }"/>
+					<mx:Object label="Mac Mail" data="{ AutoComplete.STYLE_MAC_MAIL }"/>
 					<mx:Object label="Facebook" data="{ AutoComplete.STYLE_FACEBOOK }"/>
 					<mx:Object label="Underline" data="{ AutoComplete.STYLE_UNDERLINE }"/>																		
 				</mx:ComboBox>
@@ -234,15 +234,15 @@
 			</mx:VBox>		
 			
 			<mx:VBox>
-				<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
+				<hc:AutoComplete id="autoComplete" labelField="name" matchType="anyPart" 
 					prompt="Choose your favorite Crayola crayon" width="320" change="handleAutoCompleteChange()"
-					isStrict="{ strict.selected }" style="{ AutoComplete.STYLE_OSX }" onBackspace="focus"
+					isStrict="{ strict.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus"
 					isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }"
 					isOrderable="{ orderable.selected }" useListBuilder="{ listBuilder.selected }"
 					multiSelectLayout="horizontal" dropDownItemRenderer="{ dropDownItemRenderer }"/>
 					
-					<mx:TextInput text="{ autoComplete.searchText }"/>
 					<!--
+					<mx:TextInput text="{ autoComplete.searchText }"/>
 					<mx:TextInput textInput="{ handleTextInput(event) }"/>
 					<mx:List dataProvider="{ autoComplete.selectedItems }" labelField="name"/>
 					-->
