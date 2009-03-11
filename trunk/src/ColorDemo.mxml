@@ -236,10 +236,11 @@
 					isOrderable="{ orderable.selected }" useListBuilder="{ listBuilder.selected }"
 					multiSelectLayout="horizontal" dropDownItemRenderer="{ dropDownItemRenderer }"/>
 					
-					<mx:TextInput text="{ 'width is ' + autoComplete.combo.textInput.textInput.width }"/>
+					<!--
 					<mx:TextInput text="{ autoComplete.selectedItem.name }"/>
 					<mx:List dataProvider="{ autoComplete.selectedItems }" labelField="name"/>
-						
+					-->
+					
 			</mx:VBox>						
 			
 		</mx:HBox>
