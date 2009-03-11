@@ -5,7 +5,7 @@
 	width="100%" height="100%"
 	verticalAlign="middle" horizontalAlign="center"
 	color="#000000"
-	initialize="init()" xmlns:local="*">
+	initialize="init()" xmlns:local="*" xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
 
 	<mx:Script>
 		<![CDATA[
@@ -164,6 +164,8 @@
 					{ "name":"Yellow Green", "hex":0xC5E17A },
 					{ "name":"Yellow Orange", "hex":0xFFAE42 }
 				] );
+				
+				autoComplete.setFocus();
 			}			
 			
 			private function handleAutoCompleteChange():void
@@ -199,6 +201,7 @@
 		<local:ColorItemRenderer selectedItems="{ outerDocument.autoComplete.selectedItems }" />
 	</mx:Component>
 
+
 	<mx:Panel width="550" height="400" title="Color Demo"
 			paddingBottom="20" paddingTop="20" paddingLeft="20" paddingRight="20">
 		<mx:HBox>		
@@ -228,10 +231,15 @@
 			<mx:VBox>
 				<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
 					prompt="Choose your favorite Crayola crayon" width="320" change="handleAutoCompleteChange()"
-					allowNewValues="{ strict.selected }" style="{ AutoComplete.STYLE_OSX }" 
+					isStrict="{ strict.selected }" style="{ AutoComplete.STYLE_OSX }" onBackspace="focus"
 					isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }"
 					isOrderable="{ orderable.selected }" useListBuilder="{ listBuilder.selected }"
 					multiSelectLayout="horizontal" dropDownItemRenderer="{ dropDownItemRenderer }"/>
+					
+					<mx:TextInput text="{ 'width is ' + autoComplete.combo.textInput.textInput.width }"/>
+					<mx:TextInput text="{ autoComplete.selectedItem.name }"/>
+					<mx:List dataProvider="{ autoComplete.selectedItems }" labelField="name"/>
+						
 			</mx:VBox>						
 			
 		</mx:HBox>

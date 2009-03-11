@@ -112,6 +112,11 @@
 			private var _dropDownItemRenderer:IFactory;
 			private var _dropDownItemRendererChanged:Boolean;
 			
+			private var _onBackspace:String
+			private var _onBackspaceChanged:Boolean;
+			
+			private var _browserItemRenderer:IFactory;
+			
 			private var _keyField:String = "id";
 			private var _listData:DataGridListData;
 			
@@ -127,6 +132,9 @@
 			
 			public static const LAYOUT_VERTICAL:String 		= "vertical";
 			public static const LAYOUT_HORIZONTAL:String 	= "horizontal";
+			
+			public static const BACKSPACE_FOCUS:String 	= "focus";
+			public static const BACKSPACE_REMOVE:String = "remove";
 			
 			private function init():void
 			{
@@ -210,6 +218,12 @@
 					showOrderingButtons( _isOrderable );
 				}
 				
+				if (_onBackspaceChanged)
+				{
+					_onBackspaceChanged = false;
+					combo.onBackspace = _onBackspace;
+				}
+				
 				if (_isStrictChanged)
 				{
 					_isStrictChanged = false;
@@ -243,7 +257,7 @@
 					combo.isMultiSelect = isComboMultiSelect;
 					
 					var showMultiSelect:Boolean = (_multiSelectLayout == LAYOUT_VERTICAL && _isMultiSelect);
-					showMultiSelectList( showMultiSelect );					
+					showMultiSelectList( showMultiSelect );																			
 				}
 				
 				if (_dropDownLabelFunctionChanged)
@@ -345,7 +359,7 @@
 			
             public function set listData( value:BaseListData ):void
             {
-            	combo.enableClearIcon = false;
+            	//combo.enableClearIcon = false;
             	
             	_listData = DataGridListData( value );            	
             } 
@@ -491,29 +505,13 @@
 				if (useListBuilder)
 				{
 					_selectedItems.removeAll();
-					
-					for each (item in _browser.selectedItems)
-					{
-						_selectedItems.addItem( item );
-					}					
+					combo.clear();
 				}
-				else
+				
+				for each (item in _browser.selectedItems)
 				{
-					for each (item in _browser.selectedItems)
-					{
-						if (isMultiSelect)
-						{
-							if (!isItemSelected( item ))
-							{
-								_selectedItems.addItemAt( item, 0 );
-							}
-						}
-						else
-						{
-							combo.setSelectedItem( item );
-						}
-					}
-				}
+					combo.setSelectedItem( item, true );					
+				}					
 				
 				if (_isMultiSelect && _multiSelectLayout == LAYOUT_HORIZONTAL)
 				{
@@ -674,7 +672,7 @@
 				_browserClass = value;
 			}
 			
-			public function set allowNewValues( value:Boolean ):void
+			public function set isStrict( value:Boolean ):void
 			{
 				_isStrict = value;
 				_isStrictChanged = true;
@@ -866,6 +864,15 @@
 			public function set removeLabel( value:String ):void
 			{
 				_removeLabel = value;
+			}
+			
+			[Inspectable(enumeration="focus,remove")]
+			public function set onBackspace( value:String ):void
+			{
+				_onBackspace = value;
+				_onBackspaceChanged = true;
+				
+				invalidateProperties();
 			}
 			
 		]]>
