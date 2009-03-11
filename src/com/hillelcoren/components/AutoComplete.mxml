@@ -253,8 +253,8 @@
 					_isMultiSelectChanged = false;
 					_multiSelectLayoutChanged = false;
 					
-					var isComboMultiSelect:Boolean = (_multiSelectLayout == LAYOUT_HORIZONTAL && _isMultiSelect);
-					combo.isMultiSelect = isComboMultiSelect;
+					combo.isMultiSelect = _isMultiSelect;
+					combo.multiSelectLayout = _multiSelectLayout;
 					
 					var showMultiSelect:Boolean = (_multiSelectLayout == LAYOUT_VERTICAL && _isMultiSelect);
 					showMultiSelectList( showMultiSelect );																			
@@ -505,7 +505,7 @@
 				if (useListBuilder)
 				{
 					_selectedItems.removeAll();
-					combo.clear();
+					combo.clearFlowBox();
 				}
 				
 				for each (item in _browser.selectedItems)

@@ -38,6 +38,7 @@
 				
 				_color = new Color( value.name, value.hex );
 				_list = owner as List;
+				//_list.setStyle( "alternatingItemColors", [0xFFFFFF, 0xEEEEEE] );
 				
 				nameLabel.htmlText = _list.labelFunction( _color );
 				hexLabel.htmlText = "Hex: #" + String( _color.hex.toString(16) ).toUpperCase();											
