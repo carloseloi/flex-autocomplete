@@ -71,7 +71,11 @@
 			private var _enableRemoveIconChanged:Boolean;
 			
 			private var _selectedItems:ArrayCollection;
+			
 			private var _selectedItem:Object;
+			private var _selectedItemChanged:Boolean;
+			private var _isSilent:Boolean;
+			private var _isNew:Boolean;
 			
 			private var _style:String = AutoComplete.STYLE_MAC_MAIL;
 			private var _styleChanged:Boolean;
@@ -156,6 +160,12 @@
 				{
 					_enableRemoveIconChanged = false;
 					flowBox.enableRemoveIcon = _enableRemoveIcon;
+				}
+				
+				if (_selectedItemChanged)
+				{
+					_selectedItemChanged = false;
+					_setSelectedItem();
 				}
 			}
 			
@@ -403,6 +413,20 @@
 			
 			public function setSelectedItem( value:Object, isSilent:Boolean = false, isNew:Boolean = false ):void
 			{
+				_selectedItem = value;
+				_selectedItemChanged = true;
+				_isSilent = isSilent;
+				_isNew = isNew;
+				
+				invalidateProperties();
+			}
+			
+			private function _setSelectedItem():void
+			{
+				var value:Object = _selectedItem;
+				var isSilent:Boolean = _isSilent;
+				var isNew:Boolean = _isNew;
+				
 				var validItem:Boolean = true;
 				
 				if (isNew)
