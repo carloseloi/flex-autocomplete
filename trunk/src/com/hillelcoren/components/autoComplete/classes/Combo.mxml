@@ -59,7 +59,7 @@
 			private var _multiSelectLayout:String;
 			private var _multiSelectLayoutChanged:Boolean;
 			
-			private var _isStrict:Boolean;
+			private var _isStrict:Boolean = true;
 					
 			private var _prompt:String;
 			private var _promptChanged:Boolean;

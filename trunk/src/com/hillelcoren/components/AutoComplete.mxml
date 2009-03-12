@@ -8,7 +8,13 @@
 	implements="mx.controls.listClasses.IDropInListItemRenderer,mx.managers.IFocusManagerComponent">
 	
 	<mx:Metadata>
+		/**
+		 * Dispatched when an item is selected or de-selelcted
+		 */
 		[Event(name="change")]
+		/**
+		 * Dispatched when the text in the search field is changed
+		 */
 		[Event(name="textChange")]
 	</mx:Metadata>
 	
@@ -319,7 +325,7 @@
 					
 					for each (item in _dataProvider)
 					{
-						if (item[ _keyField ] == _selectedItemId)
+						if (item.hasOwnProperty( _keyField ) && item[ _keyField ] == _selectedItemId)
 						{
 							combo.setSelectedItem( item, true );
 							_selectedItemId = 0;
@@ -343,7 +349,7 @@
 							{
 								foundItem = item;
 							}
-							else if (_keyField && item[_keyField] == selectedItem[_keyField])
+							else if (item.hasOwnProperty( _keyField ) && item[_keyField] == selectedItem[_keyField])
 							{
 								foundItem = item;
 							}
@@ -544,6 +550,11 @@
 			}
 			
 			[Inspectable(enumeration="horizontal,vertical")]
+			/**
+			 * When isMultiSelect is set to true, this specifies whether to layout the selected
+			 * items horizontally (in a flow layout) or vertically (in a List).
+			 * @default horizontal
+			 */
 			public function set multiSelectLayout( value:String ):void
 			{
 				_multiSelectLayout = value;
@@ -553,6 +564,13 @@
 			}
 			
 			[Inspectable(enumeration="false,true")]
+			/**
+			 * A flag that indicates whether or not to display the browse button.
+			 * Clicking the browse button will show either a DataGrid or a List (depending
+			 * on whether the dataProvider contains Objects or Strings). It useListBuilder
+			 * is enabled an alternate List Builder browser will be displayed
+			 * @default false
+			 */
 			public function set isBrowseable( value:Boolean ):void
 			{
 				_isBrowseable = value;
@@ -562,6 +580,11 @@
 			}
 			
 			[Inspectable(enumeration="false,true")]
+			/**
+			 * A flag that indicates whether or not we display the ordering buttons and allow the 
+			 * items to be drag-and-drop reorderd. This is only enabled when isMultiSelect is
+			 * set to true and the multiSelectLayout property is set to AutoComplete.LAYOUT_VERTICAL
+			 */
 			public function set isOrderable( value:Boolean ):void
 			{
 				_isOrderable = value;
@@ -576,11 +599,22 @@
 				_useListBuilder = value;
 			}
 			
+			/**
+			 * If this is set to true, when the user clicks the Browse button we'll  
+			 * display the List Builder (rather than a DataGrid or List). <p> 
+			 * The List Builder contains two lists next to each other. The user can add/remove 
+			 * items by selecting them and clicking the move left/move right buttons or by
+			 * drag and dropping the items betweent the lists
+			 * @default false
+			 */
 			public function get useListBuilder():Boolean
 			{
 				return _useListBuilder;
 			}
 			
+			/**
+			 * A flag that indicates whether or not you can select multiple values.
+			 */
 		    public function get isMultiSelect():Boolean
 			{
 				return _isMultiSelect;
@@ -599,6 +633,9 @@
 				return _dataProvider;	
 			}
 			
+			/**
+			 * A function that the view will use to eliminate items that do not match the function's criteria.
+			 */ 
 			public function set filterFunction( value:Function ):void
 			{
 				_filterFunction = value;
@@ -608,11 +645,19 @@
 			}	
 			
 			[Inspectable(enumeration="beginning,word,anyPart")]
+			/**
+			 * Specifies the how to compare the item to the search string when checking for a match.
+			 * Note, setting a value for the filterFunction property will override this property.
+			 * @default beginning
+			 */
 			public function set matchType( value:String ):void
 			{
 				_matchType = value;
 			}
 			
+			/**
+			 * The id of the initially selected item.
+			 */
 			public function set selectedItemId( value:Number ):void
 			{
 				_selectedItemId = value;
@@ -621,11 +666,17 @@
 				invalidateProperties();
 			}
 			
+			/**
+			 * Checks if the component is in the process of resolving the selecteItemId to it's respective object.
+			 */
 			public function isSettingValue():Boolean
 			{
 				return _selectedItemId > 0;
 			}
 			
+			/**
+			 * An array of references to the selected items in the data provider.
+			 */
 			public function set selectedItems( value:ArrayCollection ):void
 			{
 				_initialSelectedItems = value;
@@ -634,6 +685,9 @@
 				invalidateProperties();
 			}
 			
+			/**
+			 * A reference to the selected item in the data provider.
+			 */
 			public function set selectedItem( value:Object ):void
 			{
 				_selectedItem = value;
@@ -668,6 +722,9 @@
 				}
 			}
 			
+			/**
+			 * Checks if an item is selected
+			 */
 			public function isItemSelected( item:Object ):Boolean
 			{
 				return _selectedItems.getItemIndex( item ) >= 0;
@@ -683,6 +740,10 @@
 				_browserClass = value;
 			}
 			
+			/**
+			 * A flag that indicates whether or not you can select values which aren't in the dataProvider
+			 * @default true
+			 */
 			public function set isStrict( value:Boolean ):void
 			{
 				_isStrict = value;
@@ -706,6 +767,9 @@
 				return str; 
 			}
 			
+			/**
+			 * The value of the text in the search field
+			 */
 			public function set text( value:String ):void
 			{
 				_text = value;
@@ -714,6 +778,9 @@
 				invalidateProperties();
 			}
 			
+			/**
+			 * The prompt to display before the component receives focus
+			 */
 			public function set prompt( value:String ):void
 			{
 				_prompt = value;
@@ -723,6 +790,10 @@
 			}
 			
 			[Inspectable(enumeration="macMail,facebook,underline")]
+			/**
+			 * Specifies which style to use when displaying the selected items.
+			 * @default macMail
+			 */
 			public function set style( value:String ):void
 			{
 				_style = value;
@@ -732,6 +803,10 @@
 			}
 			
 			[Inspectable(enumeration="true,false")]
+			/**
+			 * A flag that indicates whether or not to display the remove icon in the selected items.
+			 * @default false
+			 */
 			public function set enableRemoveIcon( value:Boolean ):void
 			{
 				_enableRemoveIcon = value;
@@ -741,6 +816,10 @@
 			}
 			
 			[Inspectable(enumeration="true,false")]
+			/**
+			 * A flag that indicates whether or not you can select duplicate items when multiselect mode is enabled
+			 * @default false
+			 */
 			public function set allowDuplicates( value:Boolean ):void
 			{
 				_allowDuplicates = value;
@@ -754,6 +833,9 @@
 				combo.setFocus();
 			}
 			
+			/**
+			 * The name of the field in the data provider items to display as the label.
+			 */
 			public function set labelField( value:String ):void
 			{
 				_labelField = value;
@@ -762,6 +844,9 @@
 				invalidateProperties();
 			}
 			
+			/**
+			 * A user-supplied function to run on each item to determine its label.
+			 */
 			public function set labelFunction( value:Function ):void
 			{
 				_labelFunction = value;
@@ -778,6 +863,9 @@
 				invalidateProperties();
 			}
 			
+			/**
+			 * The custom item renderer for the dropdown displayed when searching.
+			 */
 			public function set dropDownItemRenderer( value:IFactory ):void
 			{
 				_dropDownItemRenderer = value;
@@ -787,6 +875,9 @@
 			}
 			
 			[Bindable(event="searchChange")]
+			/**
+			 * Returns the search string.
+			 */
 			public function get searchText():String
 			{
 				return combo.searchText;
@@ -821,6 +912,11 @@
 				}
 			}
 			
+			/**
+			 * The default function used to determine the text to display in the dropdown when searching.
+			 * It will try to find the part of the item which matched the search string and highlight
+			 * it by making bold and underlined
+			 */
 			public function defaultDropDownLabelFunction( item:Object ):String
 			{
 				var label:String = _labelFunction( item );
@@ -859,17 +955,29 @@
 				return _labelFunction;
 			}
 			
+			/**
+			 * This field is used in conjuction with the selectedItems or selectedItemId property to 
+			 * determine if the item matches.
+			 * @default id
+			 */
 			public function set keyField( value:String ):void
 			{
 				_keyField = value;
 			}
 			
+			/**
+			 * A function which controls whether or not to automatically select the item if it's the
+			 * only match. By default, it's just a case-insensitive string comparison. 
+			 */
 			public function set isEqualFunction( value:Function ):void
 			{
 				_isEqualFunction = value;
 				combo.isEqualFunction = value;
 			}
 			
+			/**
+			 * Returns the next available (un-selected) item in the data provider
+			 */ 
 			public function getNextItem():*
 			{
 				combo.filterData();
@@ -884,17 +992,29 @@
 				}
 			}
 			
+			/**
+			 * The text value for the label the browse button. 
+			 * @default Browse
+			 */
 			public function set browseLabel( value:String ):void
 			{
 				_browseLabel = value;
 			}
 			
+			/**
+			 * The text value for the label the remove button.
+			 * @default Remove
+			 */
 			public function set removeLabel( value:String ):void
 			{
 				_removeLabel = value;
 			}
 			
 			[Inspectable(enumeration="focus,remove")]
+			/**
+			 * The action to take when pressing backspace when the cursor is in front of a selected item.
+			 * @default focus 
+			 */
 			public function set backspaceAction( value:String ):void
 			{
 				_backspaceAction = value;
