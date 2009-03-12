@@ -37,6 +37,7 @@
 			private var _item:Object;
 			private var _text:String;
 			private var _isMouseOver:Boolean;		
+			private var _isMultiSelect:Boolean;
 			
 			[Bindable]			
 			private var _enableRemoveIcon:Boolean = true;
@@ -83,7 +84,7 @@
 				
 				if (_style == AutoComplete.STYLE_UNDERLINE)
 				{
-					label += ",";
+					label += _isMultiSelect ? "," : "";
 					padding = 0;					
 				}
 				else
@@ -288,7 +289,12 @@
 				var event:Event = new Event( REMOVE_ITEM );
 				dispatchEvent( event );
 			}
-			
+
+			public function set isMultiSelect( value:Boolean ):void
+			{
+				_isMultiSelect = value;
+			}
+						
 		]]>
 	</mx:Script>
 	

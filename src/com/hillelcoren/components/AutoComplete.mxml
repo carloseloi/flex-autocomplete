@@ -260,6 +260,9 @@
 					
 					if (_multiSelectLayoutChanged)
 					{	
+						_selectedItems.removeAll();
+						combo.clearFlowBox();	
+						selectedItem = null;
 						combo.multiSelectLayout = _multiSelectLayout;
 					}
 					
@@ -299,8 +302,7 @@
 					_dataProviderChanged = false;
 					_dataProvider.refresh();
 					
-					combo.dataProvider = new ArrayCollection( _dataProvider.source );
-					combo.dataProvider.sort = _dataProvider.sort;
+					combo.dataProvider = _dataProvider;
 					combo.dataProvider.refresh();
 				}		
 				
@@ -521,13 +523,14 @@
 					combo.setSelectedItem( item, true );					
 				}					
 				
+				PopUpManager.removePopUp( IFlexDisplayObject( _browser ) );
+				
 				if (_isMultiSelect && _multiSelectLayout == LAYOUT_HORIZONTAL)
 				{
 					combo.updateComoText();
 				}
 				
-				PopUpManager.removePopUp( IFlexDisplayObject( _browser ) );
-				
+				combo.setFocus();
 				dispatchEvent( new Event( Event.CHANGE ) );
 			}
 			

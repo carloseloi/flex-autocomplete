@@ -178,24 +178,44 @@
 				}
 			}
 			
+			private function handleChangeOption():void
+			{
+				var event:Event = new Event( "changeOption" );
+				dispatchEvent( event );	
+			}
+			
 			private function handleMatchTypeComboChange():void
 			{
-				autoComplete.matchType = matchTypeCombo.selectedItem.data;
+				autoComplete.matchType = matchTypeCombo.selectedItem.data;				
 			}
 			
 			private function handleLayoutComboChange():void
     		{
-    			autoComplete.multiSelectLayout = multiSelectLayout.selectedItem.data;
+    			autoComplete.multiSelectLayout = multiSelectLayout.selectedItem.data; 
+    			handleChangeOption();   			
     		}
     		
     		private function handleStyleComboChange():void
     		{
     			autoComplete.style = style.selectedItem.data;
-    			autoComplete.enableRemoveIcon = style.selectedItem.data == AutoComplete.STYLE_FACEBOOK;
+    			autoComplete.enableRemoveIcon = style.selectedItem.data == AutoComplete.STYLE_FACEBOOK;    			
     		}
+    		
+    		[Bindable(event="changeOption")]
+    		private function get orderableEnabled():Boolean
+    		{
+    			return multiselect.selected && multiSelectLayout.selectedItem.data == AutoComplete.LAYOUT_VERTICAL;
+    		}
+    		
+    		[Bindable(event="changeOption")]
+    		private function get listBuilderEnabled():Boolean
+    		{
+    			return multiselect.selected && browesable.selected;
+    		}
+    		    		    		
 		]]>
 	</mx:Script>
-
+	
 
 	<mx:Component id="dropDownItemRenderer">
 		<local:ColorItemRenderer selectedItems="{ outerDocument.autoComplete.selectedItems }" />
@@ -214,14 +234,14 @@
 				</mx:ComboBox>
 				<mx:CheckBox id="strict" label="Strict"/>
 				<mx:CheckBox id="unique" label="Unique" selected="true"/>
-				<mx:CheckBox id="browesable" label="Browesable"/>
-				<mx:CheckBox id="multiselect" label="Multiselect" selected="true"/>
-				<mx:ComboBox id="multiSelectLayout" change="handleLayoutComboChange()" enabled="{ multiselect.selected }">					
+				<mx:CheckBox id="browesable" label="Browesable" change="handleChangeOption()"/>
+				<mx:CheckBox id="multiselect" label="Multiselect" selected="true" change="handleChangeOption()"/>
+				<mx:ComboBox id="multiSelectLayout" change="handleLayoutComboChange()" enabled="{ multiselect.selected }">		
 					<mx:Object label="Horizontal" data="{ AutoComplete.LAYOUT_HORIZONTAL }"/>
 					<mx:Object label="Vertical" data="{ AutoComplete.LAYOUT_VERTICAL }"/>										
 				</mx:ComboBox>
-				<mx:CheckBox id="orderable" label="Orderable" enabled="{ multiselect.selected }"/>
-				<mx:CheckBox id="listBuilder" label="List Builder" enabled="{ browesable.selected &amp;&amp; multiselect.selected }"/>
+				<mx:CheckBox id="orderable" label="Orderable" enabled="{ orderableEnabled }"/>
+				<mx:CheckBox id="listBuilder" label="List Builder" enabled="{ listBuilderEnabled }"/>
 				<mx:ComboBox id="matchTypeCombo" change="handleMatchTypeComboChange()">
 					<mx:Object label="Match Any Part" data="{ AutoComplete.MATCH_ANY_PART }"/>
 					<mx:Object label="Match Beginning" data="{ AutoComplete.MATCH_BEGINNING }"/>
@@ -233,16 +253,10 @@
 				<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
 					prompt="Choose your favorite Crayola crayon" width="320" change="handleAutoCompleteChange()"
 					isStrict="{ strict.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
-					isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }" allowDuplicates="{ !unique.selected }"
-					isOrderable="{ orderable.selected }" useListBuilder="{ listBuilder.selected }"
-					multiSelectLayout="horizontal" dropDownItemRenderer="{ dropDownItemRenderer }"/>
-					
-					<!--
-					<mx:TextInput text="{ autoComplete.searchText }"/>
-					<mx:TextInput textInput="{ handleTextInput(event) }"/>
-					-->
-					<mx:List dataProvider="{ autoComplete.selectedItems }" labelField="name"/>
-					
+					isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }" 
+					allowDuplicates="{ !unique.selected }" isOrderable="{ orderable.selected }" 
+					useListBuilder="{ listBuilder.selected }" multiSelectLayout="horizontal" 
+					dropDownItemRenderer="{ dropDownItemRenderer }"/>
 			</mx:VBox>						
 			
 		</mx:HBox>
