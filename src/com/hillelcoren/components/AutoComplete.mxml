@@ -115,6 +115,9 @@
 			private var _backspaceAction:String
 			private var _backspaceActionChanged:Boolean;
 			
+			private var _allowDuplicates:Boolean;
+			private var _allowDuplicatesChanged:Boolean;
+			
 			private var _browserItemRenderer:IFactory;
 			
 			private var _keyField:String = "id";
@@ -237,6 +240,12 @@
 				{
 					_enableRemoveIconChanged = false;
 					combo.enableRemoveIcon = _enableRemoveIcon;
+				}
+				
+				if (_allowDuplicatesChanged)
+				{
+					_allowDuplicatesChanged = false;
+					combo.allowDuplicates = _allowDuplicates;
 				}
 				
 				if (_isMultiSelectChanged || _multiSelectLayoutChanged)
@@ -728,6 +737,15 @@
 				invalidateProperties();
 			}
 			
+			[Inspectable(enumeration="true,false")]
+			public function set allowDuplicates( value:Boolean ):void
+			{
+				_allowDuplicates = value;
+				_allowDuplicatesChanged = true;
+				 
+				 invalidateProperties();
+			}
+			
 			override public function setFocus():void
 			{
 				combo.setFocus();
@@ -888,7 +906,7 @@
 	<mx:Grid id="grid" width="100%" horizontalGap="0">
 		<mx:GridRow width="100%">
 			<mx:GridItem width="100%">
-				<hc:Combo id="combo" width="100%"/>
+				<hc:Combo id="combo" width="100%"/>									
 			</mx:GridItem>
 			<mx:GridItem id="browseGridItem"/>	
 		</mx:GridRow>

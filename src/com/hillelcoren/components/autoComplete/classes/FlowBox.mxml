@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:ToolBar
+<mx:ToolBar 
 	xmlns:mx="http://www.adobe.com/2006/mxml">
 	
 	<mx:Script>
@@ -12,7 +12,7 @@
 			
 			private var _enableRemoveIcon:Boolean;
 			private var _enableRemoveIconChanged:Boolean;
-						
+			
 			override protected function commitProperties():void
 			{
 				super.commitProperties();

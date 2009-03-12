@@ -7,7 +7,7 @@
 	
 	<mx:Metadata>
 		[Event(name="change")]
-		[Event(name="remove")]
+		[Event(name="removeItem")]
 	</mx:Metadata>
 	
 	<mx:Script>
@@ -40,6 +40,7 @@
 			
 			[Bindable]			
 			private var _enableRemoveIcon:Boolean = true;
+			public static const REMOVE_ITEM:String = "removeItem";
 			
 			override protected function commitProperties():void
 			{
@@ -284,7 +285,7 @@
 			
 			public function handleRemoveClick():void
 			{
-				var event:Event = new Event( FlexEvent.REMOVE );
+				var event:Event = new Event( REMOVE_ITEM );
 				dispatchEvent( event );
 			}
 			

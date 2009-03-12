@@ -75,6 +75,8 @@
 			private var _style:String = AutoComplete.STYLE_MAC_MAIL;
 			private var _styleChanged:Boolean;
 			
+			private var _allowDuplicates:Boolean;
+			
 			public static const SEARCH_CHANGE:String = "searchChange";
 			
 			private static const ROW_COUNT:uint = 6; 
@@ -84,7 +86,19 @@
 				textInput.textInput.setStyle( "borderStyle", "none" ); 
 				textInput.textInput.setStyle( "focusThickness", 0 );
 				
+				addEventListener( MouseEvent.MOUSE_OVER, handleMouseOver );
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
+				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );				
+			}
+			
+			private function handleMouseOver( event:Event ):void
+			{
+				//CursorManager.setCursor( CursorManager.
+			}
+			
+			private function handleFocusIn( event:Event ):void
+			{
+				drawFocus( true );				
 			}
 			
 			override protected function commitProperties():void
@@ -340,28 +354,22 @@
 			
 			private function removeItem( item:UIComponent ):void
 			{
-				if (item is SelectedItem)
+				var index:int = flowBox.getChildIndex( item as UIComponent );
+				
+				if (!flowBox.contains( item ))
 				{
-					var selectedItem:SelectedItem = item as SelectedItem;
-					var index:int = _selectedItems.getItemIndex( selectedItem.item );
-					
-					if (index == -1)
-					{
-						return;
-					}
-					
-					_selectedItems.removeItemAt( index );
+					return;
 				}
 				
-				var compIndex:int = flowBox.getChildIndex( item as UIComponent );
-				flowBox.removeChild( item as UIComponent );
+				_selectedItems.removeItemAt( index );
+				flowBox.removeChildAt( index );
 				updateComoText();
 				
-				var comboItem:iComboItem = flowBox.getChildAt( compIndex ) as iComboItem;
+				var comboItem:iComboItem = flowBox.getChildAt( index ) as iComboItem;
 				comboItem.setTextFocus();
 				
 				var event:Event = new Event( Event.CHANGE );
-				dispatchEvent( event );	
+				dispatchEvent( event );					
 			}			
 			
 			private function determineFocus():iComboItem
@@ -388,7 +396,14 @@
 					value = StringUtils.trimCommas( value as String );
 				}
 				
-				if (_selectedItems.getItemIndex( value ) == -1 && value)
+				var canBeAdded:Boolean = true;
+				
+				if (!_allowDuplicates && _selectedItems.getItemIndex( value ) >= 0)
+				{
+					canBeAdded = false;
+				} 
+				
+				if (canBeAdded && value)
 				{
 					if (_multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL)
 					{ 
@@ -420,7 +435,7 @@
 						selectedItem.height = textInput.height;
 						selectedItem.enableRemoveIcon = _enableRemoveIcon;
 						//selectedItem.addEventListener( FlexEvent.CREATION_COMPLETE, sizeTextInput, false, 0, true );
-						selectedItem.addEventListener( FlexEvent.REMOVE, handleItemRemove, false, 0, true );
+						selectedItem.addEventListener( SelectedItem.REMOVE_ITEM, handleItemRemove, false, 0, true );
 						selectedItem.addEventListener( TextEvent.TEXT_INPUT, handleItemTextInput );
 						flowBox.addChildAt( selectedItem, flowBox.numChildren - 1 );
 					}				
@@ -483,13 +498,14 @@
 			private function handleComboItemChange( event:Event ):void
 			{
 				var comboTextInput:ComboTextInput = event.currentTarget as ComboTextInput;
-				var index:int = _selectedItems.getItemIndex( comboTextInput.item );
+				var index:int = flowBox.getChildIndex( comboTextInput );
 				
 				var text:String = comboTextInput.text;
 				text = StringUtils.trimCommas( text );
 				
 				if (text.length > 0)
 				{
+					/*
 					// check if the user added text after the commma
 					var indexComma:int = text.indexOf( "," );
 					
@@ -502,7 +518,7 @@
 						textInput.setFocus();
 						textInput.setTextSelected( false );
 					}
-					
+					*/
 					_selectedItems.setItemAt( text, index );
 					comboTextInput.item = text;				
 				}
@@ -524,7 +540,7 @@
 			private function _updateComoText():void
 			{
 				textInput.text = null;
-				textInput.validateNow();
+				//textInput.validateNow();
 				
 				var event:Event = new Event( SEARCH_CHANGE );
 				dispatchEvent( event );
@@ -534,6 +550,13 @@
 			
 			private function sizeTextInput( event:Event = null ):void
 			{
+				textInput.width = measureText( textInput.text ).width + 40;
+				textInput.validateNow();
+				
+				drawFocus( true );
+				return;
+				
+				/*
 				if (_selectedItems.length == 0 &&
 					(!_isMultiSelect || _multiSelectLayout == AutoComplete.LAYOUT_VERTICAL))
 				{
@@ -575,15 +598,14 @@
 				
 				if (width >= 0)
 				{
-					/*
 					if (width && width < flowBox.width * .2)
 					{
-						width = flowBox.width;
+					//	width = flowBox.width;
 					}
-					*/
 					
 					textInput.width = width;
 				}
+				*/
 			}
 			
 			private function handleItemClick( event:ListEvent ):void
@@ -951,14 +973,19 @@
 				invalidateProperties();
 			}
 			
+			public function set allowDuplicates( value:Boolean ):void
+			{
+				_allowDuplicates = value;
+			}
+			
 		]]>
 	</mx:Script>
 	
 	<classes:FlowBox id="flowBox" horizontalGap="0" verticalGap="0" width="100%" 
-		height="100%" x="2" y="3" resize="sizeTextInput()" updateComplete="sizeTextInput()">
+		height="100%" x="2" y="3">
 
 		<components:PromptTextInput id="textInput" width="{ flowBox.width }" paddingTop="0" enableClearIcon="false"
-			change="handleChange(event)" move="sizeTextInput()"/>		
+			change="handleChange(event)"/>		
 
 	</classes:FlowBox>
 	 
