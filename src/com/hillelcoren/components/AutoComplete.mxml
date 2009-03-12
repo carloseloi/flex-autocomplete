@@ -20,6 +20,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.events.CollectionEventKind;
 			import mx.events.FlexEvent;
 			import com.hillelcoren.components.autoComplete.interfaces.IBrowser;
 			import mx.events.MoveEvent;
@@ -306,6 +307,8 @@
 				if (_dataProviderChanged && _dataProvider)
 				{
 					_dataProviderChanged = false;
+					
+					_dataProvider.addEventListener( CollectionEvent.COLLECTION_CHANGE, handleDataProviderChange );
 					_dataProvider.refresh();
 					
 					combo.dataProvider = _dataProvider;
@@ -316,7 +319,7 @@
 				{
 					_selectedItemChanged = false;
 					
-					combo.setSelectedItem( _selectedItem );
+					combo.setSelectedItem( _selectedItem, true );					
 				}
 				
 				if (_selectedItemIdChanged && _dataProvider)
@@ -356,7 +359,7 @@
 							
 							if (foundItem)
 							{
-								_selectedItems.addItem( foundItem );
+								combo.setSelectedItem( foundItem, true );
 								foundItem = true;
 								break;
 							}
@@ -364,9 +367,9 @@
 						
 						if (foundItem == null)
 						{
-							_selectedItems.addItem( selectedItem );
+							combo.setSelectedItem( selectedItem, true );							
 						}
-					}					
+					}
 				}
 			}
 			
@@ -503,6 +506,36 @@
 				}										
 			}
 			
+			private function handleDataProviderChange( event:CollectionEvent ):void
+			{
+				if (event.kind == CollectionEventKind.REMOVE)
+				{
+					var itemsRemoved:ArrayCollection = new ArrayCollection( event.items );
+			
+					if (isMultiSelect)
+					{
+							var itemsToBeSelected:ArrayCollection = new ArrayCollection();
+							
+							for each (var item:Object in selectedItems)
+							{
+								if (!itemsRemoved.contains( item ))
+								{
+									itemsToBeSelected.addItem( item );
+								}
+							}
+							
+							selectedItems = itemsToBeSelected;
+					}
+					else
+					{
+						if (itemsRemoved.contains( selectedItem ))
+						{
+							combo.setSelectedItem( null );
+						}
+					}
+				}
+			}
+						
 			private function handleComboChange( event:Event ):void
 			{
 				dispatchEvent( new Event( Event.CHANGE ) );
@@ -740,6 +773,7 @@
 				_browserClass = value;
 			}
 			
+			[Inspectable(enumeration="true,false")]
 			/**
 			 * A flag that indicates whether or not you can select values which aren't in the dataProvider
 			 * @default true
