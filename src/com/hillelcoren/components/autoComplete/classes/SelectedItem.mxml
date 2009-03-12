@@ -2,7 +2,7 @@
 <mx:HBox
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	implements="mx.managers.IFocusManagerComponent,com.hillelcoren.components.autoComplete.interfaces.iComboItem" y="2"
-	verticalGap="0" horizontalGap="0" verticalAlign="middle"
+	verticalGap="0" horizontalGap="0" verticalAlign="middle" tabChildren="false"
 	creationComplete="init()">
 	
 	<mx:Metadata>

@@ -369,7 +369,7 @@
 			
             public function set listData( value:BaseListData ):void
             {
-            	//combo.enableClearIcon = false;
+            	combo.enableClearIcon = false;
             	
             	_listData = DataGridListData( value );            	
             } 

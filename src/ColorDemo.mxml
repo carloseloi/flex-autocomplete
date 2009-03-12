@@ -165,7 +165,7 @@
 					{ "name":"Yellow Orange", "hex":0xFFAE42 }
 				] );
 				
-				//autoComplete.setFocus();
+				autoComplete.setFocus();
 			}			
 			
 			private function handleAutoCompleteChange():void
@@ -176,11 +176,6 @@
 				{
 					setStyle( "backgroundColor", color.hex );
 				}
-			}
-			
-			private function handleTextInput( event:TextEvent ):void
-			{
-				trace(">> " + event.text);
 			}
 			
 			private function handleMatchTypeComboChange():void
@@ -242,11 +237,11 @@
 					isOrderable="{ orderable.selected }" useListBuilder="{ listBuilder.selected }"
 					multiSelectLayout="horizontal" dropDownItemRenderer="{ dropDownItemRenderer }"/>
 					
-					<mx:TextInput text="{ autoComplete.searchText }"/>
 					<!--
+					<mx:TextInput text="{ autoComplete.searchText }"/>
 					<mx:TextInput textInput="{ handleTextInput(event) }"/>
-					<mx:List dataProvider="{ autoComplete.selectedItems }" labelField="name"/>
 					-->
+					<mx:List dataProvider="{ autoComplete.selectedItems }" labelField="name"/>
 					
 			</mx:VBox>						
 			

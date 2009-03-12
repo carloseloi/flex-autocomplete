@@ -2,7 +2,7 @@
 <mx:TextArea 
 	implements="com.hillelcoren.components.autoComplete.interfaces.iComboItem"
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	initialize="init()"
+	initialize="init()" tabChildren="false"
 	borderStyle="none" focusThickness="0">
 	
 	<mx:Script>
