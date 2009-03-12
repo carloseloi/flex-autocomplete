@@ -428,7 +428,8 @@
 					if (isNew)
 					{
 						var comboTextInput:ComboTextInput = new ComboTextInput();
-						comboTextInput.text = value + ",";
+						comboTextInput.isMultiSelect = _isMultiSelect;
+						comboTextInput.text = value + (_isMultiSelect ? "," : "");
 						comboTextInput.width = measureText( value as String ).width + 10;
 						comboTextInput.height = textInput.height;
 						comboTextInput.item = value;
@@ -442,6 +443,7 @@
 						selectedItem.item = value;
 						selectedItem.style = _style;
 						selectedItem.height = textInput.height;
+						selectedItem.isMultiSelect = _isMultiSelect;
 						selectedItem.enableRemoveIcon = _enableRemoveIcon;
 						//selectedItem.addEventListener( FlexEvent.CREATION_COMPLETE, sizeTextInput, false, 0, true );
 						selectedItem.addEventListener( SelectedItem.REMOVE_ITEM, handleItemRemove, false, 0, true );
