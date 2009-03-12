@@ -165,7 +165,7 @@
 					{ "name":"Yellow Orange", "hex":0xFFAE42 }
 				] );
 				
-				autoComplete.setFocus();
+				//autoComplete.setFocus();
 			}			
 			
 			private function handleAutoCompleteChange():void
