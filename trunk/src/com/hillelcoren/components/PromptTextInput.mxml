@@ -255,7 +255,7 @@
 					var bitmap:Bitmap = new _clearAsset() as Bitmap;
 					var image:Image = new Image();
 					image.source = bitmap;
-					image.x = width - 20;
+					image.x = width - 22;
 					image.y = (height - bitmap.height) / 2;
 					
 					image.addEventListener( MouseEvent.CLICK, handleClearClick );

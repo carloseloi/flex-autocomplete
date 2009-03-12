@@ -16,6 +16,7 @@
 		
 	<mx:Script>
 		<![CDATA[
+			import mx.events.ResizeEvent;
 			import com.hillelcoren.components.AutoComplete;
 			import com.hillelcoren.components.autoComplete.interfaces.iComboItem;
 			import mx.controls.Text;
@@ -87,12 +88,12 @@
 				textInput.textInput.setStyle( "focusThickness", 0 );
 				
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
-				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );							
+				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
+				addEventListener( ResizeEvent.RESIZE, sizeTextInput );								
 			}
 			
 			private function handleFocusIn( event:Event ):void
 			{
-				textInput.prompt = null;
 				drawFocus( true );				
 			}
 			
@@ -115,6 +116,7 @@
 					_isMultiSelectChanged = false;
 					
 					setComboItemsVisible( _isMultiSelect && _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL );
+					setClearIconEnabled();
 					updateComoText();
 				}			
 				
@@ -123,13 +125,14 @@
 					_multiSelectLayoutChanged = true;
 					
 					setComboItemsVisible( _isMultiSelect && _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL );
+					setClearIconEnabled();
 					updateComoText();
 				}	
 				
 				if (_enableClearIconChanged)
 				{
 					_enableClearIconChanged = false;
-					textInput.enableClearIcon = _enableClearIcon;
+					setClearIconEnabled();
 				}
 				
 				if (_promptChanged)
@@ -149,6 +152,11 @@
 					_enableRemoveIconChanged = false;
 					flowBox.enableRemoveIcon = _enableRemoveIcon;
 				}
+			}
+			
+			private function setClearIconEnabled():void
+			{
+				textInput.enableClearIcon = _enableClearIcon && (!_isMultiSelect || _multiSelectLayout == AutoComplete.LAYOUT_VERTICAL);
 			}
 			
 			private function createDropDown():void
@@ -551,12 +559,14 @@
 			
 			private function sizeTextInput( event:Event = null ):void
 			{
-				if (textInput.text.length == 0 && _selectedItems.length == 0)
+				if (textInput.text.length == 0 && _selectedItems.length == 0) 
 				{
-					textInput.width = flowBox.width;
+					textInput.width = width;
+	
 				}
 				else
 				{
+					textInput.prompt = null;				
 					textInput.width = measureText( textInput.text ).width + 40;
 				}
 				
@@ -996,7 +1006,7 @@
 		]]>
 	</mx:Script>
 	
-	<classes:FlowBox id="flowBox" horizontalGap="0" verticalGap="0" width="100%" 
+	<classes:FlowBox id="flowBox" horizontalGap="0" verticalGap="0" width="100%"
 		height="100%" x="2" y="3">
 
 		<components:PromptTextInput id="textInput" width="{ flowBox.width }" paddingTop="0" enableClearIcon="false"
