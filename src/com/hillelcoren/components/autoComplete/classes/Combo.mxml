@@ -54,7 +54,9 @@
 			
 			private var _isMultiSelect:Boolean;
 			private var _isMultiSelectChanged:Boolean;
+			
 			private var _multiSelectLayout:String;
+			private var _multiSelectLayoutChanged:Boolean;
 			
 			private var _isStrict:Boolean;
 					
@@ -103,9 +105,17 @@
 				{
 					_isMultiSelectChanged = false;
 					
-					clearFlowBox();
+					setComboItemsVisible( _isMultiSelect && _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL );
 					updateComoText();
-				}				
+				}			
+				
+				if (_multiSelectLayoutChanged)
+				{
+					_multiSelectLayoutChanged = true;
+					
+					setComboItemsVisible( _isMultiSelect && _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL );
+					updateComoText();
+				}	
 				
 				if (_enableClearIconChanged)
 				{
@@ -184,6 +194,7 @@
 				else
 				{
 					var target:iComboItem = determineFocus();
+					var focused:DisplayObject = focusManager.getFocus() as DisplayObject;
 					var comboItem:iComboItem;
 					var index:int = flowBox.getChildIndex( target as DisplayObject );
 					var pos:Point;
@@ -207,8 +218,6 @@
 								return;
 							}
 						}
-						
-						var focused:DisplayObject = focusManager.getFocus() as DisplayObject;
 						
 						if (focused is SelectedItem)
 						{
@@ -260,6 +269,15 @@
 					}
 					else if (event.keyCode == Keyboard.LEFT)
 					{
+						if (target is ComboTextInput)
+						{
+							if (ComboTextInput( target ).isTextSelected())
+							{
+								ComboTextInput( target ).setSelectionBeginning();
+								return;
+							}
+						}
+						
 						if (index > 0)
 						{
 							if (!target.isCursorAtBeginning())
@@ -305,6 +323,17 @@
 						{
 							textInput.setFocus();
 						}
+					}
+					else
+					{
+						/*
+						if (focused is SelectedItem)
+						{
+							removeItem( focused as UIComponent );
+							textInput.text = "test";
+							//textInput.text = KeyboardUtil.charCodeToChar( event.charCode );
+						}
+						*/
 					}
 				}
 			}
@@ -372,11 +401,7 @@
 					
 					textInput.width = 0;
 					
-					if (_isMultiSelect && _multiSelectLayout == AutoComplete.LAYOUT_VERTICAL)
-					{
-						// do nothing
-					}
-					else if (isNew)
+					if (isNew)
 					{
 						var comboTextInput:ComboTextInput = new ComboTextInput();
 						comboTextInput.text = value + ",";
@@ -398,7 +423,9 @@
 						selectedItem.addEventListener( FlexEvent.REMOVE, handleItemRemove, false, 0, true );
 						selectedItem.addEventListener( TextEvent.TEXT_INPUT, handleItemTextInput );
 						flowBox.addChildAt( selectedItem, flowBox.numChildren - 1 );
-					}					
+					}				
+					
+					setComboItemsVisible(!_isMultiSelect || _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL);						
 				}
 				// this means the user entered a comma after a value which has already
 				// been added, in this case we just need to readd the comma
@@ -586,6 +613,22 @@
 				while (flowBox.numChildren > 1)
 				{
 					flowBox.removeChildAt( 0 );
+				}
+			}
+			
+			public function setComboItemsVisible( visible:Boolean ):void
+			{
+				for (var x:int=0; x<flowBox.numChildren; x++)
+				{
+					var item:UIComponent = flowBox.getChildAt( x ) as UIComponent;
+					
+					if (item is PromptTextInput)
+					{
+						continue;
+					}
+					
+					item.visible = visible;
+					item.includeInLayout = visible;
 				}
 			}
 			
@@ -903,6 +946,9 @@
 			public function set multiSelectLayout( value:String ):void
 			{
 				_multiSelectLayout = value;
+				_multiSelectLayoutChanged = true;
+				
+				invalidateProperties();
 			}
 			
 		]]>

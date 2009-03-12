@@ -243,15 +243,19 @@
 				{
 					if (_isMultiSelectChanged)
 					{
-						_selectedItems.removeAll();	
-						selectedItem = null;					
+						_selectedItems.removeAll();
+						combo.clearFlowBox();	
+						selectedItem = null;
+						combo.isMultiSelect = _isMultiSelect;
+					}
+					
+					if (_multiSelectLayoutChanged)
+					{	
+						combo.multiSelectLayout = _multiSelectLayout;
 					}
 					
 					_isMultiSelectChanged = false;
 					_multiSelectLayoutChanged = false;
-					
-					combo.isMultiSelect = _isMultiSelect;
-					combo.multiSelectLayout = _multiSelectLayout;
 					
 					var showMultiSelect:Boolean = (_multiSelectLayout == LAYOUT_VERTICAL && _isMultiSelect);
 					showMultiSelectList( showMultiSelect );																			
