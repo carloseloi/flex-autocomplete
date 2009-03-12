@@ -50,17 +50,18 @@
 	</mx:Script>
 	
 	<mx:Component id="autocomplete">
-		<components:AutoComplete dataProvider="{ outerDocument.departments }" labelField="name"/>
+		<components:AutoComplete dataProvider="{ outerDocument.departments }" 
+			labelField="name" style="underline" backspaceAction="remove"/>
 	</mx:Component>
 						
 	<mx:Panel width="550" height="400" title="DataGrid Demo"
 			paddingBottom="20" paddingTop="20" paddingLeft="20" paddingRight="20">
-		<mx:DataGrid dataProvider="{ employees }" editable="true" width="100%" height="100%">
+		<mx:DataGrid dataProvider="{ employees }" editable="true" width="100%" height="100%" sortableColumns="false">
 			<mx:columns>
 				<mx:DataGridColumn headerText="Id" dataField="id" editable="false"/>
 				<mx:DataGridColumn headerText="First Name" dataField="firstName"/>
 				<mx:DataGridColumn headerText="Last Name" dataField="lastName"/>
-				<mx:DataGridColumn headerText="Department" labelFunction="departmentLabelFunction" editorUsesEnterKey="true"
+				<mx:DataGridColumn width="200" headerText="Department" labelFunction="departmentLabelFunction" editorUsesEnterKey="true"
 					itemEditor="{ autocomplete }" editorDataField="selectedItem" dataField="department"/>
 			</mx:columns>
 		</mx:DataGrid>
