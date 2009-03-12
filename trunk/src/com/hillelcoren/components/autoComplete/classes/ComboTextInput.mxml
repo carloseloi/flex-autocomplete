@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TextArea 
 	implements="com.hillelcoren.components.autoComplete.interfaces.iComboItem"
-	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:mx="http://www.adobe.com/2006/mxml" paddingLeft="0"
 	initialize="init()" tabChildren="false"
 	borderStyle="none" focusThickness="0">
 	
