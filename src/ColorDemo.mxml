@@ -227,7 +227,7 @@
 		<mx:HBox>		
 
 			<mx:VBox horizontalAlign="left">
-				<mx:ComboBox id="style" change="handleStyleComboChange()" toolTip="Style for the selected items">					
+				<mx:ComboBox id="style" change="handleStyleComboChange()">					
 					<mx:Object label="Mac Mail" data="{ AutoComplete.STYLE_MAC_MAIL }"/>
 					<mx:Object label="Facebook" data="{ AutoComplete.STYLE_FACEBOOK }"/>
 					<mx:Object label="Underline" data="{ AutoComplete.STYLE_UNDERLINE }"/>																		
@@ -255,7 +255,7 @@
 					isStrict="{ strict.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
 					isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }" 
 					allowDuplicates="{ !unique.selected }" isOrderable="{ orderable.selected }" 
-					useListBuilder="{ listBuilder.selected }" multiSelectLayout="horizontal" 
+					useListBuilder="{ listBuilder.selected }" multiSelectLayout="horizontal"
 					dropDownItemRenderer="{ dropDownItemRenderer }"/>
 			</mx:VBox>						
 			
