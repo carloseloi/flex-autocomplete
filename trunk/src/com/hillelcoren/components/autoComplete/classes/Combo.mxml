@@ -86,18 +86,13 @@
 				textInput.textInput.setStyle( "borderStyle", "none" ); 
 				textInput.textInput.setStyle( "focusThickness", 0 );
 				
-				addEventListener( MouseEvent.MOUSE_OVER, handleMouseOver );
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
-				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );				
-			}
-			
-			private function handleMouseOver( event:Event ):void
-			{
-				//CursorManager.setCursor( CursorManager.
+				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );							
 			}
 			
 			private function handleFocusIn( event:Event ):void
 			{
+				textInput.prompt = null;
 				drawFocus( true );				
 			}
 			
@@ -135,6 +130,12 @@
 				{
 					_enableClearIconChanged = false;
 					textInput.enableClearIcon = _enableClearIcon;
+				}
+				
+				if (_promptChanged)
+				{
+					_promptChanged = false;
+					textInput.prompt = _prompt;
 				}
 				
 				if (_styleChanged)
@@ -550,10 +551,24 @@
 			
 			private function sizeTextInput( event:Event = null ):void
 			{
-				textInput.width = measureText( textInput.text ).width + 40;
+				if (textInput.text.length == 0 && _selectedItems.length == 0)
+				{
+					textInput.width = flowBox.width;
+				}
+				else
+				{
+					textInput.width = measureText( textInput.text ).width + 40;
+				}
+				
 				textInput.validateNow();
 				
-				drawFocus( true );
+				var comp:UIComponent = focusManager.getFocus() as UIComponent;
+				
+				if (focusManager.getFocus() == this || (comp && this.contains(comp)))
+				{
+					drawFocus( true );
+				}
+				
 				return;
 				
 				/*
