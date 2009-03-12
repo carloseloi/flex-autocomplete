@@ -7,12 +7,15 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.hillelcoren.utils.StringUtils;
 			
 			private var _item:Object;
 			
 			private function init():void
 			{
 				addEventListener( Event.CHANGE, handleChange );
+				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );
+				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );
 			}
 			
 			private function handleChange( event:Event ):void
@@ -24,6 +27,27 @@
 			{
 				setSelection( 0, 0 );
 				setFocus();
+			}
+			
+			public function isTextSelected():Boolean
+			{
+				return selectionBeginIndex == 0 && selectionEndIndex == text.length;
+			}
+			
+			private function handleFocusIn( event:Event ):void
+			{
+				text = StringUtils.trimCommas( text );
+				setSelection( 0, text.length );
+			}
+			
+			private function handleFocusOut( event:Event ):void
+			{
+				text = StringUtils.trimCommas( text ) + ",";	
+			}
+			
+			public function setSelectionBeginning():void
+			{
+				setSelection( 0, 0 );
 			}
 			
 			public function setSelectionEnd():void
