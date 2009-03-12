@@ -150,7 +150,6 @@
 					var radius:uint = _style == AutoComplete.STYLE_MAC_MAIL ? 20 : 10;
 					var x:int = itemLabel.x;
 					var y:int = 0;
-					//var y:int = -itemLabel.height / 2;
 					
 					_shape.graphics.beginFill( color );
 					_shape.graphics.lineStyle( 1, border );

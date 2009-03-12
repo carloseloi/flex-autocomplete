@@ -428,6 +428,8 @@
 						_selectedItems.addItemAt( value, 0 );
 					}
 					
+					// we set the width so the flowBox doesn't temporarily 
+					// add a new row to fit the items
 					textInput.width = 0;
 					
 					if (isNew)
@@ -450,10 +452,9 @@
 						selectedItem.height = textInput.height;
 						selectedItem.isMultiSelect = _isMultiSelect;
 						selectedItem.enableRemoveIcon = _enableRemoveIcon;
-						//selectedItem.addEventListener( FlexEvent.CREATION_COMPLETE, sizeTextInput, false, 0, true );
 						selectedItem.addEventListener( SelectedItem.REMOVE_ITEM, handleItemRemove, false, 0, true );
 						selectedItem.addEventListener( TextEvent.TEXT_INPUT, handleItemTextInput );
-						flowBox.addChildAt( selectedItem, flowBox.numChildren - 1 );
+						flowBox.addChildAt( selectedItem, flowBox.numChildren - 1 );						
 					}				
 					
 					setComboItemsVisible(!_isMultiSelect || _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL);						
@@ -1016,7 +1017,7 @@
 	<classes:FlowBox id="flowBox" horizontalGap="0" verticalGap="0" width="100%"
 		height="100%" x="2" y="3">
 
-		<components:PromptTextInput id="textInput" width="{ flowBox.width }" enableClearIcon="false" change="handleChange(event)"/>		
+		<components:PromptTextInput id="textInput" enableClearIcon="false" change="handleChange(event)"/>		
 
 	</classes:FlowBox>
 	 
