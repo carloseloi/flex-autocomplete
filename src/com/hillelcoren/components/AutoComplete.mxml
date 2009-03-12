@@ -326,7 +326,7 @@
 				{
 					_selectedItemIdChanged = false;
 					
-					for each (item in _dataProvider)
+					for each (item in _dataProvider.source)
 					{
 						if (item.hasOwnProperty( _keyField ) && item[ _keyField ] == _selectedItemId)
 						{
@@ -394,7 +394,7 @@
 					return;
 				}
 				
-				selectedItemId = data[ _listData.dataField ][ _keyField ];				
+				selectedItemId = data[ _listData.dataField ][ _keyField ];					
             }
 			
 			private function showBrowseButton( show:Boolean ):void
