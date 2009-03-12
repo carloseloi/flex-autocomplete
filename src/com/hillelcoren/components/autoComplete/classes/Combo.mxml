@@ -183,9 +183,9 @@
 				}
 				else
 				{
-					var comp:iComboItem = determineFocus();
+					var target:iComboItem = determineFocus();
 					var comboItem:iComboItem;
-					var index:int = flowBox.getChildIndex( comp as DisplayObject );
+					var index:int = flowBox.getChildIndex( target as DisplayObject );
 					var pos:Point;
 					
 					if (event.keyCode == Keyboard.BACKSPACE)
@@ -195,9 +195,17 @@
 							return;
 						}
 						
-						if (!comp.isCursorAtBeginning())
+						if (!target.isCursorAtBeginning())
 						{
 							return;
+						}
+						
+						if (target is ComboTextInput)
+						{
+							if (ComboTextInput( target ).isTextSelected())
+							{
+								return;
+							}
 						}
 						
 						var focused:DisplayObject = focusManager.getFocus() as DisplayObject;
@@ -218,7 +226,7 @@
 							
 							if (prevItem is ComboTextInput)
 							{
-								ComboTextInput( prevItem ).setSelectionEnd();								
+								ComboTextInput( prevItem ).setFocus();
 							}							
 							else if (_backspaceAction == AutoComplete.BACKSPACE_REMOVE)
 							{
@@ -228,7 +236,7 @@
 					}
 					else if (event.keyCode == Keyboard.UP)
 					{
-						pos = flowBox.getItemPosition( comp );
+						pos = flowBox.getItemPosition( target );
 						pos.y--;
 							
 						comboItem = flowBox.getItemByPosition( pos );
@@ -240,7 +248,7 @@
 					}
 					else if (event.keyCode == Keyboard.DOWN)
 					{
-						pos = flowBox.getItemPosition( comp );
+						pos = flowBox.getItemPosition( target );
 						pos.y++;
 						
 						comboItem = flowBox.getItemByPosition( pos );
@@ -254,7 +262,7 @@
 					{
 						if (index > 0)
 						{
-							if (!comp.isCursorAtBeginning())
+							if (!target.isCursorAtBeginning())
 							{
 								return;
 							}
@@ -272,21 +280,30 @@
 					{
 						if (index < flowBox.numChildren - 1)
 						{
-							if (!comp.isCursorAtEnd())
+							if (!target.isCursorAtEnd())
 							{
 								return;
 							}							
 							
 							comboItem = flowBox.getChildAt( index + 1 ) as iComboItem;
 							comboItem.setTextFocus();
+							
+							if (comboItem is ComboTextInput)
+							{
+								ComboTextInput( comboItem ).setSelectionBeginning();
+							}
 						}
 					}
 					else if (event.keyCode == Keyboard.ENTER || event.charCode == 44)
 					{
-						if (!_isStrict && comp.isEditable())
+						if (!_isStrict && target.isEditable())
 						{
-							setSelectedItem( comp.text, false, true );
+							setSelectedItem( target.text, false, true );
 							return;
+						}
+						else if (event.keyCode == Keyboard.ENTER)
+						{
+							textInput.setFocus();
 						}
 					}
 				}
@@ -333,30 +350,13 @@
 				return null;
 			}
 			
-			private function cleanStr( value:String ):String
-			{
-				value = StringUtil.trim( value );
-				
-				while (value.length > 0 && value.charAt(0) == ",")
-				{
-					value = value.substring( 1, value.length );
-				}
-				
-				while (value.length > 0 && value.charAt( value.length - 1 ) == ",")
-				{
-					value = value.substring( 0, value.length - 1);
-				}
-				
-				return value;
-			}
-			
 			public function setSelectedItem( value:Object, isSilent:Boolean = false, isNew:Boolean = false ):void
 			{
 				var validItem:Boolean = true;
 				
 				if (isNew)
 				{
-					value = cleanStr( value as String );
+					value = StringUtils.trimCommas( value as String );
 				}
 				
 				if (_selectedItems.getItemIndex( value ) == -1 && value)
@@ -394,8 +394,9 @@
 						selectedItem.style = _style;
 						selectedItem.height = textInput.height;
 						selectedItem.enableRemoveIcon = _enableRemoveIcon;
-						selectedItem.addEventListener( FlexEvent.CREATION_COMPLETE, sizeTextInput, false, 0, true );
+						//selectedItem.addEventListener( FlexEvent.CREATION_COMPLETE, sizeTextInput, false, 0, true );
 						selectedItem.addEventListener( FlexEvent.REMOVE, handleItemRemove, false, 0, true );
+						selectedItem.addEventListener( TextEvent.TEXT_INPUT, handleItemTextInput );
 						flowBox.addChildAt( selectedItem, flowBox.numChildren - 1 );
 					}					
 				}
@@ -404,9 +405,9 @@
 				else if (_selectedItems.getItemIndex( value ) >= 0 && isNew)
 				{
 					var index:int = _selectedItems.getItemIndex( value );
-					var input:ComboTextInput = flowBox.getChildAt( index ) as ComboTextInput;
+					var comboItem:iComboItem = flowBox.getChildAt( index + 1 ) as iComboItem;
 					
-					input.text = cleanStr( input.text ) + ",";													
+					comboItem.setTextFocus();																		
 				}
 				else
 				{
@@ -440,13 +441,25 @@
 				removeItem( event.currentTarget as UIComponent );
 			}
 			
+			private function handleItemTextInput( event:TextEvent ):void
+			{
+				if (event.text != ",")
+				{
+					textInput.text = event.text;
+				}
+				
+				textInput.setFocus();
+				textInput.setTextSelected(false);
+				handleChange( null ); 
+			}
+			
 			private function handleComboItemChange( event:Event ):void
 			{
 				var comboTextInput:ComboTextInput = event.currentTarget as ComboTextInput;
 				var index:int = _selectedItems.getItemIndex( comboTextInput.item );
 				
 				var text:String = comboTextInput.text;
-				text = cleanStr( text );
+				text = StringUtils.trimCommas( text );
 				
 				if (text.length > 0)
 				{
@@ -591,7 +604,6 @@
 					return;
 				}
 				
-				var textInput:PromptTextInput = event.currentTarget as PromptTextInput;
 				_searchStr = textInput.text;
 				
 				//var start:Date = new Date();

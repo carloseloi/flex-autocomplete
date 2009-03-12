@@ -4,7 +4,7 @@
 	xmlns:hc="com.hillelcoren.components.*"
 	width="100%" height="100%"
 	verticalAlign="middle" horizontalAlign="center"
-	color="#000000"
+	color="#000000" 
 	initialize="init()" xmlns:local="*" xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
 
 	<mx:Script>
@@ -212,7 +212,7 @@
 		<mx:HBox>		
 
 			<mx:VBox horizontalAlign="left">
-				<mx:ComboBox id="style" change="handleStyleComboChange()">					
+				<mx:ComboBox id="style" change="handleStyleComboChange()" toolTip="Style for the selected items">					
 					<mx:Object label="Mac Mail" data="{ AutoComplete.STYLE_MAC_MAIL }"/>
 					<mx:Object label="Facebook" data="{ AutoComplete.STYLE_FACEBOOK }"/>
 					<mx:Object label="Underline" data="{ AutoComplete.STYLE_UNDERLINE }"/>																		
@@ -234,7 +234,7 @@
 			</mx:VBox>		
 			
 			<mx:VBox>
-				<hc:AutoComplete id="autoComplete" labelField="name" matchType="anyPart" 
+				<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
 					prompt="Choose your favorite Crayola crayon" width="320" change="handleAutoCompleteChange()"
 					isStrict="{ strict.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus"
 					isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }"
@@ -244,8 +244,8 @@
 					<!--
 					<mx:TextInput text="{ autoComplete.searchText }"/>
 					<mx:TextInput textInput="{ handleTextInput(event) }"/>
-					<mx:List dataProvider="{ autoComplete.selectedItems }" labelField="name"/>
 					-->
+					<mx:List dataProvider="{ autoComplete.selectedItems }" labelField="name"/>
 					
 			</mx:VBox>						
 			

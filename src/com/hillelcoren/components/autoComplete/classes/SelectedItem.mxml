@@ -215,8 +215,9 @@
 				redraw();
 			}
 			
-			private function handleTextChange( event:Event ):void
+			private function handleTextInput( event:TextEvent ):void
 			{
+				leftTextInput.text = "";
 				dispatchEvent( event );
 			}
 			
@@ -292,7 +293,7 @@
 	
 	
 	<mx:TextInput id="leftTextInput" width="5" borderStyle="none" 
-		focusThickness="0" change="handleTextChange(event)"/>
+		focusThickness="0" textInput="handleTextInput(event)"/>
 	<mx:Label id="itemLabel" updateComplete="redrawShape()"/>
 	<mx:Image id="removeIcon" source="@Embed('/com/hillelcoren/assets/remove.png')" 
 			visible="{ _enableRemoveIcon }" includeInLayout="{ _enableRemoveIcon }" click="handleRemoveClick()"/>

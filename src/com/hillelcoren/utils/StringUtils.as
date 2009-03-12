@@ -112,5 +112,22 @@ package com.hillelcoren.utils
 			return false;
 			
 		}
+		
+		public static function trimCommas( value:String ):String
+		{
+			value = StringUtil.trim( value );
+			
+			while (value.length > 0 && value.charAt(0) == ",")
+			{
+				value = value.substring( 1, value.length );
+			}
+			
+			while (value.length > 0 && value.charAt( value.length - 1 ) == ",")
+			{
+				value = value.substring( 0, value.length - 1);
+			}
+			
+			return value;
+		}
 	}
 }
