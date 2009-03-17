@@ -125,6 +125,9 @@
 			private var _allowDuplicates:Boolean;
 			private var _allowDuplicatesChanged:Boolean;
 			
+			private var _areNewItemsEditable:Boolean;
+			private var _areNewItemsEditableChanged:Boolean;
+			
 			private var _browserItemRenderer:IFactory;
 			
 			private var _keyField:String = "id";
@@ -254,6 +257,13 @@
 					_allowDuplicatesChanged = false;
 					combo.allowDuplicates = _allowDuplicates;
 				}
+				
+				if (_areNewItemsEditableChanged)
+				{
+					_areNewItemsEditableChanged = false;
+					combo.areNewItemsEditable = _areNewItemsEditable;
+				}
+				
 				
 				if (_isMultiSelectChanged || _multiSelectLayoutChanged)
 				{
@@ -858,6 +868,18 @@
 			{
 				_allowDuplicates = value;
 				_allowDuplicatesChanged = true;
+				 
+				 invalidateProperties();
+			}
+			
+			/**
+			 * A flag that indicates whether or not you can edit a new item which has been added. This only affects
+			 * the component when isStrict is set to false
+			 */
+			public function set areNewItemsEditable( value:Boolean ):void
+			{
+				_areNewItemsEditable = value;
+				_areNewItemsEditableChanged = true;
 				 
 				 invalidateProperties();
 			}
