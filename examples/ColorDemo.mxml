@@ -163,9 +163,7 @@
 					{ "name":"Yellow", "hex":0xFBE870 },
 					{ "name":"Yellow Green", "hex":0xC5E17A },
 					{ "name":"Yellow Orange", "hex":0xFFAE42 }
-				] );
-				
-				autoComplete.setFocus();
+				] );				
 			}			
 			
 			private function handleAutoCompleteChange():void
@@ -212,7 +210,21 @@
     		{
     			return multiselect.selected && browesable.selected;
     		}
-    		    		    		
+    		
+    		[Bindable(event="changeOption")]
+    		private function get styleEnabled():Boolean
+    		{
+    			return multiSelectLayout.selectedItem.data == AutoComplete.LAYOUT_HORIZONTAL;
+    		}
+    		
+    		[Bindable(event="changeOption")]
+    		private function get editableEnabled():Boolean
+    		{
+    			return multiSelectLayout.selectedItem.data == AutoComplete.LAYOUT_HORIZONTAL && !strict.selected;
+    		}
+    		
+    		
+    		
 		]]>
 	</mx:Script>
 	
@@ -222,18 +234,19 @@
 	</mx:Component>
 
 
-	<mx:Panel width="550" height="400" title="Color Demo"
+	<mx:Panel width="550" height="400" title="AutComplete Demo"
 			paddingBottom="20" paddingTop="20" paddingLeft="20" paddingRight="20">
 		<mx:HBox>		
 
 			<mx:VBox horizontalAlign="left">
-				<mx:ComboBox id="style" change="handleStyleComboChange()">					
+				<mx:ComboBox id="style" change="handleStyleComboChange()" enabled="{ styleEnabled }">					
 					<mx:Object label="Mac Mail" data="{ AutoComplete.STYLE_MAC_MAIL }"/>
 					<mx:Object label="Facebook" data="{ AutoComplete.STYLE_FACEBOOK }"/>
 					<mx:Object label="Underline" data="{ AutoComplete.STYLE_UNDERLINE }"/>																		
 				</mx:ComboBox>
-				<mx:CheckBox id="strict" label="Strict"/>
-				<mx:CheckBox id="unique" label="Unique" selected="true"/>
+				<mx:CheckBox id="strict" label="Allow new values" selected="true"/>
+				<mx:CheckBox id="editable" enabled="{ editableEnabled }" label="New values editable"/>
+				<mx:CheckBox id="unique" label="Unique"/>
 				<mx:CheckBox id="browesable" label="Browesable" change="handleChangeOption()"/>
 				<mx:CheckBox id="multiselect" label="Multiselect" selected="true" change="handleChangeOption()"/>
 				<mx:ComboBox id="multiSelectLayout" change="handleLayoutComboChange()" enabled="{ multiselect.selected }">		
@@ -252,11 +265,11 @@
 			<mx:VBox>
 				<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
 					prompt="Choose your favorite Crayola crayon" width="320" change="handleAutoCompleteChange()"
-					isStrict="{ strict.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
+					isStrict="{ !strict.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
 					isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }" 
 					allowDuplicates="{ !unique.selected }" isOrderable="{ orderable.selected }" 
 					useListBuilder="{ listBuilder.selected }" multiSelectLayout="horizontal"
-					dropDownItemRenderer="{ dropDownItemRenderer }"/>
+					areNewItemsEditable="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"/>
 			</mx:VBox>						
 			
 		</mx:HBox>

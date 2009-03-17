@@ -81,6 +81,7 @@
 			private var _styleChanged:Boolean;
 			
 			private var _allowDuplicates:Boolean;
+			private var _areNewItemsEditable:Boolean;
 			
 			public static const SEARCH_CHANGE:String = "searchChange";
 			
@@ -445,7 +446,7 @@
 					// add a new row to fit the items
 					textInput.width = 0;
 					
-					if (isNew)
+					if (isNew && _areNewItemsEditable)
 					{
 						var comboTextInput:ComboTextInput = new ComboTextInput();
 						comboTextInput.isMultiSelect = _isMultiSelect;
@@ -930,6 +931,11 @@
 			public function set allowDuplicates( value:Boolean ):void
 			{
 				_allowDuplicates = value;
+			}
+			
+			public function set areNewItemsEditable( value:Boolean ):void
+			{
+				_areNewItemsEditable = value;
 			}
 			
 		]]>
