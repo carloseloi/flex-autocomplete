@@ -15,7 +15,7 @@
 		/**
 		 * Dispatched when the text in the search field is changed
 		 */
-		[Event(name="textChange")]
+		[Event(name="searchChange")]
 	</mx:Metadata>
 	
 	<mx:Script>
@@ -404,7 +404,12 @@
 					return;
 				}
 				
-				selectedItemId = data[ _listData.dataField ][ _keyField ];					
+				callLater( _setData );
+            }
+            
+            private function _setData():void
+            {
+            	selectedItem = data[ _listData.dataField ];
             }
 			
 			private function showBrowseButton( show:Boolean ):void
