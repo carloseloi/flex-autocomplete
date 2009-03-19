@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas 
+<mx:Box 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	clipContent="false" 
 	borderStyle="inset" borderThickness="1"
-	height="{ flowBox.height + 5 }" width="100%"
+	height="{ flowBox.height + 2 }" width="100%"
+	verticalAlign="middle" horizontalAlign="center"
 	initialize="init()" backgroundColor="#FFFFFF"
-	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	creationComplete="handleCreationComplete()"
+	verticalScrollPolicy="off" horizontalScrollPolicy="auto"
 	xmlns:components="com.hillelcoren.components.*" 
 	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
 	
@@ -72,11 +74,6 @@
 			
 			private var _selectedItems:ArrayCollection;
 			
-			private var _selectedItem:Object;
-			private var _selectedItemChanged:Boolean;
-			private var _isSilent:Boolean;
-			private var _isNew:Boolean;
-			
 			private var _style:String = AutoComplete.STYLE_MAC_MAIL;
 			private var _styleChanged:Boolean;
 			
@@ -95,6 +92,11 @@
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
 				addEventListener( ResizeEvent.RESIZE, handleResize );								
+			}
+			
+			private function handleCreationComplete():void
+			{
+				maxWidth = width;
 			}
 			
 			private function handleFocusIn( event:Event ):void
@@ -161,13 +163,7 @@
 				{
 					_enableRemoveIconChanged = false;
 					flowBox.enableRemoveIcon = _enableRemoveIcon;
-				}
-				
-				if (_selectedItemChanged)
-				{
-					_selectedItemChanged = false;
-					_setSelectedItem();
-				}
+				}				
 			}
 			
 			private function setClearIconEnabled():void
@@ -403,19 +399,11 @@
 			
 			public function setSelectedItem( value:Object, isSilent:Boolean = false, isNew:Boolean = false ):void
 			{
-				_selectedItem = value;
-				_selectedItemChanged = true;
-				_isSilent = isSilent;
-				_isNew = isNew;
-				
-				invalidateProperties();
-			}
-			
-			private function _setSelectedItem():void
-			{
-				var value:Object = _selectedItem;
-				var isSilent:Boolean = _isSilent;
-				var isNew:Boolean = _isNew;
+				if (!_isMultiSelect)
+				{
+					_selectedItems.removeAll();
+					clearFlowBox();
+				}
 				
 				var validItem:Boolean = true;
 				
@@ -573,7 +561,7 @@
 				}
 				else
 				{
-					textInput.prompt = null;				
+					textInput.prompt = null;
 					textInput.width = measureText( textInput.text ).width + 40;
 				}
 				
@@ -774,19 +762,6 @@
 				}				
 			}
 			
-			/*
-			private function handleFocusOut( event:FocusEvent ):void
-			{			
-				if (isDropDownVisible())
-				{
-					if (!event.relatedObject || !_dropDown.contains( event.relatedObject ))
-					{
-						hideDropDown();
-					}
-				}
-			}
-			*/
-			
 			private function hideDropDown():void
 			{
 				PopUpManager.removePopUp( _dropDown );
@@ -941,11 +916,10 @@
 		]]>
 	</mx:Script>
 	
-	<classes:FlowBox id="flowBox" horizontalGap="0" verticalGap="0" width="100%"
-		height="100%" x="2" y="3">
+	<classes:FlowBox id="flowBox" horizontalGap="0" verticalGap="0" width="99%" height="99%">
 
 		<components:PromptTextInput id="textInput" enableClearIcon="false" change="handleChange(event)"/>		
 
 	</classes:FlowBox>
 	 
-</mx:Canvas>
+</mx:Box>
