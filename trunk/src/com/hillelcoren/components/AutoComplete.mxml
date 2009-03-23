@@ -318,7 +318,7 @@
 				{
 					_dataProviderChanged = false;
 					
-					_dataProvider.addEventListener( CollectionEvent.COLLECTION_CHANGE, handleDataProviderChange );
+					_dataProvider.addEventListener( CollectionEvent.COLLECTION_CHANGE, handleDataProviderChange, false, 0, true );
 					_dataProvider.refresh();
 					
 					combo.dataProvider = _dataProvider;
@@ -350,7 +350,9 @@
 				if (_selectedItemsChanged && _dataProvider)
 				{
 					_selectedItemsChanged = false;
+					
 					_selectedItems.removeAll();
+					combo.clearFlowBox();
 					
 					for each (var selectedItem:Object in _initialSelectedItems)
 					{
@@ -370,6 +372,7 @@
 							if (foundItem)
 							{
 								combo.setSelectedItem( foundItem, true );
+								combo.validateNow();
 								foundItem = true;
 								break;
 							}
@@ -377,7 +380,8 @@
 						
 						if (foundItem == null)
 						{
-							combo.setSelectedItem( selectedItem, true );							
+							combo.setSelectedItem( selectedItem, true );
+							combo.validateNow();							
 						}
 					}
 				}
@@ -670,6 +674,11 @@
 			
 			public function set dataProvider( value:ArrayCollection ):void
 			{
+				if (_dataProvider != null)
+				{
+					_dataProvider.removeEventListener( CollectionEvent.COLLECTION_CHANGE, handleDataProviderChange );
+				}
+					
 				_dataProvider = value;
 				_dataProviderChanged = true;
 				

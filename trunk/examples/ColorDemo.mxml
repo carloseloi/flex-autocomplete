@@ -262,13 +262,12 @@
 			
 			<mx:VBox>
 				<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
-					prompt="Choose your favorite Crayola crayon" width="200" change="handleAutoCompleteChange()"
+					prompt="Choose your favorite Crayola crayon" width="320" change="handleAutoCompleteChange()"
 					isStrict="{ !strict.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
 					isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }" 
 					allowDuplicates="{ !unique.selected }" isOrderable="{ orderable.selected }" 
 					useListBuilder="{ listBuilder.selected }" multiSelectLayout="horizontal"
-					areNewItemsEditable="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"/>
-				<mx:Label text="{ 'value: ' + autoComplete.selectedItem }"/>					
+					areNewItemsEditable="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"/>												
 			</mx:VBox>						
 			
 		</mx:HBox>

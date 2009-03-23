@@ -92,6 +92,13 @@
 				_enableClearIcon = value;
 			}
 			
+			override public function validateNow():void
+			{
+				super.validateNow();
+				
+				textInput.validateNow();
+			}
+			
 			public function get text():String
 			{
 				if (_isPromptSet)
