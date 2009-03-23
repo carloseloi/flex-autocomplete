@@ -4,8 +4,8 @@
 	xmlns:hc="com.hillelcoren.components.*"
 	width="100%" height="100%"
 	verticalAlign="middle" horizontalAlign="center"
-	color="#000000" 
-	initialize="init()" xmlns:local="*" xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
+	color="#000000" xmlns:local="*"
+	initialize="init()">
 
 	<mx:Script>
 		<![CDATA[
