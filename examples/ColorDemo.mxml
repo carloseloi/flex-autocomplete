@@ -267,7 +267,7 @@
 					isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }" 
 					allowDuplicates="{ !unique.selected }" isOrderable="{ orderable.selected }" 
 					useListBuilder="{ listBuilder.selected }" multiSelectLayout="horizontal"
-					areNewItemsEditable="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"/>												
+					areNewItemsEditable="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"	/>												
 			</mx:VBox>						
 			
 		</mx:HBox>
