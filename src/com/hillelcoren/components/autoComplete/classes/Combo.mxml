@@ -2,11 +2,11 @@
 <mx:Box 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	clipContent="false" 
-	borderStyle="inset" borderThickness="1"
 	height="{ flowBox.height + 2 }" width="100%"
 	verticalAlign="middle" horizontalAlign="center"
 	initialize="init()" backgroundColor="#FFFFFF"
-	creationComplete="handleCreationComplete()"
+	creationComplete="setMaxWidth()"
+	borderStyle="inset" borderThickness="1"
 	verticalScrollPolicy="off" horizontalScrollPolicy="auto"
 	xmlns:components="com.hillelcoren.components.*" 
 	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
@@ -90,18 +90,32 @@
 				textInput.textInput.setStyle( "focusThickness", 0 );
 				
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
+				addEventListener( ResizeEvent.RESIZE, handleResize );
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
-				addEventListener( ResizeEvent.RESIZE, handleResize );								
+				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );														
 			}
 			
-			private function handleCreationComplete():void
+			public function setMaxWidth():void
 			{
-				maxWidth = width;
+				if (width)
+				{
+					maxWidth = width;
+				}				
 			}
 			
 			private function handleFocusIn( event:Event ):void
 			{
 				drawFocus( true );				
+			}
+			
+			private function handleFocusOut( event:Event ):void
+			{
+				drawFocus( false );
+				
+				if (searchText.length > 0)
+				{
+					setSelectedItem( searchText, false, true, false );
+				}	
 			}
 			
 			private function handleResize( event:Event ):void
@@ -222,7 +236,7 @@
 					}
 					else if (event.keyCode == Keyboard.ENTER || event.keyCode == Keyboard.TAB || event.charCode == 44)
 					{
-						setSelectedItem( _dropDown.selectedItem );	
+						setSelectedItem( _dropDown.selectedItem );
 						return;											
 					}
 				}
@@ -231,6 +245,7 @@
 					var target:iComboItem = determineFocus();
 					var focused:DisplayObject = focusManager.getFocus() as DisplayObject;
 					var comboItem:iComboItem;
+					
 					var index:int = flowBox.getChildIndex( target as DisplayObject );
 					var pos:Point;
 					
@@ -397,7 +412,7 @@
 				return null;
 			}
 			
-			public function setSelectedItem( value:Object, isSilent:Boolean = false, isNew:Boolean = false ):void
+			public function setSelectedItem( value:Object, isSilent:Boolean = false, isNew:Boolean = false, setFocus:Boolean = true ):void
 			{
 				if (!_isMultiSelect)
 				{
@@ -479,8 +494,11 @@
 				
 				if (validItem)
 				{
-					textInput.setFocus();
-				
+					if (setFocus)
+					{
+						textInput.setFocus();
+					}
+					
 					if (!isSilent)
 					{
 						dispatchEvent( new Event( Event.CHANGE ) );
@@ -539,14 +557,14 @@
 			
 			public function updateComoText():void
 			{
+				textInput.text = null;
+				textInput.validateNow();
+				
 				callLater( _updateComoText );
 			}
 			
 			private function _updateComoText():void
 			{
-				textInput.text = null;
-				//textInput.validateNow();
-				
 				var event:Event = new Event( SEARCH_CHANGE );
 				dispatchEvent( event );
 				
