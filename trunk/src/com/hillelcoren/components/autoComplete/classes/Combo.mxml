@@ -364,7 +364,11 @@
 					}
 					else if (event.keyCode == Keyboard.ENTER || event.charCode == 44)
 					{
-						if (!_isStrict && target.isEditable())
+						if (target is ComboTextInput)
+						{
+							textInput.setFocus();
+						}
+						else if (!_isStrict && target.isEditable())
 						{
 							setSelectedItem( target.text, false, true );
 							return;
@@ -654,6 +658,9 @@
 				{
 					return;
 				}
+				
+				var regExp:RegExp = new RegExp(",", "gi")
+				textInput.text = textInput.text.replace( regExp, "" );
 				
 				_searchStr = textInput.text;
 				
