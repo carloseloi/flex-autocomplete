@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:ToolBar paddingTop="4" 
-	xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:Container
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	borderStyle="inset" backgroundColor="#FFFFFF"
+	initialize="init()" >
 	
 	<mx:Script>
 		<![CDATA[
 			import mx.core.UIComponent;
+			import mx.controls.VRule;
+			import mx.core.Container;
+			import mx.core.EdgeMetrics;
+			import mx.core.IUIComponent;
 			import com.hillelcoren.components.autoComplete.interfaces.iComboItem;
 			
 			private var _style:String;
@@ -12,6 +19,25 @@
 			
 			private var _enableRemoveIcon:Boolean;
 			private var _enableRemoveIconChanged:Boolean;
+			
+			private var _enableMultiRow:Boolean;
+			
+			private function init():void
+			{
+				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
+				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );
+			}
+			
+			private function handleFocusIn( event:Event ):void
+			{
+				validateNow();
+				drawFocus( true );				
+			}
+			
+			private function handleFocusOut( event:Event ):void
+			{
+				drawFocus( false );
+			}
 			
 			override protected function commitProperties():void
 			{
@@ -103,6 +129,118 @@
 				invalidateProperties();
 			}
 			
+			internal function set enableMultiRow( value:Boolean ):void
+			{
+				_enableMultiRow = value;
+			}
+			
+			override protected function measure():void
+			{
+				super.measure();
+				
+				var minWidth:Number = 0;
+				var minHeight:Number = 0;
+				
+				var preferredWidth:Number = 0;
+				var preferredHeight:Number = 0;
+				
+				var n:int = numChildren;
+				var numGaps:int = -1;
+	
+				for (var i:int = 0; i < n; i++)
+				{
+					var child:IUIComponent = IUIComponent(getChildAt(i));
+		
+					if (!child.includeInLayout)
+					{
+						continue;
+					}	
+					
+					numGaps++;
+					var wPref:Number = child.getExplicitOrMeasuredWidth();
+					var hPref:Number = child.getExplicitOrMeasuredHeight();
+					
+					minWidth = Math.max(minWidth, wPref);
+					minHeight = Math.max(minHeight, hPref);
+					preferredWidth += wPref;
+				}
+				
+				var vm:EdgeMetrics = viewMetricsAndPadding;
+				var wPadding:Number = vm.left + vm.right + numGaps * getStyle("horizontalGap");
+				var hPadding:Number = vm.top + vm.bottom;
+				
+				measuredMinWidth = minWidth; // + wPadding;
+				measuredMinHeight = minHeight; // + hPadding;
+				
+				measuredWidth = preferredWidth + wPadding;
+				measuredHeight = minHeight + hPadding;
+			}
+			
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+			{
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				
+				var vm:EdgeMetrics = viewMetricsAndPadding;
+				
+				var xPos:Number = 0; // vm.left;
+				var yPos:Number = 0; // vm.top;
+				var maxYPos:Number = 0;
+				
+				var n:int = numChildren;
+				var child:IUIComponent;
+				var lastChild:IUIComponent;
+				var childWidth:int;
+				var childHeight:int;
+				
+				var xEnd:Number = unscaledWidth - vm.right;
+				
+				for (var i:int = 0; i < n; i++)
+				{
+					child = IUIComponent(getChildAt(i));
+					
+					if (!child.includeInLayout)
+					{
+						continue;
+					}
+					
+					childWidth = child.getExplicitOrMeasuredWidth();
+					childHeight = child.getExplicitOrMeasuredHeight();
+					
+					// Start a new row?
+					if (xPos + childWidth > xEnd && xPos != vm.left && _enableMultiRow)
+					{
+						yPos = maxYPos;
+						xPos = 0; // vm.left;
+						
+						if (child is VRule)
+						{
+							child.setActualSize(0, 0);
+							child.move(xPos, yPos);
+							continue;
+						}
+						else if (lastChild is VRule)
+						{
+							lastChild.setActualSize(0, 0);
+						}
+					}
+					
+					child.setActualSize(childWidth, childHeight)
+					child.move(xPos, yPos);
+					lastChild = child;
+					
+					maxYPos = Math.max(maxYPos, yPos + childHeight);
+					xPos += childWidth;
+				}
+				
+				maxYPos += 0; //vm.bottom;
+				
+				if (height != maxYPos)
+				{
+					height = maxYPos;
+				}
+			}
+			
 		]]>
 	</mx:Script>
-</mx:ToolBar>
+	
+</mx:Container>

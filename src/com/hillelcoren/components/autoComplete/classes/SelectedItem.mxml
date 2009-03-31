@@ -153,7 +153,7 @@
 					
 					_shape.graphics.beginFill( color );
 					_shape.graphics.lineStyle( 1, border );
-					_shape.graphics.drawRoundRect( x, y, width, height, radius );
+					_shape.graphics.drawRoundRect( x, y, width, height - 1, radius );
 					_shape.graphics.endFill();
 				}
 			}
@@ -305,10 +305,5 @@
 	<mx:Image id="removeIcon" source="@Embed('/com/hillelcoren/assets/remove.png')" height="{ itemLabel.height }" verticalAlign="middle" 
 		visible="{ _enableRemoveIcon }" includeInLayout="{ _enableRemoveIcon }" click="handleRemoveClick()"/>		
 	<mx:Spacer id="rightSpacer"/>
-	
-	<!--
-	<mx:TextInput id="rightTextInput" width="5" borderStyle="none" 
-		focusThickness="0" change="handleTextChange(event)" visible="false" includeInLayout="false"/>		
-	-->
 	
 </mx:HBox>

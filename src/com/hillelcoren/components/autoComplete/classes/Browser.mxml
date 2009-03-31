@@ -44,7 +44,7 @@
 			private var _itemRenderer:IFactory;
 			
 			[Bindable]
-			private var _list:ListBase;
+			protected var _list:ListBase;
 						
 			public function init():void
 			{

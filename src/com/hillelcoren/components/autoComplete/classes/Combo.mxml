@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Box 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	clipContent="false" 
-	height="{ flowBox.height + 2 }" width="100%"
+	clipContent="false" width="100%" borderStyle="none"
 	verticalAlign="middle" horizontalAlign="center"
-	initialize="init()" backgroundColor="#FFFFFF"
-	creationComplete="setMaxWidth()"
-	borderStyle="inset" borderThickness="1"
-	verticalScrollPolicy="off" horizontalScrollPolicy="auto"
+	initialize="init()" creationComplete="setMaxWidth()"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	xmlns:components="com.hillelcoren.components.*" 
 	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
 	
@@ -86,12 +83,8 @@
 			
 			private function init():void
 			{
-				textInput.textInput.setStyle( "borderStyle", "none" ); 
-				textInput.textInput.setStyle( "focusThickness", 0 );
-				
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
 				addEventListener( ResizeEvent.RESIZE, handleResize );
-				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );														
 			}
 			
@@ -103,14 +96,12 @@
 				}				
 			}
 			
-			private function handleFocusIn( event:Event ):void
+			private function handleFocusOut( event:FocusEvent ):void
 			{
-				drawFocus( true );				
-			}
-			
-			private function handleFocusOut( event:Event ):void
-			{
-				drawFocus( false );
+				if (event.relatedObject && contains( event.relatedObject))
+				{
+					return;
+				}
 				
 				if (searchText.length > 0)
 				{
@@ -141,6 +132,7 @@
 				{
 					_isMultiSelectChanged = false;
 					
+					flowBox.enableMultiRow = _isMultiSelect && _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL;
 					setComboItemsVisible( _isMultiSelect && _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL );
 					setClearIconEnabled();
 					updateComoText();
@@ -342,7 +334,11 @@
 							{
 								ComboTextInput( comboItem ).setSelectionEnd();
 							}
-						}					
+						}
+						else if (index == 0 && focused is SelectedItem)
+						{
+							SelectedItem( focused ).setTextFocus();
+						}		
 					}
 					else if (event.keyCode == Keyboard.RIGHT)
 					{
@@ -577,14 +573,17 @@
 			
 			private function sizeTextInput( event:Event = null ):void
 			{
-				if (textInput.text.length == 0 && _selectedItems.length == 0) 
+				//return;
+				if (textInput.text.length == 0 && _selectedItems && _selectedItems.length == 0) 
 				{
 					textInput.width = width - 10;	
 				}
 				else
 				{
 					textInput.prompt = null;
-					textInput.width = measureText( textInput.text ).width + 40;
+					
+					var newWidth:int = measureText( textInput.text ).width + 40; 
+					textInput.width = newWidth < flowBox.width ? newWidth : flowBox.width;
 				}
 				
 				// this is needed so the focus border will be drawn correctly
@@ -941,10 +940,8 @@
 		]]>
 	</mx:Script>
 	
-	<classes:FlowBox id="flowBox" horizontalGap="0" verticalGap="0" width="99%" height="99%">
-
+	<classes:FlowBox id="flowBox" width="100%" height="100%">
 		<components:PromptTextInput id="textInput" enableClearIcon="false" change="handleChange(event)"/>		
-
 	</classes:FlowBox>
 	 
 </mx:Box>
