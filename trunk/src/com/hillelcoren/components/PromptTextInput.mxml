@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas
+<mx:HBox
 	xmlns:mx="http://www.adobe.com/2006/mxml"	
-	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	implements="com.hillelcoren.components.autoComplete.interfaces.iComboItem"
-	height="{ textInput.height }"
-	initialize="init()">
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	verticalGap="0" horizontalGap="0"
+	borderStyle="none" initialize="init()">
 	
 	<mx:Metadata>
 		[Event("change")]
@@ -322,6 +322,6 @@
 		]]>
 	</mx:Script>
 	
-	<mx:TextInput id="textInput" width="100%" paddingRight="20"/>
+	<mx:TextInput id="textInput" width="100%" paddingRight="20" borderStyle="none"/>
 	
-</mx:Canvas>
+</mx:HBox>
