@@ -770,19 +770,22 @@
 					return;
 				}
 				
-				var localPoint:Point = new Point( 0, height );
+				var localPoint:Point = new Point( 0, 0 );
 				var globalPoint:Point = localToGlobal( localPoint );
 								
 				_dropDown.x = globalPoint.x;
 				
+				var fitsBelow:Boolean = Application.application.height + height - globalPoint.y > dropDown.height;
+				var fitsAbove:Boolean = globalPoint.y > dropDown.height;
+				
 				// check if it will fit below the textInput 
-				if (Application.application.height - globalPoint.y > dropDown.height)	
+				if (fitsBelow || !fitsAbove)	
 				{
-					_dropDown.y = globalPoint.y;
+					_dropDown.y = globalPoint.y + height;
 				}
 				else
 				{
-					_dropDown.y = globalPoint.y - height - dropDown.height;
+					_dropDown.y = globalPoint.y - dropDown.height;
 				}				
 			}
 			
