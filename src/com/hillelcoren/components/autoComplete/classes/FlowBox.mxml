@@ -30,7 +30,9 @@
 			
 			private function handleFocusIn( event:Event ):void
 			{
+				// this is needed to make sure the focus border is drawn correctly
 				validateNow();
+				
 				drawFocus( true );				
 			}
 			

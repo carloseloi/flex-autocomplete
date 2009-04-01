@@ -85,7 +85,9 @@
 			{
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
 				addEventListener( ResizeEvent.RESIZE, handleResize );
-				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );														
+				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );			
+				
+				textInput.setStyle( "borderStyle", "none" );											
 			}
 			
 			public function setMaxWidth():void
@@ -103,7 +105,7 @@
 					return;
 				}
 				
-				if (searchText.length > 0)
+				if (searchText.length > 0 && !_isStrict)
 				{
 					setSelectedItem( searchText, false, true, false );
 				}	
@@ -489,7 +491,7 @@
 				{
 					validItem = false;
 				}
-								
+					
 				updateComoText();
 				
 				if (validItem)
