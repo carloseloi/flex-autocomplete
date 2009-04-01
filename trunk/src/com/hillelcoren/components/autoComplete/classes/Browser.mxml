@@ -36,6 +36,8 @@
 			[Bindable]
 			private var _originalSelectedItems:ArrayCollection;
 			
+			private var _browserFields:Array;
+			
 			private var _searchStr:String
 			private var _searchStrChanged:Boolean;
 			
@@ -63,6 +65,20 @@
 				else
 				{
 					_list = new DataGrid();
+					
+					if (_browserFields)
+					{
+						var columns:Array = [];
+						
+						for each (var field:String in _browserFields)
+						{
+							var column:DataGridColumn = new DataGridColumn( field );
+							column.headerText = StringUtils.capitalizeWords( field );
+							columns.push( column );
+						}
+
+						DataGrid( _list ).columns = columns;
+					}
 				}
 				
 				_list.percentWidth = 100;
@@ -173,6 +189,11 @@
 				_searchStrChanged = true;
 				
 				invalidateProperties();
+			}
+			
+			public function set browserFields( value:Array ):void
+			{
+				_browserFields = value;
 			}
 			
 			override protected function commitProperties():void

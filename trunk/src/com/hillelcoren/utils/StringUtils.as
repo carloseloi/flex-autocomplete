@@ -20,7 +20,7 @@ package com.hillelcoren.utils
 			return pattern == string.substr( 0, pattern.length );
 		}
 		
-		public static function anyWordBeginsWIth( string:String, pattern:String ):Boolean
+		public static function anyWordBeginsWith( string:String, pattern:String ):Boolean
 		{
 			if (!string)
 			{
@@ -51,6 +51,19 @@ package com.hillelcoren.utils
 			return string.charAt(0).toUpperCase() + string.substring( 1, string.length );
 		}
 		
+		public static function capitalizeWords( string:String ):String
+		{
+			var origWords:Array = string.split( " " );
+			var newWords:Array = [];
+			
+			for each (var word:String in origWords)
+			{
+				newWords.push( StringUtils.capitalize( word ) ); 
+			}
+
+			return newWords.join( " " ); 
+		}
+						
 		public static function unCapitalize( string:String ):String
 		{
 			return string.charAt(0).toLowerCase() + string.substring( 1, string.length );

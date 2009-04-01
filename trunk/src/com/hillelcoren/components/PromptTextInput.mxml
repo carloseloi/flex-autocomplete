@@ -4,7 +4,7 @@
 	implements="com.hillelcoren.components.autoComplete.interfaces.iComboItem"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	verticalGap="0" horizontalGap="0"
-	borderStyle="none" initialize="init()">
+	borderStyle="inset" initialize="init()">
 	
 	<mx:Metadata>
 		[Event("change")]

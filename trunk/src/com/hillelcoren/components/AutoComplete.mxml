@@ -31,7 +31,7 @@
 			import mx.controls.dataGridClasses.DataGridListData;
 			import com.hillelcoren.components.autoComplete.classes.*;
 			import com.hillelcoren.utils.StringUtils;
-			import mx.controls.Button;
+			import mx.controls.LinkButton;
 			import mx.core.IFlexDisplayObject;
 			import mx.core.Application;
 			import mx.containers.GridRow;
@@ -74,9 +74,10 @@
 			
 			private var _browser:IBrowser;
 			private var _useListBuilder:Boolean;
+			private var _browserFields:Array;
 			protected var _browserClass:Class = Browser;
 			protected var _listBuilderClass:Class = ListBuilder;
-				
+			
 			private var _browseLabel:String = "Browse";
 			private var _removeLabel:String = "Remove";	
 			
@@ -484,10 +485,12 @@
 				if (useListBuilder)
 				{
 					_browser = new _listBuilderClass();	
+					ListBuilder( _browser ).isOrderable = _isOrderable;
 				}
 				else
 				{
 					_browser = new _browserClass();
+					Browser( _browser ).browserFields = _browserFields;					
 				}
 				
 				var dp:ArrayCollection = new ArrayCollection( _dataProvider.source );
@@ -510,19 +513,10 @@
 				
 				_browser.init();
 				
-				if (useListBuilder)
+				if (!useListBuilder && !combo.isItemSelected)
 				{
-					ListBuilder( _browser ).isOrderable = _isOrderable;	
-				}
-				else
-				{
-					Browser( _browser ).isMultiSelect = _isMultiSelect;
-				
-					if (!combo.isItemSelected)
-					{
-						Browser( _browser ).searchStr = searchText;
-					}
-				}										
+					Browser( _browser ).searchStr = searchText;
+				}													
 			}
 			
 			private function handleDataProviderChange( event:CollectionEvent ):void
@@ -934,6 +928,15 @@
 			}
 			
 			/**
+			 * The fields/columns to display in the browse window. If listBuilder is enable
+			 * this property is ignored.
+			 */
+			public function set browserFields( value:Array ):void
+			{
+				_browserFields = value;
+			}
+			
+			/**
 			 * The custom item renderer for the dropdown displayed when searching.
 			 */
 			public function set dropDownItemRenderer( value:IFactory ):void
@@ -964,7 +967,7 @@
 					case MATCH_BEGINNING:
 						return StringUtils.beginsWith( str, searchStr );
 					case MATCH_WORD:
-						return StringUtils.anyWordBeginsWIth( str, searchStr );
+						return StringUtils.anyWordBeginsWith( str, searchStr );
 				}
 				
 				return false;
