@@ -3,8 +3,8 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"	
 	implements="com.hillelcoren.components.autoComplete.interfaces.iComboItem"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
-	verticalGap="0" horizontalGap="0"
-	borderStyle="inset" initialize="init()">
+	verticalAlign="middle" backgroundColor="#FFFFFF"
+	width="100" borderStyle="inset" initialize="init()">
 	
 	<mx:Metadata>
 		[Event("change")]
@@ -20,13 +20,17 @@
 			
 			private var _prompt:String;
 			private var _isPromptSet:Boolean;
+			private var _drawFocusBorder:Boolean = true;
 			
+			[Bindable]
 			private var _enableClearIcon:Boolean = true;
-			private var _showingClearIcon:Boolean;
 			private var _isMouseOver:Boolean;
 			
 			[Embed(source="/com/hillelcoren/assets/clear.png")]
 			private var _clearAsset:Class;
+			
+			private var _text:String;
+			private var _textChanged:Boolean;
 			
 			private function init():void
 			{
@@ -38,6 +42,17 @@
 				textInput.addEventListener( Event.CHANGE, handleChange );				
 				
 				showPrompt();
+			}
+			
+			override protected function commitProperties():void
+			{
+				super.commitProperties();
+				
+				if (_textChanged)
+				{
+					_textChanged = false;
+					setNewText();
+				}
 			}
 			
 			private function showPrompt():void
@@ -118,6 +133,7 @@
 				}
 			}
 			
+			/*
 			public function get htmlText():String
 			{
 				if (_isPromptSet)
@@ -129,6 +145,7 @@
 					return textInput.htmlText;
 				}
 			}
+			*/
 			
 			public function get selectionBeginIndex():int
 			{
@@ -137,7 +154,15 @@
 			
 			public function set text( value:String ):void
 			{
-				if (value == null)
+				_text = value;
+				_textChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			private function setNewText():void
+			{	
+				if (_text == null)
 				{
 					textInput.text = "";
 					textInput.setSelection( 0, 0 );
@@ -148,10 +173,11 @@
 				else
 				{
 					hidePrompt();
-					textInput.text = value;							
+					textInput.text = _text;							
 				}								
 			}
 			
+			/*
 			public function set htmlText( value:String ):void
 			{
 				if (value == null)
@@ -168,6 +194,7 @@
 					textInput.htmlText = value;																		
 				}					
 			}
+			*/
 			
 			public function setTextSelected( value:Boolean ):void
 			{
@@ -178,6 +205,11 @@
 				
 			private function handleFocusIn( event:FocusEvent ):void
 			{
+				if (_drawFocusBorder)
+				{
+					drawFocus( true );
+				}
+				
 				if (_isPromptSet)
 				{
 					hidePrompt();
@@ -186,10 +218,20 @@
 			
 			private function handleFocusOut( event:FocusEvent ):void
 			{
+				if (_drawFocusBorder)
+				{
+					drawFocus( false );
+				}
+				
 				if (textInput.text.length == 0)
 				{
 					showPrompt();
 				}
+			}
+			
+			public function set drawFocusBorder( value:Boolean ):void
+			{
+				_drawFocusBorder = value;
 			}
 			
 			private function handleChange( event:Event ):void
@@ -235,7 +277,8 @@
 			{
 				_isMouseOver = false;
 				
-				if (_showingClearIcon)
+				/*
+				if (clearIcon.visible = true)
 				{
 					if (event.relatedObject == getChildAt(1))
 					{
@@ -244,41 +287,33 @@
 					
 					hideClearIcon();
 				}
+				*/
+				
+				hideClearIcon();
 			}
 			
 			private function hideClearIcon():void
 			{
-				if (_showingClearIcon)
-				{
-					_showingClearIcon = false;
-					removeChildAt( 1 );
-				}
+				clearIcon.visible = false;
 			}
 			
 			private function showClearIcon():void
 			{
-				if (_enableClearIcon && !_showingClearIcon)
+				if (_enableClearIcon)
 				{
-					var bitmap:Bitmap = new _clearAsset() as Bitmap;
-					var image:Image = new Image();
-					image.source = bitmap;
-					image.x = width - 22;
-					image.y = (height - bitmap.height) / 2;
-					
-					image.addEventListener( MouseEvent.CLICK, handleClearClick );
-					
-					_showingClearIcon = true;
-					addChild( image );
+					clearIcon.visible = true;
 				}																			
 			}
 			
-			private function handleClearClick( event:Event ):void
+			private function handleClearClick():void
 			{
 				text = null;
+				
 				hidePrompt();
 				setFocus();
 				
-				dispatchEvent( new Event( Event.CHANGE ) );
+				var event:Event = new Event( Event.CHANGE );
+				dispatchEvent( event );
 			}
 			
 			override public function setFocus():void
@@ -322,6 +357,8 @@
 		]]>
 	</mx:Script>
 	
-	<mx:TextInput id="textInput" width="100%" paddingRight="20" borderStyle="none"/>
+	<mx:TextInput id="textInput" width="100%" borderStyle="none"/>
+	<mx:Image id="clearIcon" source="@Embed('/com/hillelcoren/assets/clear.png')" verticalAlign="middle" 
+		visible="false" includeInLayout="{ _enableClearIcon }" click="handleClearClick()"/>
 	
 </mx:HBox>
