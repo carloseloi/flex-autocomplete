@@ -157,11 +157,6 @@
 				combo.addEventListener( Event.CHANGE, handleComboChange );
 				combo.addEventListener( Combo.SEARCH_CHANGE, handleComboSearchChange );
 				
-				if (_dataProvider == null)
-				{
-					_dataProvider = new ArrayCollection();
-				}
-				
 				if (_filterFunction == null)
 				{
 					filterFunction = defaultFilterFunction;
@@ -324,6 +319,7 @@
 					
 					combo.dataProvider = _dataProvider;
 					combo.dataProvider.refresh();
+					combo.validateNow();
 				}		
 				
 				if (_selectedItemChanged && _dataProvider)
@@ -480,6 +476,11 @@
 			
 			private function handleBrowseClick( event:Event ):void
 			{
+				if (!_dataProvider)
+				{
+					return;
+				}
+				
 				var useListBuilder:Boolean = _useListBuilder && _isMultiSelect;
 				
 				if (useListBuilder)

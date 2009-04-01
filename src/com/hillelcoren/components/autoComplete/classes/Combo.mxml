@@ -15,6 +15,7 @@
 		
 	<mx:Script>
 		<![CDATA[
+			import mx.managers.FocusManager;
 			import mx.events.ResizeEvent;
 			import com.hillelcoren.components.AutoComplete;
 			import com.hillelcoren.components.autoComplete.interfaces.iComboItem;
@@ -107,7 +108,7 @@
 				
 				if (searchText.length > 0 && !_isStrict)
 				{
-					setSelectedItem( searchText, false, true, false );
+					setSelectedItem( searchText, false, true );
 				}	
 			}
 			
@@ -414,7 +415,7 @@
 				return null;
 			}
 			
-			public function setSelectedItem( value:Object, isSilent:Boolean = false, isNew:Boolean = false, setFocus:Boolean = true ):void
+			public function setSelectedItem( value:Object, isSilent:Boolean = false, isNew:Boolean = false ):void
 			{
 				if (!_isMultiSelect)
 				{
@@ -496,11 +497,6 @@
 				
 				if (validItem)
 				{
-					if (setFocus)
-					{
-						textInput.setFocus();
-					}
-					
 					if (!isSilent)
 					{
 						dispatchEvent( new Event( Event.CHANGE ) );
@@ -588,6 +584,7 @@
 					textInput.width = newWidth < flowBox.width ? newWidth : flowBox.width;
 				}
 				
+				/*
 				// this is needed so the focus border will be drawn correctly
 				textInput.validateNow();
 				
@@ -597,6 +594,7 @@
 				{
 					drawFocus( true );
 				}
+				*/
 			}
 			
 			private function handleItemClick( event:ListEvent ):void
@@ -946,7 +944,7 @@
 	</mx:Script>
 	
 	<classes:FlowBox id="flowBox" width="100%" height="100%">
-		<components:PromptTextInput id="textInput" enableClearIcon="false" change="handleChange(event)"/>		
+		<components:PromptTextInput id="textInput" enableClearIcon="false" change="handleChange(event)" drawFocusBorder="false"/>		
 	</classes:FlowBox>
 	 
 </mx:Box>
