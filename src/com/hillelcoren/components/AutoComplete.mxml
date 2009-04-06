@@ -491,7 +491,8 @@
 				else
 				{
 					_browser = new _browserClass();
-					Browser( _browser ).browserFields = _browserFields;					
+					Browser( _browser ).browserFields = _browserFields;
+					Browser( _browser ).isMultiSelect = _isMultiSelect;					
 				}
 				
 				var dp:ArrayCollection = new ArrayCollection( _dataProvider.source );
