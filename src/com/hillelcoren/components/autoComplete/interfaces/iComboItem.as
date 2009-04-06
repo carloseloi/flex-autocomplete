@@ -10,5 +10,6 @@ package com.hillelcoren.components.autoComplete.interfaces
 		function isCursorAtEnd():Boolean
 		function isEditable():Boolean		
 		function get text():String
+		function get item():Object
 	}
 }

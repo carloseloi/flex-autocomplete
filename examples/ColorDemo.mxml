@@ -208,7 +208,7 @@
     		[Bindable(event="changeOption")]
     		private function get listBuilderEnabled():Boolean
     		{
-    			return multiselect.selected && browesable.selected;
+    			return multiselect.selected && browesable.selected;    			
     		}
     		
     		[Bindable(event="changeOption")]

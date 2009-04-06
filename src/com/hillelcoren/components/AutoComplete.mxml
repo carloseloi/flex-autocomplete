@@ -157,6 +157,8 @@
 				combo.addEventListener( Event.CHANGE, handleComboChange );
 				combo.addEventListener( Combo.SEARCH_CHANGE, handleComboSearchChange );
 				
+				_selectedItems.addEventListener( CollectionEvent.COLLECTION_CHANGE, handleSelectedItemsChange );
+				
 				if (_filterFunction == null)
 				{
 					filterFunction = defaultFilterFunction;
@@ -202,7 +204,7 @@
 				{
 					_textChanged = false;
 					
-					combo.setSelectedItem( null );
+					combo.addItem( null );
 					combo.text = _text;
 				}	
 				
@@ -266,16 +268,12 @@
 					if (_isMultiSelectChanged)
 					{
 						_selectedItems.removeAll();
-						combo.clearFlowBox();	
-						selectedItem = null;
 						combo.isMultiSelect = _isMultiSelect;
 					}
 					
 					if (_multiSelectLayoutChanged)
 					{	
 						_selectedItems.removeAll();
-						combo.clearFlowBox();	
-						selectedItem = null;
 						combo.multiSelectLayout = _multiSelectLayout;
 					}
 					
@@ -325,19 +323,24 @@
 				if (_selectedItemChanged && _dataProvider)
 				{
 					_selectedItemChanged = false;
+					_selectedItems.removeAll();
 					
-					combo.setSelectedItem( _selectedItem, true );					
+					if (_selectedItem)
+					{
+						_selectedItems.addItem( _selectedItem );
+					}
 				}
 				
 				if (_selectedItemIdChanged && _dataProvider)
 				{
 					_selectedItemIdChanged = false;
+					_selectedItems.removeAll();
 					
 					for each (item in _dataProvider.source)
 					{
 						if (item.hasOwnProperty( _keyField ) && item[ _keyField ] == _selectedItemId)
 						{
-							combo.setSelectedItem( item, true );
+							_selectedItems.addItem( item );
 							_selectedItemId = 0;
 							break;
 						}
@@ -347,9 +350,7 @@
 				if (_selectedItemsChanged && _dataProvider)
 				{
 					_selectedItemsChanged = false;
-					
 					_selectedItems.removeAll();
-					combo.clearFlowBox();
 					
 					for each (var selectedItem:Object in _initialSelectedItems)
 					{
@@ -368,7 +369,7 @@
 							
 							if (foundItem)
 							{
-								combo.setSelectedItem( foundItem, true );
+								_selectedItems.addItem( foundItem );
 								combo.validateNow();
 								foundItem = true;
 								break;
@@ -377,7 +378,7 @@
 						
 						if (foundItem == null)
 						{
-							combo.setSelectedItem( selectedItem, true );
+							_selectedItems.addItem( selectedItem );
 							combo.validateNow();							
 						}
 					}
@@ -461,7 +462,7 @@
 					grid.addChildAt( _multiSelect, 0 );
 					grid.setStyle( "horizontalGap", 5 );
 					
-					combo.setSelectedItem( null, true );
+					_selectedItems.removeAll();
 				}
 				else if (_multiSelect && _multiSelect.parent)
 				{
@@ -525,32 +526,76 @@
 			{
 				if (event.kind == CollectionEventKind.REMOVE)
 				{
-					var itemsRemoved:ArrayCollection = new ArrayCollection( event.items );
-			
-					if (isMultiSelect)
+					for each (var item:Object in event.items)
 					{
-							var itemsToBeSelected:ArrayCollection = new ArrayCollection();
-							
-							for each (var item:Object in selectedItems)
-							{
-								if (!itemsRemoved.contains( item ))
-								{
-									itemsToBeSelected.addItem( item );
-								}
-							}
-							
-							selectedItems = itemsToBeSelected;
-					}
-					else
-					{
-						if (itemsRemoved.contains( selectedItem ))
+						var index:int = _selectedItems.getItemIndex( item );
+						
+						if (index >= 0)
 						{
-							combo.setSelectedItem( null );
+							_selectedItems.removeItemAt( index );
 						}
 					}
 				}
 			}
+			
+			private function handleSelectedItemsChange( event:CollectionEvent ):void
+			{
+				var item:Object;
+				
+				if (event.kind == CollectionEventKind.REMOVE)
+				{
+					combo.removeItemAt( event.location );
+				}			
+				else if (event.kind == CollectionEventKind.ADD)
+				{
+					for each (item in event.items)
+					{
+						if (!_allowDuplicates)
+						{
+							if (checkIfDuplicate( item ))
+							{
+								continue;
+							}
+						}
 						
+						combo.addItem( item );											
+					}
+				}
+				
+				combo.updateComoText();
+				combo.hideDropDown();
+				
+				var changeEvent:Event = new Event( Event.CHANGE );
+				dispatchEvent( changeEvent );
+			}
+			
+			private function checkIfDuplicate( searchFor:Object ):Boolean
+			{
+				var count:int;
+				
+				for each (var item:Object in _selectedItems)
+				{
+					if (item == searchFor)
+					{
+						count++;
+					}
+				} 
+				
+				if (count > 1)
+				{
+					_selectedItems.removeEventListener( CollectionEvent.COLLECTION_CHANGE, handleSelectedItemsChange );
+					
+					var index:int = _selectedItems.getItemIndex( item );
+					_selectedItems.removeItemAt( index );
+					
+					_selectedItems.addEventListener( CollectionEvent.COLLECTION_CHANGE, handleSelectedItemsChange );
+										
+					return true;
+				}
+				
+				return false;
+			}
+				
 			private function handleComboChange( event:Event ):void
 			{
 				dispatchEvent( new Event( Event.CHANGE ) );
@@ -568,13 +613,12 @@
 				
 				if (useListBuilder || !_isMultiSelect)
 				{
-					_selectedItems.removeAll();
-					combo.clearFlowBox();
+					_selectedItems.removeAll();					
 				}
 				
 				for each (item in _browser.selectedItems)
 				{
-					combo.setSelectedItem( item, true );					
+					_selectedItems.addItem( item );				
 				}					
 				
 				PopUpManager.removePopUp( IFlexDisplayObject( _browser ) );
