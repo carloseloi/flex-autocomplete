@@ -172,7 +172,7 @@
 				var hPadding:Number = vm.top + vm.bottom;
 				
 				measuredMinWidth = minWidth; // + wPadding;
-				measuredMinHeight = minHeight; // + hPadding;
+				measuredMinHeight = minHeight + hPadding;
 				
 				measuredWidth = preferredWidth + wPadding;
 				measuredHeight = minHeight + hPadding;
@@ -185,7 +185,7 @@
 				var vm:EdgeMetrics = viewMetricsAndPadding;
 				
 				var xPos:Number = 0; // vm.left;
-				var yPos:Number = 0; // vm.top;
+				var yPos:Number = vm.top;
 				var maxYPos:Number = 0;
 				
 				var n:int = numChildren;
@@ -234,7 +234,7 @@
 					xPos += childWidth;
 				}
 				
-				maxYPos += 0; //vm.bottom;
+				maxYPos += vm.bottom;
 				
 				if (height != maxYPos)
 				{
