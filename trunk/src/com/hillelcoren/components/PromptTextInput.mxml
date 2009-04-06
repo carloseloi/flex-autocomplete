@@ -4,7 +4,7 @@
 	implements="com.hillelcoren.components.autoComplete.interfaces.iComboItem"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	verticalAlign="middle" backgroundColor="#FFFFFF"
-	width="100" borderStyle="inset" initialize="init()" xmlns:components="com.hillelcoren.components.*">
+	width="100" borderStyle="inset" initialize="init()" xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
 	
 	<mx:Metadata>
 		[Event("change")]
@@ -358,7 +358,7 @@
 		]]>
 	</mx:Script>
 	
-	<components:ShorterTextInput id="textInput" width="100%" borderStyle="none"/> 
+	<classes:ShorterTextInput id="textInput" width="100%" borderStyle="none"/> 
 	<mx:Image id="clearIcon" source="@Embed('/com/hillelcoren/assets/clear.png')" verticalAlign="middle" 
 		visible="false" includeInLayout="{ _enableClearIcon }" click="handleClearClick()"/>
 			

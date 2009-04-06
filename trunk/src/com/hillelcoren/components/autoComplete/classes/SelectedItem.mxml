@@ -3,7 +3,7 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	implements="mx.managers.IFocusManagerComponent,com.hillelcoren.components.autoComplete.interfaces.iComboItem"
 	verticalGap="0" horizontalGap="0" tabChildren="false" height="{ leftTextInput.height }"
-	creationComplete="init()" borderStyle="none" xmlns:components="com.hillelcoren.components.*">
+	creationComplete="init()" borderStyle="none" xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
 	
 	<mx:Metadata>
 		[Event(name="change")]
@@ -298,7 +298,7 @@
 		]]>
 	</mx:Script>
 	
-	<components:ShorterTextInput id="leftTextInput" width="5" borderStyle="none" 
+	<classes:ShorterTextInput id="leftTextInput" width="5" borderStyle="none" 
 		focusThickness="0" textInput="handleTextInput(event)"/>
 	<mx:Label id="itemLabel" updateComplete="redrawShape()"/>
 	<mx:Image id="removeIcon" source="@Embed('/com/hillelcoren/assets/remove.png')" height="{ itemLabel.height }" verticalAlign="middle" 
