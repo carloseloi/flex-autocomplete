@@ -108,7 +108,7 @@
 				
 				if (searchText.length > 0 && !_isStrict)
 				{
-					setSelectedItem( searchText, false, true );
+					_selectedItems.addItem( searchText );
 				}	
 			}
 			
@@ -231,7 +231,7 @@
 					}
 					else if (event.keyCode == Keyboard.ENTER || event.keyCode == Keyboard.TAB || event.charCode == 44)
 					{
-						setSelectedItem( _dropDown.selectedItem );
+						_selectedItems.addItem( _dropDown.selectedItem );
 						return;											
 					}
 				}
@@ -240,7 +240,7 @@
 					var target:iComboItem = determineFocus();
 					var focused:DisplayObject = focusManager.getFocus() as DisplayObject;
 					var comboItem:iComboItem;
-					
+					var item:Object;
 					var index:int = flowBox.getChildIndex( target as DisplayObject );
 					var pos:Point;
 					
@@ -265,8 +265,10 @@
 						}
 						
 						if (focused is SelectedItem)
-						{
-							removeItem( focused as UIComponent );
+						{							
+							item = SelectedItem( focused ).item;
+							_selectedItems.removeItemAt( index );
+							iComboItem( flowBox.getChildAt( index ) ).setTextFocus();																															
 						}
 						else
 						{
@@ -284,9 +286,11 @@
 							}							
 							else if (_backspaceAction == AutoComplete.BACKSPACE_REMOVE)
 							{
-								removeItem( prevItem );	
+								item = SelectedItem( focused ).item;
+								_selectedItems.removeItemAt( index );
+								iComboItem( flowBox.getChildAt( index ) ).setTextFocus();					
 							}							
-						}						
+						}												
 					}
 					else if (event.keyCode == Keyboard.UP)
 					{
@@ -329,8 +333,18 @@
 							{
 								return;
 							}
-						
-							comboItem = flowBox.getChildAt( index - 1 ) as iComboItem;
+							
+							// if you press left when a SelectedItem is focused then we'll move the
+							// cursor to the left of the focused item (rather than one item back)
+							if (focused is SelectedItem)
+							{
+								comboItem = flowBox.getChildAt( index ) as iComboItem;
+							}
+							else
+							{				
+								comboItem = flowBox.getChildAt( index - 1 ) as iComboItem;
+							}
+							
 							comboItem.setTextFocus();
 							
 							if (comboItem is ComboTextInput)
@@ -367,9 +381,9 @@
 						{
 							textInput.setFocus();
 						}
-						else if (!_isStrict && target.isEditable())
+						else if (target.text && !_isStrict && target.isEditable())
 						{
-							setSelectedItem( target.text, false, true );
+							_selectedItems.addItem( target.text );
 							return;
 						}
 						else if (event.keyCode == Keyboard.ENTER)
@@ -379,26 +393,6 @@
 					}
 				}
 			}
-			
-			private function removeItem( item:UIComponent ):void
-			{
-				var index:int = flowBox.getChildIndex( item as UIComponent );
-				
-				if (!flowBox.contains( item ))
-				{
-					return;
-				}
-				
-				_selectedItems.removeItemAt( index );
-				flowBox.removeChildAt( index );
-				updateComoText();
-				
-				var comboItem:iComboItem = flowBox.getChildAt( index ) as iComboItem;
-				comboItem.setTextFocus();
-				
-				var event:Event = new Event( Event.CHANGE );
-				dispatchEvent( event );					
-			}			
 			
 			private function determineFocus():iComboItem
 			{
@@ -415,39 +409,29 @@
 				return null;
 			}
 			
-			public function setSelectedItem( value:Object, isSilent:Boolean = false, isNew:Boolean = false ):void
+			public function removeItemAt( index:int ):void
+			{
+				flowBox.removeChildAt( index );
+				
+				updateComoText();
+			}
+			
+			public function addItem( item:Object ):void
 			{
 				if (!_isMultiSelect)
 				{
-					_selectedItems.removeAll();
-					clearFlowBox();
+					_selectedItems.removeAll();					
 				}
 				
-				var validItem:Boolean = true;
+				var isNew:Boolean = _dataProvider.getItemIndex( item ) == -1;
 				
 				if (isNew)
 				{
-					value = StringUtils.trimCommas( value as String );
+					item = StringUtils.trimCommas( item as String );
 				}
 				
-				var canBeAdded:Boolean = true;
-				
-				if (!_allowDuplicates && _selectedItems.getItemIndex( value ) >= 0)
+				if (item)
 				{
-					canBeAdded = false;
-				} 
-				
-				if (canBeAdded && value)
-				{
-					if (_multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL)
-					{ 
-						_selectedItems.addItem( value );
-					}
-					else
-					{
-						_selectedItems.addItemAt( value, 0 );
-					}
-					
 					// we set the width so the flowBox doesn't temporarily 
 					// add a new row to fit the items
 					textInput.width = 0;
@@ -456,18 +440,18 @@
 					{
 						var comboTextInput:ComboTextInput = new ComboTextInput();
 						comboTextInput.isMultiSelect = _isMultiSelect;
-						comboTextInput.text = value + (_isMultiSelect ? "," : "");
-						comboTextInput.width = measureText( value as String ).width + 10;
+						comboTextInput.text = item + (_isMultiSelect ? "," : "");
+						comboTextInput.width = measureText( item as String ).width + 10;
 						comboTextInput.height = textInput.height;
-						comboTextInput.item = value;
+						comboTextInput.item = item;
 						comboTextInput.addEventListener( Event.CHANGE, handleComboItemChange, false, 0, true );
 						flowBox.addChildAt( comboTextInput, flowBox.numChildren - 1 );									
 					}
 					else
 					{
 						var selectedItem:SelectedItem = new SelectedItem();
-						selectedItem.text = _labelFunction( value );
-						selectedItem.item = value;
+						selectedItem.text = _labelFunction( item );
+						selectedItem.item = item;
 						selectedItem.style = _style;
 						selectedItem.height = textInput.height;
 						selectedItem.isMultiSelect = _isMultiSelect;
@@ -481,41 +465,30 @@
 				}
 				// this means the user entered a comma after a value which has already
 				// been added, in this case we just need to readd the comma
-				else if (_selectedItems.getItemIndex( value ) >= 0 && isNew)
+				else if (_selectedItems.getItemIndex( item ) >= 0 && isNew)
 				{
-					var index:int = _selectedItems.getItemIndex( value );
+					var index:int = _selectedItems.getItemIndex( item );
 					var comboItem:iComboItem = flowBox.getChildAt( index + 1 ) as iComboItem;
 					
 					comboItem.setTextFocus();																		
-				}
-				else
-				{
-					validItem = false;
-				}
-					
-				updateComoText();
-				
-				if (validItem)
-				{
-					if (!isSilent)
-					{
-						dispatchEvent( new Event( Event.CHANGE ) );
-					}
-				}
-				
-				if (isDropDownVisible())
-				{
-					// we're using a callLater here as a workaround for not being
-					// able to prevent the enter keyboard event from bubbling. Delaying
-					// the selection gives the UI a chance to check if the enter key
-					// was clicked while the drop down was visible 
-					callLater( hideDropDown );
 				}
 			}
 			
 			private function handleItemRemove( event:Event ):void
 			{
-				removeItem( event.currentTarget as UIComponent );
+				var index:int;
+				
+				for each (var child:DisplayObject in flowBox.getChildren())
+				{
+					if (child == event.currentTarget)
+					{
+						break;
+					}
+					
+					index++;
+				} 
+				
+				_selectedItems.removeItemAt( index );
 			}
 			
 			private function handleItemTextInput( event:TextEvent ):void
@@ -546,7 +519,6 @@
 				else
 				{
 					_selectedItems.removeItemAt( index );
-					flowBox.removeChild( comboTextInput );
 					
 					var comboItem:iComboItem = flowBox.getChildAt( index ) as iComboItem;
 					comboItem.setTextFocus();
@@ -572,7 +544,6 @@
 			
 			private function sizeTextInput( event:Event = null ):void
 			{
-				//return;
 				if (textInput.text.length == 0 && _selectedItems && _selectedItems.length == 0) 
 				{
 					textInput.width = width - 10;	
@@ -584,23 +555,11 @@
 					var newWidth:int = measureText( textInput.text ).width + 40; 
 					textInput.width = newWidth < flowBox.width ? newWidth : flowBox.width;
 				}
-				
-				/*
-				// this is needed so the focus border will be drawn correctly
-				textInput.validateNow();
-				
-				var comp:UIComponent = focusManager.getFocus() as UIComponent;
-				
-				if (focusManager.getFocus() == this || (comp && this.contains(comp)))
-				{
-					drawFocus( true );
-				}
-				*/
 			}
 			
 			private function handleItemClick( event:ListEvent ):void
 			{
-				setSelectedItem( _dropDown.selectedItem );
+				_selectedItems.addItem( _dropDown.selectedItem );
 			}
 			
 			/**
@@ -618,15 +577,7 @@
 				{
 					hideDropDown();
 				}
-			}
-			
-			public function clearFlowBox():void
-			{
-				while (flowBox.numChildren > 1)
-				{
-					flowBox.removeChildAt( 0 );
-				}
-			}
+			}			
 			
 			public function setComboItemsVisible( visible:Boolean ):void
 			{
@@ -648,8 +599,7 @@
 			{
 				if (selectedItem && !_isMultiSelect)
 				{
-					_selectedItems.removeAll();
-					clearFlowBox();		
+					_selectedItems.removeAll();							
 				}
 				
 				sizeTextInput();
@@ -720,7 +670,7 @@
 					{
 						if (_isEqualFunction( item, searchText ))
 						{
-							setSelectedItem( item );
+							_selectedItems.addItem( item );
 							return true;
 						}
 					}
@@ -730,7 +680,7 @@
 						
 						if (str.toLowerCase() == searchText.toLowerCase())
 						{
-							setSelectedItem( item );
+							_selectedItems.addItem( item );
 							return true;
 						}
 					}
@@ -790,7 +740,16 @@
 				}				
 			}
 			
-			private function hideDropDown():void
+			public function hideDropDown():void
+			{
+				// we're using a callLater here as a workaround for not being
+				// able to prevent the enter keyboard event from bubbling. Delaying
+				// the selection gives the UI a chance to check if the enter key
+				// was clicked while the drop down was visible 
+				callLater( _hideDropDown );					
+			}
+
+			private function _hideDropDown():void
 			{
 				PopUpManager.removePopUp( _dropDown );
 			}

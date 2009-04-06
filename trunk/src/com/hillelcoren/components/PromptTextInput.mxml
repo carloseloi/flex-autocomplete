@@ -4,7 +4,8 @@
 	implements="com.hillelcoren.components.autoComplete.interfaces.iComboItem"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	verticalAlign="middle" backgroundColor="#FFFFFF"
-	width="100" borderStyle="inset" initialize="init()" xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
+	width="100" borderStyle="inset" initialize="init()" 
+	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
 	
 	<mx:Metadata>
 		[Event("change")]
@@ -131,6 +132,11 @@
 					
 					return textInput.text;
 				}
+			}
+			
+			public function get item():Object
+			{
+				return null;
 			}
 			
 			/*
