@@ -555,7 +555,8 @@
 			
 			public function updateComoText():void
 			{
-				textInput.text = null;
+				// if no items are selected then we want to show the prompt (if it's been set)
+				textInput.text = _selectedItems.length == 0 ? null : "";
 				textInput.validateNow();
 				
 				callLater( _updateComoText );
@@ -944,7 +945,8 @@
 	</mx:Script>
 	
 	<classes:FlowBox id="flowBox" width="100%" height="100%">
-		<components:PromptTextInput id="textInput" enableClearIcon="false" change="handleChange(event)" drawFocusBorder="false"/>		
+		<components:PromptTextInput id="textInput" enableClearIcon="false" 
+			change="handleChange(event)" drawFocusBorder="false" borderStyle="none"/>		
 	</classes:FlowBox>
 	 
 </mx:Box>

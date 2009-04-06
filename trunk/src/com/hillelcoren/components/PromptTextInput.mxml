@@ -308,6 +308,7 @@
 			private function handleClearClick():void
 			{
 				text = null;
+				validateNow();
 				
 				hidePrompt();
 				setFocus();
@@ -359,6 +360,5 @@
 	
 	<mx:TextInput id="textInput" width="100%" borderStyle="none"/>
 	<mx:Image id="clearIcon" source="@Embed('/com/hillelcoren/assets/clear.png')" verticalAlign="middle" 
-		visible="false" includeInLayout="{ _enableClearIcon }" click="handleClearClick()"/>
-	
+		visible="false" includeInLayout="{ _enableClearIcon }" click="handleClearClick()"/>	
 </mx:HBox>
