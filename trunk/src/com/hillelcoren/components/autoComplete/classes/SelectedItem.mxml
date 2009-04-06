@@ -2,8 +2,8 @@
 <mx:HBox
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	implements="mx.managers.IFocusManagerComponent,com.hillelcoren.components.autoComplete.interfaces.iComboItem"
-	verticalGap="0" horizontalGap="0" tabChildren="false"
-	creationComplete="init()" borderStyle="none">
+	verticalGap="0" horizontalGap="0" tabChildren="false" height="{ leftTextInput.height }"
+	creationComplete="init()" borderStyle="none" xmlns:components="com.hillelcoren.components.*">
 	
 	<mx:Metadata>
 		[Event(name="change")]
@@ -153,7 +153,7 @@
 					
 					_shape.graphics.beginFill( color );
 					_shape.graphics.lineStyle( 1, border );
-					_shape.graphics.drawRoundRect( x, y, width, height, radius );
+					_shape.graphics.drawRoundRect( x, y+1, width, leftTextInput.height-2, radius );
 					_shape.graphics.endFill();
 				}
 			}
@@ -298,8 +298,7 @@
 		]]>
 	</mx:Script>
 	
-	
-	<mx:TextInput id="leftTextInput" width="5" borderStyle="none" 
+	<components:ShorterTextInput id="leftTextInput" width="5" borderStyle="none" 
 		focusThickness="0" textInput="handleTextInput(event)"/>
 	<mx:Label id="itemLabel" updateComplete="redrawShape()"/>
 	<mx:Image id="removeIcon" source="@Embed('/com/hillelcoren/assets/remove.png')" height="{ itemLabel.height }" verticalAlign="middle" 

@@ -3,7 +3,7 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	borderStyle="inset" backgroundColor="#FFFFFF"
-	initialize="init()" >
+	initialize="init()" clipContent="false">
 	
 	<mx:Script>
 		<![CDATA[
@@ -171,7 +171,7 @@
 				var wPadding:Number = vm.left + vm.right + numGaps * getStyle("horizontalGap");
 				var hPadding:Number = vm.top + vm.bottom;
 				
-				measuredMinWidth = minWidth; // + wPadding;
+				measuredMinWidth = minWidth + wPadding;
 				measuredMinHeight = minHeight + hPadding;
 				
 				measuredWidth = preferredWidth + wPadding;
@@ -184,7 +184,7 @@
 				
 				var vm:EdgeMetrics = viewMetricsAndPadding;
 				
-				var xPos:Number = 0; // vm.left;
+				var xPos:Number = vm.left;
 				var yPos:Number = vm.top;
 				var maxYPos:Number = 0;
 				
@@ -212,7 +212,7 @@
 					if (xPos + childWidth > xEnd && xPos != vm.left && _enableMultiRow)
 					{
 						yPos = maxYPos;
-						xPos = 0; // vm.left;
+						xPos = vm.left;
 						
 						if (child is VRule)
 						{
