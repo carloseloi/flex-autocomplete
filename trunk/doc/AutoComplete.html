@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="print.css" type="text/css" media="print">
-<meta content="AutoComplete,com.hillelcoren.components.AutoComplete,BACKSPACE_FOCUS,BACKSPACE_REMOVE,LAYOUT_HORIZONTAL,LAYOUT_VERTICAL,MATCH_ANY_PART,MATCH_BEGINNING,MATCH_WORD,STYLE_FACEBOOK,STYLE_MAC_MAIL,STYLE_UNDERLINE,_browserClass,_listBuilderClass,_selectedItemId,browserClass,dataProvider,isMultiSelect,labelFunction,listData,searchText,selectedItem,selectedItems,text,useListBuilder,allowDuplicates,backspaceAction,browseLabel,data,dropDownItemRenderer,dropDownLabelFunction,enableRemoveIcon,filterFunction,isBrowseable,isEqualFunction,isOrderable,isStrict,keyField,labelField,matchType,multiSelectLayout,prompt,removeLabel,selectedItemId,style,commitProperties,defaultDropDownLabelFunction,getNextItem,isItemSelected,isSettingValue,setFocus" name="keywords">
+<meta content="AutoComplete,com.hillelcoren.components.AutoComplete,BACKSPACE_FOCUS,BACKSPACE_REMOVE,LAYOUT_HORIZONTAL,LAYOUT_VERTICAL,MATCH_ANY_PART,MATCH_BEGINNING,MATCH_WORD,SEARCH_CHANGE,STYLE_FACEBOOK,STYLE_MAC_MAIL,STYLE_UNDERLINE,_browserClass,_listBuilderClass,_selectedItemId,browserClass,dataProvider,isMultiSelect,labelFunction,listData,searchText,selectedItem,selectedItems,text,useListBuilder,allowDuplicates,areNewItemsEditable,backspaceAction,browseLabel,browserFields,data,dropDownItemRenderer,dropDownLabelFunction,enableRemoveIcon,filterFunction,isBrowseable,isEqualFunction,isOrderable,isStrict,keyField,labelField,matchType,multiSelectLayout,percentWidth,prompt,removeLabel,selectedItemId,style,width,commitProperties,defaultDropDownLabelFunction,getNextItem,isItemSelected,isSettingValue,search,setFocus" name="keywords">
 <title>com.hillelcoren.components.AutoComplete</title>
 </head>
 <body>
@@ -45,8 +45,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-<p>Advanced AutoComplete component which supports browsing, selecting and ordering multiple items.</p>
-<p>The license is freewaree, I just ask that if you make any improvemnts or fix any bugs you send them back to me (<a href="http://www.hillelcoren.com">hillelcoren.com</a>)
+<p></p>
 <br>
 <hr>
 </div>
@@ -64,6 +63,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">AutoComplete</td>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#areNewItemsEditable">areNewItemsEditable</a> : Boolean<div class="summaryTableDescription">[write-only]
+    A flag that indicates whether or not you can edit a new item which has been added.</div>
+</td><td class="summaryTableOwnerCol">AutoComplete</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#backspaceAction">backspaceAction</a> : String<div class="summaryTableDescription">[write-only]
     The action to take when pressing backspace when the cursor is in front of a selected item.</div>
 </td><td class="summaryTableOwnerCol">AutoComplete</td>
@@ -75,6 +79,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#browserClass">browserClass</a> : Class<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">AutoComplete</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#browserFields">browserFields</a> : Array<div class="summaryTableDescription">[write-only]
+    The fields/columns to display in the browse window.</div>
 </td><td class="summaryTableOwnerCol">AutoComplete</td>
 </tr>
 <tr class="">
@@ -163,6 +172,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">AutoComplete</td>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#percentWidth">percentWidth</a> : Number<div class="summaryTableDescription">[write-only]</div>
+</td><td class="summaryTableOwnerCol">AutoComplete</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#prompt">prompt</a> : String<div class="summaryTableDescription">[write-only]
     The prompt to display before the component receives focus
     </div>
@@ -174,7 +187,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">AutoComplete</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#searchText">searchText</a> : String<div class="summaryTableDescription">[read-only]
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#searchText">searchText</a> : String<div class="summaryTableDescription">
     Returns the search string.</div>
 </td><td class="summaryTableOwnerCol">AutoComplete</td>
 </tr>
@@ -204,6 +217,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#useListBuilder">useListBuilder</a> : Boolean<div class="summaryTableDescription">
     If this is set to true, when the user clicks the Browse button we'll  
     display the List Builder (rather than a DataGrid or List).</div>
+</td><td class="summaryTableOwnerCol">AutoComplete</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#width">width</a> : Number<div class="summaryTableDescription">[write-only]</div>
 </td><td class="summaryTableOwnerCol">AutoComplete</td>
 </tr>
 </table>
@@ -273,6 +290,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="#search()">search</a>():void</div>
+<div class="summaryTableDescription">
+    This will cause the component to research the dataProvider and display the popUp if 
+    there are any matches.</div>
+</td><td class="summaryTableOwnerCol">AutoComplete</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="#setFocus()">setFocus</a>():void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">AutoComplete</td>
@@ -314,7 +340,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#event:textChange">textChange</a>
+<a class="signatureLink" href="#event:searchChange">searchChange</a>
 </div>
 </td><td class="summaryTableDescription summaryTableCol">
    Dispatched when the text in the search field is changed
@@ -358,6 +384,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">AutoComplete</td>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SEARCH_CHANGE">SEARCH_CHANGE</a> : String = "searchChange"<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">AutoComplete</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#STYLE_FACEBOOK">STYLE_FACEBOOK</a> : String = "facebook"<div class="summaryTableDescription">[static]</div>
 </td><td class="summaryTableOwnerCol">AutoComplete</td>
 </tr>
@@ -391,6 +421,21 @@ showHideInherited();
 <span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function set allowDuplicates(value:Boolean):void</code>
+<br>
+</div>
+<a name="areNewItemsEditable"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">areNewItemsEditable</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>areNewItemsEditable:Boolean</code>&nbsp;&nbsp;[write-only]<p>
+    A flag that indicates whether or not you can edit a new item which has been added. This only affects
+    the component when isStrict is set to false
+    </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set areNewItemsEditable(value:Boolean):void</code>
 <br>
 </div>
 <a name="backspaceAction"></a>
@@ -444,6 +489,21 @@ showHideInherited();
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get browserClass():Class</code>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function set browserClass(value:Class):void</code>
+<br>
+</div>
+<a name="browserFields"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">browserFields</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>browserFields:Array</code>&nbsp;&nbsp;[write-only]<p>
+    The fields/columns to display in the browse window. If listBuilder is enable
+    this property is ignored.
+    </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set browserFields(value:Array):void</code>
 <br>
 </div>
 <a name="data"></a>
@@ -706,6 +766,18 @@ showHideInherited();
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function set multiSelectLayout(value:String):void</code>
 <br>
 </div>
+<a name="percentWidth"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">percentWidth</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>percentWidth:Number</code>&nbsp;&nbsp;[write-only]<span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set percentWidth(value:Number):void</code>
+<br>
+</div>
 <a name="prompt"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -742,12 +814,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>searchText:String</code>&nbsp;&nbsp;[read-only]<p>
+<code>searchText:String</code>&nbsp;&nbsp;[read-write]<p>
     Returns the search string.
     </p><p>This property can be used as the source for data binding.</p>
 <span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get searchText():String</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set searchText(value:String):void</code>
 <br>
 </div>
 <a name="selectedItem"></a>
@@ -854,6 +928,18 @@ showHideInherited();
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function set useListBuilder(value:Boolean):void</code>
 <br>
 </div>
+<a name="width"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">width</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>width:Number</code>&nbsp;&nbsp;[write-only]<span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set width(value:Number):void</code>
+<br>
+</div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
 <a name="commitProperties()"></a>
@@ -947,6 +1033,18 @@ showHideInherited();
 </tr>
 </table>
 </div>
+<a name="search()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">search</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function search():void</code><p>
+    This will cause the component to research the dataProvider and display the popUp if 
+    there are any matches. This is useful when using a dynamic dataProvider. Simply call
+    this function once the data has been returned from the server
+    </p></div>
 <a name="setFocus()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -966,10 +1064,10 @@ showHideInherited();
 <div class="detailBody"><p>
    Dispatched when an item is selected or de-selelcted
    </p></div>
-<a name="event:textChange"></a>
+<a name="event:searchChange"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">textChange</td><td class="detailHeaderType">event&nbsp;</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">searchChange</td><td class="detailHeaderType">event&nbsp;</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody"><p>
@@ -1039,6 +1137,15 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static const MATCH_WORD:String = "word"</code>
+</div>
+<a name="SEARCH_CHANGE"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">SEARCH_CHANGE</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const SEARCH_CHANGE:String = "searchChange"</code>
 </div>
 <a name="STYLE_FACEBOOK"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
