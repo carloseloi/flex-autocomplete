@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:HBox
 	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*"
 	implements="mx.managers.IFocusManagerComponent,com.hillelcoren.components.autoComplete.interfaces.iComboItem"
-	verticalGap="0" horizontalGap="0" tabChildren="false" height="{ leftTextInput.height }"
-	creationComplete="init()" borderStyle="none" xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
+	verticalGap="0" horizontalGap="0" tabChildren="false" tabEnabled="false" 
+	height="{ leftTextInput.height }"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	creationComplete="init()">
 	
 	<mx:Metadata>
 		[Event(name="change")]

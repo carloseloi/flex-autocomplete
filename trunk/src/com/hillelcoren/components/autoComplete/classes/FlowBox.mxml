@@ -152,7 +152,7 @@
 				for (var i:int = 0; i < n; i++)
 				{
 					var child:IUIComponent = IUIComponent(getChildAt(i));
-		
+					
 					if (!child.includeInLayout)
 					{
 						continue;
@@ -171,11 +171,14 @@
 				var wPadding:Number = vm.left + vm.right + numGaps * getStyle("horizontalGap");
 				var hPadding:Number = vm.top + vm.bottom;
 				
-				measuredMinWidth = minWidth + wPadding;
+				//measuredMinWidth = minWidth + wPadding;
 				measuredMinHeight = minHeight + hPadding;
 				
-				measuredWidth = preferredWidth + wPadding;
+				//measuredWidth = preferredWidth + wPadding;
 				measuredHeight = minHeight + hPadding;
+				
+				measuredMinWidth = 320;
+				measuredWidth = 320;
 			}
 			
 			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
