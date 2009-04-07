@@ -422,6 +422,7 @@
 				flowBox.validateNow();
 				
 				sizeTextInput();
+				
 				textInput.enablePrompt = flowBox.numChildren == 1;			
 			}
 			

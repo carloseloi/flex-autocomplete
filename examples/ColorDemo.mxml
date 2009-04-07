@@ -224,7 +224,7 @@
     		[Bindable(event="changeOption")]
     		private function get editableEnabled():Boolean
     		{
-    			return multiSelectLayout.selectedItem.data == AutoComplete.LAYOUT_HORIZONTAL && !strict.selected;
+    			return (multiSelectLayout.selectedItem.data == AutoComplete.LAYOUT_HORIZONTAL) && allowNew.selected;
     		}
 
 		]]>
@@ -242,7 +242,7 @@
 			<mx:Object label="Facebook" data="{ AutoComplete.STYLE_FACEBOOK }"/>
 			<mx:Object label="Underline" data="{ AutoComplete.STYLE_UNDERLINE }"/>																		
 		</mx:ComboBox>
-		<mx:CheckBox id="strict" label="Allow new values" selected="true"/>
+		<mx:CheckBox id="allowNew" label="Allow new values" selected="true"/>
 		<mx:CheckBox id="editable" enabled="{ editableEnabled }" label="New values editable"/>
 		<mx:CheckBox id="unique" label="Unique"/>
 		<mx:CheckBox id="browesable" label="Browesable" change="handleChangeOption()"/>
@@ -264,7 +264,7 @@
 	
 	<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
 		prompt="Choose your favorite Crayola crayon" width="250" change="handleAutoCompleteChange()"
-		isStrict="{ !strict.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
+		isStrict="{ !allowNew.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
 		isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }" 
 		allowDuplicates="{ !unique.selected }" isOrderable="{ orderable.selected }" 
 		useListBuilder="{ listBuilder.selected }" multiSelectLayout="horizontal"
