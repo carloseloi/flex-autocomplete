@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Box 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	clipContent="false" width="100%" borderStyle="none"
+	clipContent="true" width="100%" borderStyle="none"
 	verticalAlign="middle" horizontalAlign="center"
 	initialize="init()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
@@ -60,6 +60,7 @@
 			private var _multiSelectLayoutChanged:Boolean;
 			
 			private var _isStrict:Boolean = true;
+			private var _widthChanged:Boolean;
 			
 			private var _prompt:String;
 			private var _promptChanged:Boolean;
@@ -109,6 +110,11 @@
 			{
 				super.commitProperties();
 			
+				if (_widthChanged)
+				{
+					flowBox.width = width;
+				}
+			
 				if (_dataProviderChanged)
 				{
 					_dataProviderChanged = false;
@@ -125,7 +131,7 @@
 					
 					flowBox.enableMultiRow = _isMultiSelect && _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL;
 					setClearIconEnabled();
-					searchText = null;
+					searchText = null;					
 				}			
 				
 				if (_multiSelectLayoutChanged)
@@ -447,6 +453,7 @@
 						comboTextInput.height = textInput.height;
 						comboTextInput.item = item;
 						comboTextInput.addEventListener( Event.CHANGE, handleComboItemChange, false, 0, true );
+						selectedItem.maxWidth = width - 4;
 						flowBox.addChildAt( comboTextInput, flowBox.numChildren - 1 );									
 					}
 					else
@@ -474,9 +481,17 @@
 					comboItem.setTextFocus();																		
 				}
 				
+				
 				sizeTextInput();
 				
 				textInput.enablePrompt = flowBox.numChildren == 1;
+				
+				/*
+				if (_isMultiSelect && _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL)
+				{
+					textInput.visible = false;
+				}
+				*/
 			}
 			
 			private function handleItemRemove( event:Event ):void
@@ -673,7 +688,7 @@
 				textInput.text = value;
 				textInput.validateNow();
 				
-				//sizeTextInput();
+				sizeTextInput();
 			}
 			
 			public function filterData():void
@@ -880,6 +895,12 @@
 			public function set areNewItemsEditable( value:Boolean ):void
 			{
 				_areNewItemsEditable = value;
+			}
+			
+			override public function set width( value:Number ):void
+			{
+				super.width = value;
+				_widthChanged = true;
 			}
 			
 		]]>
