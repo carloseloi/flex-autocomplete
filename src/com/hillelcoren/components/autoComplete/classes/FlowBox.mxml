@@ -178,7 +178,7 @@
 				measuredHeight = minHeight + hPadding;
 				
 				measuredMinWidth = width;
-				measuredWidth = width;				
+				measuredWidth = width;
 			}
 			
 			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void

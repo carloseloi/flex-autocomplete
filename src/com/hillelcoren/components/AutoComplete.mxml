@@ -88,7 +88,8 @@
 			private var _textChanged:Boolean;
 			
 			private var _widthChanged:Boolean;
-									
+			private var _percentWidthChanged:Boolean;
+			
 			[Bindable]
 			private var _selectedItems:ArrayCollection = new ArrayCollection();
 			private var _selectedItemsChanged:Boolean;
@@ -245,6 +246,12 @@
 				{
 					_widthChanged = false;
 					combo.width = width;
+				}
+				
+				if (_percentWidthChanged)
+				{
+					_percentWidthChanged = false;
+					combo.percentWidth = percentWidth;
 				}
 				
 				if (_styleChanged)
@@ -628,6 +635,11 @@
 				return false;
 			}
 				
+			/**
+			 * This will cause the component to research the dataProvider and display the popUp if 
+			 * there are any matches. This is useful when using a dynamic dataProvider. Simply call
+			 * this function once the data has been returned from the server
+			 */
 			public function search():void
 			{
 				validateNow();
@@ -1172,6 +1184,15 @@
 				
 				invalidateProperties();
 			}
+			
+			override public function set percentWidth( value:Number ):void
+			{
+				super.percentWidth = value;
+				_percentWidthChanged = true;
+				
+				invalidateProperties();
+			}
+			
 			
 			/**
 			 * The text value for the label the remove button.
