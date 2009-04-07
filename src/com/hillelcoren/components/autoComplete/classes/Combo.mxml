@@ -437,7 +437,7 @@
 			
 			public function addItem( item:Object ):void
 			{
-				var isNew:Boolean = _dataProvider.getItemIndex( item ) == -1;
+				var isNew:Boolean = item is String && _dataProvider.getItemIndex( item ) == -1;
 				
 				if (isNew)
 				{
@@ -474,7 +474,7 @@
 						selectedItem.addEventListener( SelectedItem.REMOVE_ITEM, handleItemRemove, false, 0, true );
 						selectedItem.addEventListener( TextEvent.TEXT_INPUT, handleItemTextInput );
 						selectedItem.maxWidth = width - 4;
-						flowBox.addChildAt( selectedItem, flowBox.numChildren - 1 );						
+						flowBox.addChildAt( selectedItem, flowBox.numChildren - 1 );
 					}				
 				}
 				// this means the user entered a comma after a value which has already
@@ -647,8 +647,8 @@
 				
 				if (isDropDownVisible())
 				{
-					callLater( positionDropDown );
 					callLater( highlightFirstItem );
+					callLater( callLater, [positionDropDown] );
 					_dropDown.rowCount = (_dataProvider.length < ROW_COUNT ? _dataProvider.length : ROW_COUNT);
 				}				
 			}
