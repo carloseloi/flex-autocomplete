@@ -3,7 +3,7 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	clipContent="false" width="100%" borderStyle="none"
 	verticalAlign="middle" horizontalAlign="center"
-	initialize="init()" creationComplete="setMaxWidth()"
+	initialize="init()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	xmlns:components="com.hillelcoren.components.*" 
 	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
@@ -60,7 +60,7 @@
 			private var _multiSelectLayoutChanged:Boolean;
 			
 			private var _isStrict:Boolean = true;
-					
+			
 			private var _prompt:String;
 			private var _promptChanged:Boolean;
 			
@@ -78,8 +78,6 @@
 			private var _allowDuplicates:Boolean;
 			private var _areNewItemsEditable:Boolean;
 			
-			public static const SEARCH_CHANGE:String = "searchChange";
-			
 			private static const ROW_COUNT:uint = 6; 
 			
 			private function init():void
@@ -87,16 +85,6 @@
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
 				addEventListener( ResizeEvent.RESIZE, handleResize );
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );			
-				
-				textInput.setStyle( "borderStyle", "none" );											
-			}
-			
-			public function setMaxWidth():void
-			{
-				if (width)
-				{
-					maxWidth = width;
-				}				
 			}
 			
 			private function handleFocusOut( event:FocusEvent ):void
@@ -136,18 +124,16 @@
 					_isMultiSelectChanged = false;
 					
 					flowBox.enableMultiRow = _isMultiSelect && _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL;
-					setComboItemsVisible( _isMultiSelect && _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL );
 					setClearIconEnabled();
-					updateComoText();
+					searchText = null;
 				}			
 				
 				if (_multiSelectLayoutChanged)
 				{
 					_multiSelectLayoutChanged = false;
 					
-					setComboItemsVisible( _isMultiSelect && _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL );
 					setClearIconEnabled();
-					updateComoText();
+					searchText = null;
 				}	
 				
 				if (_enableClearIconChanged)
@@ -238,9 +224,11 @@
 				else
 				{
 					var target:iComboItem = determineFocus();
+					
 					var focused:DisplayObject = focusManager.getFocus() as DisplayObject;
 					var comboItem:iComboItem;
 					var item:Object;
+					
 					var index:int = flowBox.getChildIndex( target as DisplayObject );
 					var pos:Point;
 					
@@ -277,19 +265,21 @@
 								return;
 							}
 							
-							var prevItem:UIComponent = flowBox.getChildAt( index - 1 ) as UIComponent;
-							prevItem.setFocus();
-							
-							if (prevItem is ComboTextInput)
+							if (_backspaceAction == AutoComplete.BACKSPACE_REMOVE)
 							{
-								ComboTextInput( prevItem ).setFocus();
-							}							
-							else if (_backspaceAction == AutoComplete.BACKSPACE_REMOVE)
+								_selectedItems.removeItemAt( index - 1 );
+								iComboItem( flowBox.getChildAt( index - 1 ) ).setTextFocus();
+							}
+							else
 							{
-								item = SelectedItem( focused ).item;
-								_selectedItems.removeItemAt( index );
-								iComboItem( flowBox.getChildAt( index ) ).setTextFocus();					
-							}							
+								var prevItem:UIComponent = flowBox.getChildAt( index - 1 ) as UIComponent;
+								prevItem.setFocus();
+								
+								if (prevItem is ComboTextInput)
+								{
+									ComboTextInput( prevItem ).setSelectionEnd();
+								}
+							}
 						}												
 					}
 					else if (event.keyCode == Keyboard.UP)
@@ -398,6 +388,11 @@
 			{
 				var comp:UIComponent = focusManager.getFocus() as UIComponent;
 				
+				if (comp is iComboItem)
+				{
+					return comp as iComboItem;
+				}
+				
 				for each (var item:iComboItem in flowBox.getChildren())
 				{
 					if (item.contains( comp ))
@@ -412,17 +407,24 @@
 			public function removeItemAt( index:int ):void
 			{
 				flowBox.removeChildAt( index );
+				flowBox.validateNow();
 				
-				updateComoText();
+				sizeTextInput();
+				textInput.enablePrompt = flowBox.numChildren == 1;			
+			}
+			
+			public function removeAll():void
+			{
+				while (flowBox.numChildren > 1)
+				{
+					flowBox.removeChildAt( 0 );	
+				}
+				
+				textInput.enablePrompt = flowBox.numChildren == 1;
 			}
 			
 			public function addItem( item:Object ):void
 			{
-				if (!_isMultiSelect)
-				{
-					_selectedItems.removeAll();					
-				}
-				
 				var isNew:Boolean = _dataProvider.getItemIndex( item ) == -1;
 				
 				if (isNew)
@@ -458,10 +460,9 @@
 						selectedItem.enableRemoveIcon = _enableRemoveIcon;
 						selectedItem.addEventListener( SelectedItem.REMOVE_ITEM, handleItemRemove, false, 0, true );
 						selectedItem.addEventListener( TextEvent.TEXT_INPUT, handleItemTextInput );
+						selectedItem.maxWidth = width - 4;
 						flowBox.addChildAt( selectedItem, flowBox.numChildren - 1 );						
 					}				
-					
-					setComboItemsVisible(!_isMultiSelect || _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL);						
 				}
 				// this means the user entered a comma after a value which has already
 				// been added, in this case we just need to readd the comma
@@ -472,6 +473,10 @@
 					
 					comboItem.setTextFocus();																		
 				}
+				
+				sizeTextInput();
+				
+				textInput.enablePrompt = flowBox.numChildren == 1;
 			}
 			
 			private function handleItemRemove( event:Event ):void
@@ -525,36 +530,21 @@
 				}
 			}
 			
-			public function updateComoText():void
-			{
-				// if no items are selected then we want to show the prompt (if it's been set)
-				textInput.text = _selectedItems.length == 0 ? null : "";
-				textInput.validateNow();
-				
-				callLater( _updateComoText );
-			}
-			
-			private function _updateComoText():void
-			{
-				var event:Event = new Event( SEARCH_CHANGE );
-				dispatchEvent( event );
-				
-				sizeTextInput();				
-			}
-			
 			private function sizeTextInput( event:Event = null ):void
 			{
-				if (textInput.text.length == 0 && _selectedItems && _selectedItems.length == 0) 
+				var newWidth:int;
+				
+				if (flowBox.numChildren == 1)
 				{
-					textInput.width = width - 10;	
+					newWidth = width - 4;
 				}
 				else
 				{
-					textInput.prompt = null;
-					
-					var newWidth:int = measureText( textInput.text ).width + 40; 
-					textInput.width = newWidth < flowBox.width ? newWidth : flowBox.width;
+					newWidth = measureText( textInput.text ).width + 30;
+					newWidth = Math.min( newWidth, width - 4 );
 				}
+				
+				textInput.width = newWidth;								
 			}
 			
 			private function handleItemClick( event:ListEvent ):void
@@ -578,22 +568,6 @@
 					hideDropDown();
 				}
 			}			
-			
-			public function setComboItemsVisible( visible:Boolean ):void
-			{
-				for (var x:int=0; x<flowBox.numChildren; x++)
-				{
-					var item:UIComponent = flowBox.getChildAt( x ) as UIComponent;
-					
-					if (item is PromptTextInput)
-					{
-						continue;
-					}
-					
-					item.visible = visible;
-					item.includeInLayout = visible;
-				}
-			}
 			
 			public function handleChange( event:Event ):void
 			{
@@ -619,7 +593,7 @@
 				//var end:Date = new Date();
 				//trace(">> search took: " + (end.getTime() - start.getTime()) + " msecs" );
 				
-				var event:Event = new Event( SEARCH_CHANGE );
+				var event:Event = new Event( AutoComplete.SEARCH_CHANGE );
 				dispatchEvent( event );
 				
 				if (_dataProvider.length == 0)
@@ -694,6 +668,14 @@
 				return textInput.text;
 			}
 			
+			public function set searchText( value:String ):void
+			{
+				textInput.text = value;
+				textInput.validateNow();
+				
+				//sizeTextInput();
+			}
+			
 			public function filterData():void
 			{
 				_dataProvider.filterFunction = filterFunctionWrapper;
@@ -711,7 +693,7 @@
 				_dropDown.owner = this;
 				_dropDown.scrollToIndex(0);
 				
-				PopUpManager.addPopUp( _dropDown, this );				
+				PopUpManager.addPopUp( _dropDown, this );
 			}
 			
 			public function positionDropDown():void

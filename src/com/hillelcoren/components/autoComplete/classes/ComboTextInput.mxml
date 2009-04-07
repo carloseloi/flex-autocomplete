@@ -2,7 +2,7 @@
 <mx:TextArea 
 	implements="com.hillelcoren.components.autoComplete.interfaces.iComboItem"
 	xmlns:mx="http://www.adobe.com/2006/mxml" paddingLeft="0"
-	initialize="init()" tabChildren="false"
+	initialize="init()" tabChildren="false" tabEnabled="false"
 	borderStyle="none" focusThickness="0">
 	
 	<mx:Script>
@@ -38,7 +38,7 @@
 			private function handleFocusIn( event:Event ):void
 			{
 				text = StringUtils.trimCommas( text );
-				setSelection( 0, text.length );
+				//setSelection( 0, text.length );
 			}
 			
 			private function handleFocusOut( event:Event ):void

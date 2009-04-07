@@ -5,7 +5,7 @@
 	width="100%" height="100%"
 	verticalAlign="middle" horizontalAlign="center"
 	color="#000000" xmlns:local="*"
-	initialize="init()">
+	initialize="init()" xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
 
 	<mx:Script>
 		<![CDATA[
@@ -222,6 +222,22 @@
     		{
     			return multiSelectLayout.selectedItem.data == AutoComplete.LAYOUT_HORIZONTAL && !strict.selected;
     		}
+    		
+    		/*
+    		private function handleAddClick():void
+			{
+				autoComplete.selectedItems.addItem( textInput.text );
+			}
+			
+			private function handleRemoveClick():void
+			{
+				for each (var item:Object in selectedItems.selectedItems)
+				{
+					var index:int = autoComplete.selectedItems.getItemIndex( item );
+					autoComplete.selectedItems.removeItemAt( index );	
+				}								
+			}
+			*/
     		    		
 		]]>
 	</mx:Script>
@@ -267,7 +283,16 @@
 					isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }" 
 					allowDuplicates="{ !unique.selected }" isOrderable="{ orderable.selected }" 
 					useListBuilder="{ listBuilder.selected }" multiSelectLayout="horizontal"
-					areNewItemsEditable="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"	/>												
+					areNewItemsEditable="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"	/>
+					
+				<!--
+				<mx:List id="selectedItems" dataProvider="{ autoComplete.selectedItems }" allowMultipleSelection="true" maxWidth="320"/>
+				<mx:Label text="{ 'Selected items length is ' + autoComplete.selectedItems.length }"/>
+				<mx:TextInput id="textInput"/>
+				<mx:Button label="Add" click="handleAddClick()"/>
+				<mx:Button label="Remove" click="handleRemoveClick()"/>
+				-->
+								
 			</mx:VBox>						
 			
 		</mx:HBox>

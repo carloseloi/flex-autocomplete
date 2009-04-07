@@ -25,6 +25,7 @@
 			
 			[Bindable]
 			private var _enableClearIcon:Boolean = true;
+			private var _enablePrompt:Boolean = true;
 			private var _isMouseOver:Boolean;
 			
 			[Embed(source="/com/hillelcoren/assets/clear.png")]
@@ -58,7 +59,7 @@
 			
 			private function showPrompt():void
 			{
-				if (_prompt == null)
+				if (_prompt == null || !_enablePrompt)
 				{
 					return;
 				}
@@ -106,6 +107,11 @@
 			public function set enableClearIcon( value:Boolean ):void
 			{
 				_enableClearIcon = value;
+			}
+			
+			public function set enablePrompt( value:Boolean ):void
+			{
+				_enablePrompt = value;
 			}
 			
 			override public function validateNow():void
@@ -180,7 +186,9 @@
 				{
 					hidePrompt();
 					textInput.text = _text;							
-				}								
+				}
+				
+				textInput.validateNow();
 			}
 			
 			/*
@@ -213,7 +221,7 @@
 			{
 				if (_drawFocusBorder)
 				{
-					drawFocus( true );
+					drawFocus( true );					
 				}
 				
 				if (_isPromptSet)
