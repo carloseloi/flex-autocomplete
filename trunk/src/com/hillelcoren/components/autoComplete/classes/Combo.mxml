@@ -61,6 +61,7 @@
 			
 			private var _isStrict:Boolean = true;
 			private var _widthChanged:Boolean;
+			private var _percentWidthChanged:Boolean;
 			
 			private var _prompt:String;
 			private var _promptChanged:Boolean;
@@ -113,6 +114,11 @@
 				if (_widthChanged)
 				{
 					flowBox.width = width;
+				}
+				
+				if (_percentWidthChanged)
+				{
+					flowBox.percentWidth = percentWidth;
 				}
 			
 				if (_dataProviderChanged)
@@ -453,7 +459,7 @@
 						comboTextInput.height = textInput.height;
 						comboTextInput.item = item;
 						comboTextInput.addEventListener( Event.CHANGE, handleComboItemChange, false, 0, true );
-						selectedItem.maxWidth = width - 4;
+						comboTextInput.maxWidth = width - 4;
 						flowBox.addChildAt( comboTextInput, flowBox.numChildren - 1 );									
 					}
 					else
@@ -905,6 +911,13 @@
 				super.width = value;
 				_widthChanged = true;
 			}
+			
+			override public function set percentWidth( value:Number ):void
+			{
+				super.percentWidth = value;
+				_percentWidthChanged = true;
+			}
+			
 			
 		]]>
 	</mx:Script>

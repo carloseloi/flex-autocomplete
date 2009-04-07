@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application 
+<mx:Box 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:components="com.hillelcoren.components.*"
 	width="100%" height="100%"
-	verticalAlign="middle" horizontalAlign="center"
-	initialize="init()" xmlns:components="com.hillelcoren.components.*">
+	verticalAlign="top" horizontalAlign="left" 
+	paddingLeft="20" paddingTop="15" paddingBottom="20" paddingRight="20"
+	initialize="init()">
 	
 	<mx:Script>
 		<![CDATA[
@@ -79,15 +81,12 @@
 			labelField="name" style="underline" backspaceAction="remove"/>
 	</mx:Component>
 						
-	<mx:Panel width="550" height="400" title="DataGrid Demo"
-			paddingBottom="20" paddingTop="20" paddingLeft="20" paddingRight="20">
-		<mx:DataGrid dataProvider="{ characters }" editable="true" width="100%" height="100%">
-			<mx:columns>
-				<mx:DataGridColumn headerText="Character" dataField="name" editable="false"/>
-				<mx:DataGridColumn width="300" headerText="Voiced By" labelFunction="voicedByFunction" editorUsesEnterKey="true"
-					itemEditor="{ autocomplete }" editorDataField="selectedItems" dataField="voicedBy"/>
-			</mx:columns>
-		</mx:DataGrid>
-	</mx:Panel>
-	
-</mx:Application>
+	<mx:DataGrid dataProvider="{ characters }" editable="true" width="100%" height="100%">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Character" dataField="name" editable="false"/>
+			<mx:DataGridColumn width="300" headerText="Voiced By" labelFunction="voicedByFunction" editorUsesEnterKey="true"
+				itemEditor="{ autocomplete }" editorDataField="selectedItems" dataField="voicedBy"/>
+		</mx:columns>
+	</mx:DataGrid>
+
+</mx:Box>

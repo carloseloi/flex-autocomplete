@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application 
+<mx:Box 
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:components="com.hillelcoren.components.*"
 	width="100%" height="100%"
-	verticalAlign="middle" horizontalAlign="center"
+	verticalAlign="top" horizontalAlign="left" 
+	paddingLeft="20" paddingTop="15" paddingBottom="20" paddingRight="20"
 	initialize="init()">
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.utils.StringUtil;
 			import mx.core.ByteArrayAsset;
 			import com.hillelcoren.utils.StringUtils;
 			import mx.collections.ArrayCollection;
@@ -31,7 +33,7 @@
 					var parts:Array = simpson.split( "\t" );
 					
 					var obj:Object = new Object();
-					obj.name = parts[0];
+					obj.name = StringUtil.trim( parts[0] );
 					obj.email = String( obj.name.split( " " )[0] ).toLowerCase() + "@gmail.com";
 					_contacts.addItem( obj ); 
 				}				
@@ -75,23 +77,19 @@
 		]]>
 	</mx:Script>
 	
-	<mx:Panel width="550" height="400" title="Email Demo"
-		paddingBottom="20" paddingTop="20" paddingLeft="20" paddingRight="20">
 
-		<mx:Form width="100%" height="100%">
-			<mx:FormItem label="To: " width="100%">				
-				<components:AutoComplete id="autocomplete" width="80%" dataProvider="{ _contacts }" 
-					isMultiSelect="true" multiSelectLayout="horizontal" isStrict="false" areNewItemsEditable="true"
-					labelField="name" dropDownLabelFunction="dropDownLabelFunction" filterFunction="filterFunction"/>
-			</mx:FormItem>
-			<mx:FormItem label="Subject: " width="100%">
-				<mx:TextInput width="80%"/>
-			</mx:FormItem>
-			<mx:FormItem label="Body: " width="100%" height="100%">
-				<mx:TextArea width="80%" height="100%"/>
-			</mx:FormItem>
-		</mx:Form>
+	<mx:Form width="100%" height="100%">
+		<mx:FormItem label="To: ">				
+			<components:AutoComplete id="autocomplete" dataProvider="{ _contacts }" width="350"
+				isMultiSelect="true" multiSelectLayout="horizontal" isStrict="false" areNewItemsEditable="true"
+				labelField="name" dropDownLabelFunction="dropDownLabelFunction" filterFunction="filterFunction"/>
+		</mx:FormItem>
+		<mx:FormItem label="Subject: ">
+			<mx:TextInput width="350"/>
+		</mx:FormItem>
+		<mx:FormItem label="Body:  " height="100%">
+			<mx:TextArea width="350" height="100%"/>
+		</mx:FormItem>
+	</mx:Form>
 	
-	</mx:Panel>
-	
-</mx:Application>
+</mx:Box>
