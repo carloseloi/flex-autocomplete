@@ -628,6 +628,12 @@
 				return false;
 			}
 				
+			public function search():void
+			{
+				validateNow();
+				combo.handleChange( null );
+			}
+			
 			private function handleComboChange( event:Event ):void
 			{
 				dispatchEvent( event );

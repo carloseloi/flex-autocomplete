@@ -164,7 +164,7 @@
 				{
 					_enableRemoveIconChanged = false;
 					flowBox.enableRemoveIcon = _enableRemoveIcon;
-				}				
+				}		
 			}
 			
 			private function setClearIconEnabled():void
@@ -608,8 +608,11 @@
 				//var end:Date = new Date();
 				//trace(">> search took: " + (end.getTime() - start.getTime()) + " msecs" );
 				
-				var event:Event = new Event( AutoComplete.SEARCH_CHANGE );
-				dispatchEvent( event );
+				if (event)
+				{
+					var event:Event = new Event( AutoComplete.SEARCH_CHANGE );
+					dispatchEvent( event );
+				}
 				
 				if (_dataProvider.length == 0)
 				{
