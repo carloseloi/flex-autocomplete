@@ -853,14 +853,7 @@
 			{
 				if (_selectedItems.length > 0)
 				{
-					if (_multiSelectLayout == LAYOUT_VERTICAL)
-					{
-						return _selectedItems.getItemAt( 0 );
-					}
-					else	
-					{
-						return _selectedItems.getItemAt( _selectedItems.length - 1 );
-					}
+					return _selectedItems.getItemAt( _selectedItems.length - 1 );					
 				}
 				else
 				{

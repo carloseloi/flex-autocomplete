@@ -12,10 +12,6 @@
 			import mx.utils.StringUtil;
 			import mx.events.FlexEvent;
 			import mx.controls.List;
-			import com.Color;
-			
-			[Bindable]
-			private var _color:Color;
 			
 			[Bindable]
 			private var _list:List;
@@ -36,12 +32,11 @@
 					return;
 				}
 				
-				_color = new Color( value.name, value.hex );
 				_list = owner as List;
 				
-				nameLabel.htmlText = _list.labelFunction( _color );
-				hexLabel.htmlText = "Hex: #" + hexToString( _color.hex );										
-				colorBox.setStyle( "backgroundColor", _color.hex );
+				nameLabel.htmlText = _list.labelFunction( value );
+				hexLabel.htmlText = "Hex: " + value.hex;								
+				colorBox.setStyle( "backgroundColor", value.hex );
 				
 				if (_selectedItems && _selectedItems.getItemIndex( value ) >= 0)
 				{
@@ -61,19 +56,7 @@
 				graphics.lineStyle( 1, 0x858585, 0.5 );
 				graphics.moveTo( -2, height + 2);
 				graphics.lineTo( width, height + 2 );
-			}
-			
-			private function hexToString( value:uint ):String
-			{
-				var str:String = value.toString( 16 );
-				
-				while (str.length < 6)
-				{
-					str = "0" + str;	
-				}
-				
-				return str.toUpperCase();
-			}
+			}			
 			
 		]]>
 	</mx:Script>

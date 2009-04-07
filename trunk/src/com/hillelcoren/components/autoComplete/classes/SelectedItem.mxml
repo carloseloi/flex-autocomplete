@@ -4,7 +4,7 @@
 	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*"
 	implements="mx.managers.IFocusManagerComponent,com.hillelcoren.components.autoComplete.interfaces.iComboItem"
 	verticalGap="0" horizontalGap="0" tabChildren="false" tabEnabled="false" 
-	height="{ leftTextInput.height }"
+	height="{ textInput.height }"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	creationComplete="init()">
 	
@@ -106,7 +106,7 @@
 				
 				itemLabel.htmlText = label;
 				itemLabel.setStyle( "paddingLeft", padding );
-				rightSpacer.width = padding;
+				spacer.width = padding;
 				
 				redrawShape();
 			}
@@ -122,7 +122,7 @@
 					
 				if (_style == AutoComplete.STYLE_MAC_MAIL || _style == AutoComplete.STYLE_FACEBOOK)
 				{
-					var width:uint = itemLabel.width + rightSpacer.width;
+					var width:uint = itemLabel.width + spacer.width;
 					var height:uint = itemLabel.height;
 					
 					if (_enableRemoveIcon)
@@ -156,7 +156,7 @@
 					
 					_shape.graphics.beginFill( color );
 					_shape.graphics.lineStyle( 1, border );
-					_shape.graphics.drawRoundRect( x, y+1, width, leftTextInput.height-2, radius );
+					_shape.graphics.drawRoundRect( x, y+1, width, textInput.height-2, radius );
 					_shape.graphics.endFill();
 				}
 			}
@@ -179,7 +179,7 @@
 			
 			private function handleMouseOver( event:Event ):void
 			{
-				if (leftTextInput.contains( event.target as DisplayObject ))
+				if (textInput.contains( event.target as DisplayObject ))
 				{
 					return;
 				}
@@ -190,7 +190,7 @@
 			
 			private function handleMouseOut( event:Event ):void
 			{
-				if (leftTextInput.contains( event.target as DisplayObject ))
+				if (textInput.contains( event.target as DisplayObject ))
 				{
 					return;
 				}
@@ -201,7 +201,7 @@
 			
 			private function handleMouseDown( event:Event ):void
 			{
-				if (leftTextInput.contains( event.target as DisplayObject ))
+				if (textInput.contains( event.target as DisplayObject ))
 				{
 					return;
 				}
@@ -222,7 +222,9 @@
 			
 			private function handleTextInput( event:TextEvent ):void
 			{
-				leftTextInput.text = "";
+				textInput.text = "";
+				textInput.validateNow();
+				
 				dispatchEvent( event );
 			}
 			
@@ -238,23 +240,12 @@
 			
 			public function get newText():String
 			{
-				return leftTextInput.text;
-				
-				/*
-				if (leftTextInput.text)
-				{
-					return leftTextInput.text;
-				}
-				else
-				{
-					return rightTextInput.text;
-				}
-				*/
+				return textInput.text;
 			}
 			
 			public function setTextFocus():void
 			{
-				leftTextInput.setFocus();
+				textInput.setFocus();
 			}
 			
 			public function isCursorAtBeginning():Boolean
@@ -301,11 +292,11 @@
 		]]>
 	</mx:Script>
 	
-	<classes:ShorterTextInput id="leftTextInput" width="5" borderStyle="none" 
+	<classes:ShorterTextInput id="textInput" width="5" borderStyle="none" 
 		focusThickness="0" textInput="handleTextInput(event)"/>
 	<mx:Label id="itemLabel" updateComplete="redrawShape()"/>
 	<mx:Image id="removeIcon" source="@Embed('/com/hillelcoren/assets/remove.png')" height="{ itemLabel.height }" verticalAlign="middle" 
 		visible="{ _enableRemoveIcon }" includeInLayout="{ _enableRemoveIcon }" click="handleRemoveClick()"/>		
-	<mx:Spacer id="rightSpacer"/>
+	<mx:Spacer id="spacer"/>
 	
 </mx:HBox>
