@@ -112,6 +112,11 @@
 			public function set enablePrompt( value:Boolean ):void
 			{
 				_enablePrompt = value;
+				
+				if (!_enablePrompt)
+				{
+					hidePrompt();
+				}
 			}
 			
 			override public function validateNow():void
