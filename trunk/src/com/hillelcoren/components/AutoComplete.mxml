@@ -86,6 +86,8 @@
 			
 			private var _text:String;
 			private var _textChanged:Boolean;
+			
+			private var _widthChanged:Boolean;
 									
 			[Bindable]
 			private var _selectedItems:ArrayCollection = new ArrayCollection();
@@ -239,6 +241,12 @@
 					combo.isStrict = _isStrict;
 				}
 				
+				if (_widthChanged)
+				{
+					_widthChanged = false;
+					combo.width = width;
+				}
+				
 				if (_styleChanged)
 				{
 					_styleChanged = false;
@@ -266,15 +274,15 @@
 				
 				if (_isMultiSelectChanged || _multiSelectLayoutChanged)
 				{
+					_selectedItems.removeAll();
+						
 					if (_isMultiSelectChanged)
 					{
-						_selectedItems.removeAll();
 						combo.isMultiSelect = _isMultiSelect;
 					}
 					
 					if (_multiSelectLayoutChanged)
 					{	
-						_selectedItems.removeAll();
 						combo.multiSelectLayout = _multiSelectLayout;
 					}
 					
@@ -545,32 +553,35 @@
 				
 				if (event.kind == CollectionEventKind.REMOVE)
 				{
-					combo.removeItemAt( event.location );					
+					if (!_isMultiSelect || _multiSelectLayout == LAYOUT_HORIZONTAL)
+					{
+						combo.removeItemAt( event.location );
+					}					
 				}
 				else if (event.kind == CollectionEventKind.RESET)
 				{
 					combo.removeAll();
 				}	
 				else if (event.kind == CollectionEventKind.ADD)
-				{
-					for each (item in event.items)
-					{
-						if (!_allowDuplicates)
-						{
-							if (checkIfDuplicate( item ))
-							{
-								continue;
-							}
-						}
-						
-						if (!_isMultiSelect || _multiSelectLayout == LAYOUT_HORIZONTAL)
-						{
-							combo.addItem( item );
-						}											
-					}
-					
+				{					
 					searchText = null;
 					combo.hideDropDown();
+					
+					if (!_isMultiSelect || _multiSelectLayout == LAYOUT_HORIZONTAL)
+					{
+						for each (item in event.items)
+						{
+							if (!_allowDuplicates)
+							{
+								if (checkIfDuplicate( item ))
+								{
+									continue;
+								}
+							}
+							
+							combo.addItem( item );																	
+						}
+					}					
 				}
 								
 				var changeEvent:Event = new Event( Event.CHANGE );
@@ -606,7 +617,7 @@
 				
 			private function handleComboChange( event:Event ):void
 			{
-				dispatchEvent( new Event( Event.CHANGE ) );
+				dispatchEvent( event );
 			}
 			
 			private function handleComboSearchChange( event:Event ):void
@@ -620,7 +631,7 @@
 				
 				if (useListBuilder || !_isMultiSelect)
 				{
-					_selectedItems.removeAll();					
+					_selectedItems.removeAll();				
 				}
 				
 				for each (item in _browser.selectedItems)
@@ -1133,6 +1144,14 @@
 			public function set browseLabel( value:String ):void
 			{
 				_browseLabel = value;
+			}
+			
+			override public function set width( value:Number ):void
+			{
+				super.width = value;
+				_widthChanged = true;
+				
+				invalidateProperties();
 			}
 			
 			/**

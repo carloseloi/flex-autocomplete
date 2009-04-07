@@ -278,7 +278,7 @@
 			
 			<mx:VBox>
 				<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
-					prompt="Choose your favorite Crayola crayon" width="320" change="handleAutoCompleteChange()"
+					prompt="Choose your favorite Crayola crayon" width="250" change="handleAutoCompleteChange()"
 					isStrict="{ !strict.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
 					isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }" 
 					allowDuplicates="{ !unique.selected }" isOrderable="{ orderable.selected }" 
@@ -292,9 +292,10 @@
 				<mx:Button label="Add" click="handleAddClick()"/>
 				<mx:Button label="Remove" click="handleRemoveClick()"/>
 				-->
-								
+				
 			</mx:VBox>						
 			
 		</mx:HBox>
 	</mx:Panel>
+	
 </mx:Application>
