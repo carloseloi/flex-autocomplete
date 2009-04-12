@@ -230,6 +230,7 @@
 					else if (event.keyCode == Keyboard.ENTER || event.keyCode == Keyboard.TAB || event.charCode == 44)
 					{
 						_selectedItems.addItem( _dropDown.selectedItem );
+						dispatchEvent( new Event( Event.CHANGE ) );
 						return;											
 					}
 				}
@@ -268,7 +269,8 @@
 						{							
 							item = SelectedItem( focused ).item;
 							_selectedItems.removeItemAt( index );
-							iComboItem( flowBox.getChildAt( index ) ).setTextFocus();																															
+							iComboItem( flowBox.getChildAt( index ) ).setTextFocus();
+							dispatchEvent( new Event( Event.CHANGE ) );																														
 						}
 						else
 						{
@@ -280,6 +282,7 @@
 							if (_backspaceAction == AutoComplete.BACKSPACE_REMOVE)
 							{
 								_selectedItems.removeItemAt( index - 1 );
+								dispatchEvent( new Event( Event.CHANGE ) );																														
 								iComboItem( flowBox.getChildAt( index - 1 ) ).setTextFocus();
 							}
 							else
@@ -386,6 +389,7 @@
 						else if (target.text && !_isStrict && target.isEditable())
 						{
 							_selectedItems.addItem( target.text );
+							dispatchEvent( new Event( Event.CHANGE ) );																														
 							return;
 						}
 						else if (event.keyCode == Keyboard.ENTER)
@@ -488,17 +492,8 @@
 					comboItem.setTextFocus();																		
 				}
 				
-				
 				sizeTextInput();
-				
 				textInput.enablePrompt = flowBox.numChildren == 1;
-				
-				/*
-				if (_isMultiSelect && _multiSelectLayout == AutoComplete.LAYOUT_HORIZONTAL)
-				{
-					textInput.visible = false;
-				}
-				*/
 			}
 			
 			private function handleItemRemove( event:Event ):void
