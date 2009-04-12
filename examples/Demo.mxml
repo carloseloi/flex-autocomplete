@@ -9,11 +9,11 @@
 	initialize="init()" viewSourceURL="srcview/index.html">
 
 	<mx:Panel width="560" height="400" title="AutoComplete Demos">
-		<mx:TabNavigator width="100%" height="100%">
+		<mx:TabNavigator width="100%" height="100%" focusEnabled="false">
 			<local:ColorDemo label="Color Chooser"/>
 			<local:DataGridDemo label="DataGrid Demo"/>
 			<local:EmailDemo label="Email Demo"/>
 		</mx:TabNavigator>		
 	</mx:Panel>
-		
+			
 </mx:Application>

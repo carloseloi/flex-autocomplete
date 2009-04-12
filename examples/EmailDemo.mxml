@@ -41,37 +41,22 @@
 			
 			public function dropDownLabelFunction( item:Object ):String
 			{
-				var label:String = item.name + " &lt;" + item.email + "&gt;";
-				
-				var str:String = "";
+				var string:String = item.name + " &lt;" + item.email + "&gt;";
 				var searchStr:String = autocomplete.searchText;
 				
-				var start:int = label.search(new RegExp(searchStr, "gi"));
+				var returnStr:String = StringUtils.highlighMatch( string, searchStr );
 				
-				str = label.substring(0, start);
-				str = str + "<b><u>" + label.substr(start, searchStr.length) + "</u></b>";
-				str = str + label.substr(start + searchStr.length, label.length);
-
 				if (autocomplete.isItemSelected( item ))
     			{
-    				str = "<font color='" + Consts.COLOR_TEXT_DISABLED + "'>" + str + "</font>";
+    				returnStr = "<font color='" + Consts.COLOR_TEXT_DISABLED + "'>" + returnStr + "</font>";
     			}
     			
-    			return str;
+    			return returnStr;
 			}
 
 			private function filterFunction( item:Object, searchStr:String ):Boolean
 			{
-				if (StringUtils.anyWordBeginsWith( item.name, searchStr ))
-				{
-					return true;
-				}
-				else if (StringUtils.beginsWith( item.email, searchStr ))
-				{	
-					return true;
-				}
-				
-				return false;
+				return StringUtils.contains( item.name + item.email, searchStr );
 			}
 			
 		]]>
@@ -87,7 +72,7 @@
 		<mx:FormItem label="Subject: ">
 			<mx:TextInput width="350"/>
 		</mx:FormItem>
-		<mx:FormItem label="Body:  " height="100%">
+		<mx:FormItem label="Body: " height="100%">
 			<mx:TextArea width="350" height="100%"/>
 		</mx:FormItem>
 	</mx:Form>

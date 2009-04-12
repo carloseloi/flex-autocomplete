@@ -242,18 +242,18 @@
 			<mx:Object label="Facebook" data="{ AutoComplete.STYLE_FACEBOOK }"/>
 			<mx:Object label="Underline" data="{ AutoComplete.STYLE_UNDERLINE }"/>																		
 		</mx:ComboBox>
-		<mx:CheckBox id="allowNew" label="Allow new values" selected="true"/>
+		<mx:CheckBox id="allowNew" label="Allow new values" selected="true" change="{ handleChangeOption() }"/>
 		<mx:CheckBox id="editable" enabled="{ editableEnabled }" label="New values editable"/>
 		<mx:CheckBox id="unique" label="Unique"/>
-		<mx:CheckBox id="browesable" label="Browesable" change="handleChangeOption()"/>
-		<mx:CheckBox id="multiselect" label="Multiselect" selected="true" change="handleChangeOption()"/>
-		<mx:ComboBox id="multiSelectLayout" change="handleLayoutComboChange()" enabled="{ multiselect.selected }">		
+		<mx:CheckBox id="browesable" label="Browesable" change="{ handleChangeOption() }"/>
+		<mx:CheckBox id="multiselect" label="Multiselect" selected="true" change="{ handleChangeOption() }"/>
+		<mx:ComboBox id="multiSelectLayout" change="{ handleLayoutComboChange() }" enabled="{ multiselect.selected }">		
 			<mx:Object label="Horizontal" data="{ AutoComplete.LAYOUT_HORIZONTAL }"/>
 			<mx:Object label="Vertical" data="{ AutoComplete.LAYOUT_VERTICAL }"/>										
 		</mx:ComboBox>
 		<mx:CheckBox id="orderable" label="Orderable" enabled="{ orderableEnabled }"/>
 		<mx:CheckBox id="listBuilder" label="List Builder" enabled="{ listBuilderEnabled }"/>
-		<mx:ComboBox id="matchTypeCombo" change="handleMatchTypeComboChange()">
+		<mx:ComboBox id="matchTypeCombo" change="{ handleMatchTypeComboChange() }">
 			<mx:Object label="Match Any Part" data="{ AutoComplete.MATCH_ANY_PART }"/>
 			<mx:Object label="Match Beginning" data="{ AutoComplete.MATCH_BEGINNING }"/>
 			<mx:Object label="Match Word" data="{ AutoComplete.MATCH_WORD }"/>					
@@ -263,7 +263,7 @@
 	<mx:Spacer width="5"/>
 	
 	<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
-		prompt="Choose your favorite Crayola crayon" width="250" change="handleAutoCompleteChange()"
+		prompt="Choose your favorite Crayola crayon" width="250" change="{ handleAutoCompleteChange() }"
 		isStrict="{ !allowNew.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
 		isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }" 
 		allowDuplicates="{ !unique.selected }" isOrderable="{ orderable.selected }" 

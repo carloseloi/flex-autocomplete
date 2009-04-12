@@ -2,7 +2,7 @@
 <mx:Box
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:hc="com.hillelcoren.components.autoComplete.classes.*"
-	clipContent="false" width="250" initialize="init()" 
+	clipContent="false" initialize="init()" 
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	implements="mx.controls.listClasses.IDropInListItemRenderer,mx.managers.IFocusManagerComponent">
 	
@@ -584,28 +584,26 @@
 				}	
 				else if (event.kind == CollectionEventKind.ADD)
 				{					
-					searchText = null;
 					combo.hideDropDown();
 					
-					if (!_isMultiSelect || _multiSelectLayout == LAYOUT_HORIZONTAL)
+					for each (item in event.items)
 					{
-						for each (item in event.items)
+						if (!_allowDuplicates)
 						{
-							if (!_allowDuplicates)
+							if (checkIfDuplicate( item ))
 							{
-								if (checkIfDuplicate( item ))
-								{
-									continue;
-								}
+								continue;
 							}
-							
-							combo.addItem( item );																	
 						}
-					}					
+				
+						if (!_isMultiSelect || _multiSelectLayout == LAYOUT_HORIZONTAL)
+						{
+							combo.addItem( item );																	
+						}					
+					}
+					
+					searchText = null;									
 				}
-								
-				var changeEvent:Event = new Event( Event.CHANGE );
-				dispatchEvent( changeEvent );
 			}
 			
 			private function checkIfDuplicate( searchFor:Object ):Boolean
@@ -799,6 +797,11 @@
 			public function set matchType( value:String ):void
 			{
 				_matchType = value;
+			}
+			
+			public function get matchType():String
+			{
+				return _matchType;
 			}
 			
 			/**
@@ -1059,7 +1062,7 @@
 				switch (_matchType)
 				{
 					case MATCH_ANY_PART:
-						return (new RegExp(searchStr, "gi")).test( str );
+						return StringUtils.contains( str, searchStr );
 					case MATCH_BEGINNING:
 						return StringUtils.beginsWith( str, searchStr );
 					case MATCH_WORD:
@@ -1088,35 +1091,17 @@
 			 */
 			public function defaultDropDownLabelFunction( item:Object ):String
 			{
-				var label:String = _labelFunction( item );
-				
-				var str:String = "";
+				var string:String = _labelFunction( item );
 				var searchStr:String = combo.searchText;
 				
-				var start:int = label.search(new RegExp(searchStr, "gi"));
-				
-				// we need to make sure if we're matching whole words that we don't 
-				// highlight a part of a word which matches. ie, if the string is
-				// "Test String" and the user searches for "st" we need to highlight
-				// the "st" in "String" (not "Test")
-				if (_matchType == MATCH_WORD && start > 0)
-				{
-					if (label.charAt( start - 1 ) != " ")
-					{
-						start = label.search(new RegExp(" " + searchStr, "gi")) + 1;
-					}
-				}
-				
-				str = label.substring(0, start);
-				str = str + "<b><u>" + label.substr(start, searchStr.length) + "</u></b>";
-				str = str + label.substr(start + searchStr.length, label.length);
+				var returnStr:String = StringUtils.highlighMatch( string, searchStr, _matchType );
 				
 				if (isItemSelected( item ))
     			{
-    				str = "<font color='" + Consts.COLOR_TEXT_DISABLED + "'>" + str + "</font>";
+    				returnStr = "<font color='" + Consts.COLOR_TEXT_DISABLED + "'>" + returnStr + "</font>";
     			}
     			
-    			return str;
+    			return returnStr;
 			}
 						
 			public function get labelFunction():Function
