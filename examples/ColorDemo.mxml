@@ -11,6 +11,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.hillelcoren.components.AutoComplete;
 			import mx.core.Application;
 			import mx.core.UIComponent;
 			import mx.collections.ArrayCollection;
@@ -203,6 +204,17 @@
     			autoComplete.enableRemoveIcon = style.selectedItem.data == AutoComplete.STYLE_FACEBOOK;    			
     		}
     		
+    		private function handleChangeMulti():void
+    		{
+    			if (!multiselect.selected)
+    			{
+    				multiSelectLayout.selectedIndex = 0;
+    				handleLayoutComboChange();
+    			}
+    			
+    			handleChangeOption();	
+    		}
+    		
     		[Bindable(event="changeOption")]
     		private function get orderableEnabled():Boolean
     		{
@@ -246,7 +258,7 @@
 		<mx:CheckBox id="editable" enabled="{ editableEnabled }" label="New values editable"/>
 		<mx:CheckBox id="unique" label="Unique"/>
 		<mx:CheckBox id="browesable" label="Browesable" change="{ handleChangeOption() }"/>
-		<mx:CheckBox id="multiselect" label="Multiselect" selected="true" change="{ handleChangeOption() }"/>
+		<mx:CheckBox id="multiselect" label="Multiselect" selected="true" change="{ handleChangeMulti() }"/>
 		<mx:ComboBox id="multiSelectLayout" change="{ handleLayoutComboChange() }" enabled="{ multiselect.selected }">		
 			<mx:Object label="Horizontal" data="{ AutoComplete.LAYOUT_HORIZONTAL }"/>
 			<mx:Object label="Vertical" data="{ AutoComplete.LAYOUT_VERTICAL }"/>										
@@ -262,8 +274,8 @@
 	
 	<mx:Spacer width="5"/>
 	
-	<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
-		prompt="Choose your favorite Crayola crayon" width="250" change="{ handleAutoCompleteChange() }"
+	<hc:AdvancedAutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
+		prompt="Choose your favorite Crayola crayon" width="320" change="{ handleAutoCompleteChange() }"
 		isStrict="{ !allowNew.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
 		isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }" 
 		allowDuplicates="{ !unique.selected }" isOrderable="{ orderable.selected }" 

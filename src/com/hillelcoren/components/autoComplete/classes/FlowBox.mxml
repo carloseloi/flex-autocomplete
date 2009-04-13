@@ -30,9 +30,6 @@
 			
 			private function handleFocusIn( event:Event ):void
 			{
-				// this is needed to make sure the focus border is drawn correctly
-				validateNow();
-				
 				drawFocus( true );				
 			}
 			
@@ -61,7 +58,7 @@
 				}
 			}
 			
-			internal function getItemPosition( comboItem:iComboItem ):Point
+			public function getItemPosition( comboItem:iComboItem ):Point
 			{
 				var lastY:int;
 				var col:uint;
@@ -87,7 +84,7 @@
 				return null;
 			}
 			
-			internal function getItemByPosition( pos:Point ):iComboItem
+			public function getItemByPosition( pos:Point ):iComboItem
 			{
 				var lastY:int;
 				var row:uint;
@@ -115,7 +112,7 @@
 				return null;	
 			}								
 			
-			internal function set style( value:String ):void
+			public function set style( value:String ):void
 			{
 				_style = value;
 				_styleChanged = true;
@@ -123,7 +120,7 @@
 				invalidateProperties();
 			}
 			
-			internal function set enableRemoveIcon( value:Boolean ):void
+			public function set enableRemoveIcon( value:Boolean ):void
 			{
 				_enableRemoveIcon = value;
 				_enableRemoveIconChanged = true;
@@ -131,7 +128,7 @@
 				invalidateProperties();
 			}
 			
-			internal function set enableMultiRow( value:Boolean ):void
+			public function set enableMultiRow( value:Boolean ):void
 			{
 				_enableMultiRow = value;
 			}
