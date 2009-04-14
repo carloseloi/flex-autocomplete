@@ -35,8 +35,8 @@
 			[Bindable]
 			private var _labelFunction:Function;
 			
-			private var _isOrderable:Boolean;
-			private var _isOrderableChanged:Boolean;
+			private var _showOrderButtons:Boolean;
+			private var _showOrderButtonsChanged:Boolean;
 			
 			public function init():void
 			{
@@ -61,10 +61,10 @@
 				invalidateProperties();
 			}
 			
-			public function set isOrderable( value:Boolean ):void
+			public function set showOrderButtons( value:Boolean ):void
 			{
-				_isOrderable = value;
-				_isOrderableChanged = true;
+				_showOrderButtons = value;
+				_showOrderButtonsChanged = true;
 				
 				invalidateProperties();
 			}
@@ -81,12 +81,12 @@
 					_dataProvider.refresh();
 				}		
 				
-				if (_isOrderableChanged)
+				if (_showOrderButtonsChanged)
 				{
-					_isOrderableChanged = false;
+					_showOrderButtonsChanged = false;
 					
-					orderingButtons.visible = _isOrderable;
-					orderingButtons.includeInLayout = _isOrderable;
+					orderingButtons.visible = _showOrderButtons;
+					orderingButtons.includeInLayout = _showOrderButtons;
 				}										
 			}
 			

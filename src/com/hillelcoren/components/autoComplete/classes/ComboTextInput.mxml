@@ -10,7 +10,7 @@
 			import com.hillelcoren.utils.StringUtils;
 			
 			private var _item:Object;
-			private var _isMultiSelect:Boolean;
+			private var _allowMultipleSelection:Boolean;
 			
 			private function init():void
 			{
@@ -43,7 +43,7 @@
 			
 			private function handleFocusOut( event:Event ):void
 			{
-				if (_isMultiSelect)
+				if (_allowMultipleSelection)
 				{
 					text = StringUtils.trimCommas( text ) + ",";
 				}	
@@ -69,9 +69,9 @@
 				return selectionBeginIndex == text.length;
 			}
 			
-			public function set isMultiSelect( value:Boolean ):void
+			public function set allowMultipleSelection( value:Boolean ):void
 			{
-				_isMultiSelect = value;
+				_allowMultipleSelection = value;
 			}
 			
 			public function set item( value:Object ):void

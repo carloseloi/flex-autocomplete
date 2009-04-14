@@ -40,7 +40,7 @@
 			private var _item:Object;
 			private var _text:String;
 			private var _isMouseOver:Boolean;		
-			private var _isMultiSelect:Boolean;
+			private var _allowMultipleSelection:Boolean;
 			
 			[Bindable]			
 			private var _enableRemoveIcon:Boolean = true;
@@ -87,7 +87,7 @@
 				
 				if (_style == AutoComplete.STYLE_UNDERLINE)
 				{
-					label += _isMultiSelect ? "," : "";
+					label += _allowMultipleSelection ? "," : "";
 					padding = 0;					
 				}
 				else
@@ -284,9 +284,9 @@
 				dispatchEvent( event );
 			}
 
-			public function set isMultiSelect( value:Boolean ):void
+			public function set allowMultipleSelection( value:Boolean ):void
 			{
-				_isMultiSelect = value;
+				_allowMultipleSelection = value;
 			}
 						
 		]]>

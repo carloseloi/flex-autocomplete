@@ -13,7 +13,7 @@
 			<local:ColorDemo label="Color Chooser"/>
 			<local:DataGridDemo label="DataGrid Demo"/>
 			<local:EmailDemo label="Email Demo"/>
-		</mx:TabNavigator>		
+		</mx:TabNavigator>
 	</mx:Panel>
-			
+	
 </mx:Application>

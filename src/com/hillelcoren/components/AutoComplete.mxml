@@ -3,11 +3,11 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:components="com.hillelcoren.components.*" 
 	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*"
-	clipContent="true" width="250" borderStyle="none"
+	implements="mx.controls.listClasses.IDropInListItemRenderer,mx.managers.IFocusManagerComponent"
+	clipContent="false" width="250"
 	verticalAlign="middle" horizontalAlign="left"
-	initialize="init()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
-	implements="mx.controls.listClasses.IDropInListItemRenderer,mx.managers.IFocusManagerComponent">
+	initialize="init()">
 	
 	<mx:Metadata>
 		/**
@@ -70,15 +70,14 @@
 			private var _autoSelectEnabled:Boolean = true;
 			private var _autoSelectFunction:Function;	
 			
-			protected var _isMultiSelect:Boolean;
-			private var _isMultiSelectChanged:Boolean;
+			protected var _allowMultipleSelection:Boolean;
+			private var _allowMultipleSelectionChanged:Boolean;
 			
 			protected var _showSelectedItems:Boolean = true;
 			
-			private var _isStrict:Boolean = true;
+			private var _allowNewValues:Boolean;
 			private var _widthChanged:Boolean;
-			private var _percentWidthChanged:Boolean;
-			
+		
 			private var _prompt:String;
 			private var _promptChanged:Boolean;
 			
@@ -106,7 +105,7 @@
 			private var _styleChanged:Boolean;
 			
 			private var _allowDuplicates:Boolean;
-			private var _areNewItemsEditable:Boolean;
+			private var _allowEditingNewValues:Boolean;
 			
 			private var _keyField:String = "id";
 			private var _listData:DataGridListData;
@@ -183,7 +182,7 @@
 					return;
 				}
 				
-				if (searchText.length > 0 && !_isStrict)
+				if (searchText.length > 0 && _allowNewValues)
 				{
 					_selectedItems.addItem( searchText );
 				}	
@@ -214,17 +213,11 @@
 					flowBox.width = width;
 				}
 				
-				if (_percentWidthChanged)
+				if (_allowMultipleSelectionChanged)
 				{
-					_percentWidthChanged = false;
-					flowBox.percentWidth = percentWidth;
-				}
-			
-				if (_isMultiSelectChanged)
-				{
-					_isMultiSelectChanged = false;
+					_allowMultipleSelectionChanged = false;
 					
-					flowBox.enableMultiRow = _isMultiSelect;
+					flowBox.enableMultiRow = _allowMultipleSelection;
 					setClearIconEnabled();
 					searchText = null;					
 				}				
@@ -518,7 +511,7 @@
 												
 			private function setClearIconEnabled():void
 			{
-				textInput.enableClearIcon = _enableClearIcon && !_isMultiSelect;
+				textInput.enableClearIcon = _enableClearIcon && !_allowMultipleSelection;
 			}
 			
 			private function createDropDown():void
@@ -738,7 +731,7 @@
 							
 							textInput.setFocus();
 						}
-						else if (target.text && !_isStrict && target.isEditable())
+						else if (target.text && _allowNewValues && target.isEditable())
 						{
 							_selectedItems.addItem( target.text );
 							dispatchEvent( new Event( Event.CHANGE ) );																														
@@ -816,7 +809,7 @@
 					return;
 				}
 				
-				if (flowBox.numChildren == 2 && !_isMultiSelect)
+				if (flowBox.numChildren == 2 && !_allowMultipleSelection)
 				{
 					return;							
 				}
@@ -834,11 +827,11 @@
 					// add a new row to fit the items
 					textInput.width = 0;
 					
-					if (isNew && _areNewItemsEditable)
+					if (isNew && _allowEditingNewValues)
 					{
 						var comboTextInput:ComboTextInput = new ComboTextInput();
-						comboTextInput.isMultiSelect = _isMultiSelect;
-						comboTextInput.text = item + (_isMultiSelect ? "," : "");
+						comboTextInput.allowMultipleSelection = _allowMultipleSelection;
+						comboTextInput.text = item + (_allowMultipleSelection ? "," : "");
 						comboTextInput.width = measureText( item as String ).width + 10;
 						comboTextInput.height = textInput.height;
 						comboTextInput.item = item;
@@ -853,7 +846,7 @@
 						selectedItem.item = item;
 						selectedItem.style = _style;
 						selectedItem.height = textInput.height;
-						selectedItem.isMultiSelect = _isMultiSelect;
+						selectedItem.allowMultipleSelection = _allowMultipleSelection;
 						selectedItem.enableRemoveIcon = _enableRemoveIcon;
 						selectedItem.addEventListener( SelectedItem.REMOVE_ITEM, handleItemRemove, false, 0, true );
 						selectedItem.addEventListener( TextEvent.TEXT_INPUT, handleItemTextInput );
@@ -939,6 +932,12 @@
 				}
 				else
 				{
+					/*
+					var lastIndex:int = flowBox.numChildren - 2;
+					var lastComp:UIComponent = flowBox.getChildAt( lastIndex ) as UIComponent;
+					newWidth = flowBox.width - (lastComp.x + lastComp.width + 4);
+					*/
+					
 					newWidth = measureText( textInput.text ).width + 30;
 					newWidth = Math.min( newWidth, flowBox.width - 4 );
 				}
@@ -970,7 +969,7 @@
 			
 			public function handleChange( event:Event ):void
 			{
-				if (selectedItem && !_isMultiSelect)
+				if (selectedItem && !_allowMultipleSelection)
 				{
 					_selectedItems.removeAll();							
 				}
@@ -1005,7 +1004,7 @@
 						}						
 					}
 					
-					if (!_isStrict && parts.length > 1)
+					if (_allowNewValues && parts.length > 1)
 					{
 						_selectedItems.addItem( searchStr );						
 					}
@@ -1241,9 +1240,9 @@
 			 * A flag that indicates whether or not you can select values which aren't in the dataProvider
 			 * @default true
 			 */			
-			public function set isStrict( value:Boolean ):void
+			public function set allowNewValues( value:Boolean ):void
 			{
-				_isStrict = value;
+				_allowNewValues = value;
 			}
 			
 			[Inspectable(enumeration="false,true")]			
@@ -1251,12 +1250,12 @@
 			 * Flag which sets whether or not we allow the user to 
 			 * select more than one item
 			 */
-			public function set isMultiSelect( value:Boolean ):void
+			public function set allowMultipleSelection( value:Boolean ):void
 			{
-				if (value != _isMultiSelect)
+				if (value != _allowMultipleSelection)
 				{
-					 _isMultiSelect = value;
-					 _isMultiSelectChanged = true;
+					 _allowMultipleSelection = value;
+					 _allowMultipleSelectionChanged = true;
 					 
 					 invalidateProperties();
 				}
@@ -1356,7 +1355,7 @@
 			{
 				if (_selectedItems.length > 0)
 				{
-					return _selectedItems.getItemAt( 0 );					
+					return _selectedItems.getItemAt( _selectedItems.length - 1 );					
 				}
 				else
 				{
@@ -1482,11 +1481,11 @@
 			
 			/**
 			 * A flag that indicates whether or not you can edit a new item which has been added. This only affects
-			 * the component when isStrict is set to false
+			 * the component when allowNewValues is set to false
 			 */			
-			public function set areNewItemsEditable( value:Boolean ):void
+			public function set allowEditingNewValues( value:Boolean ):void
 			{
-				_areNewItemsEditable = value;
+				_allowEditingNewValues = value;
 			}
 			
 			override public function set width( value:Number ):void
@@ -1495,18 +1494,11 @@
 				_widthChanged = true;
 			}
 			
-			override public function set percentWidth( value:Number ):void
-			{
-				super.percentWidth = value;
-				_percentWidthChanged = true;
-			}
-			
-			
 		]]>
 	</mx:Script>
 	
-	<mx:GridRow id="mainGridRow">
-		<mx:GridItem id="mainGridItem">
+	<mx:GridRow id="mainGridRow" width="100%" height="100%">
+		<mx:GridItem id="mainGridItem" width="100%" height="100%">
 			<classes:FlowBox id="flowBox" width="100%" height="100%">
 				<components:PromptTextInput id="textInput" enableClearIcon="false" 
 					change="handleChange(event)" drawFocusBorder="false" borderStyle="none"/>		
