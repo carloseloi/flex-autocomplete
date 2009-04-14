@@ -168,14 +168,14 @@
 				var wPadding:Number = vm.left + vm.right + numGaps * getStyle("horizontalGap");
 				var hPadding:Number = vm.top + vm.bottom;
 				
-				//measuredMinWidth = minWidth + wPadding;
 				measuredMinHeight = minHeight + hPadding;
-				
-				//measuredWidth = preferredWidth + wPadding;
 				measuredHeight = minHeight + hPadding;
 				
-				measuredMinWidth = width;
-				measuredWidth = width;
+				measuredMinWidth = minWidth + wPadding;
+				measuredWidth = preferredWidth + wPadding;
+				
+				//measuredMinWidth = width;
+				//measuredWidth = width;				
 			}
 			
 			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void

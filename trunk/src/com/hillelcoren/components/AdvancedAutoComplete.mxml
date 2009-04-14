@@ -18,8 +18,8 @@
 			import com.hillelcoren.components.autoComplete.interfaces.IBrowser;
 			import com.hillelcoren.components.autoComplete.classes.*;
 			
-			private var _isBrowseable:Boolean;
-			private var _isBrowseableChanged:Boolean;
+			private var _showBrowseButton:Boolean;
+			private var _showBrowseButtonChanged:Boolean;
 			private var _browseButton:Button;
 			
 			private var _browser:IBrowser;
@@ -33,37 +33,37 @@
 			private var _browseLabel:String = "Browse";
 			private var _removeLabel:String = "Remove";	
 						
-			private var _multiSelectLayout:String = LAYOUT_VERTICAL;
-			private var _multiSelectLayoutChanged:Boolean;
+			private var _selectionLayout:String = LAYOUT_VERTICAL;
+			private var _selectionLayoutChanged:Boolean;
 			private var _multiSelect:MultiSelect;
 
-			private var _isOrderable:Boolean;
-			private var _isOrderableChanged:Boolean;			
+			private var _showOrderButtons:Boolean;
+			private var _showOrderButtonsChanged:Boolean;			
 			
 			override protected function commitProperties():void
 			{
 				super.commitProperties();
 				
-				if (_isBrowseableChanged)
+				if (_showBrowseButtonChanged)
 				{
-					_isBrowseableChanged = false;
-					showBrowseButton( _isBrowseable );
+					_showBrowseButtonChanged = false;
+					setBrowseButtonVisible( _showBrowseButton );
 				}
 				
-				if (_isOrderableChanged)
+				if (_showOrderButtonsChanged)
 				{
-					_isOrderableChanged = false;
-					showOrderingButtons( _isOrderable );
+					_showOrderButtonsChanged = false;
+					setOrderButtonsVisible( _showOrderButtons );
 				}
 				
-				if (_multiSelectLayoutChanged)
+				if (_selectionLayoutChanged)
 				{
-					_multiSelectLayoutChanged = false;
+					_selectionLayoutChanged = false;
 					
 					_selectedItems.removeAll();
-					_showSelectedItems = _multiSelectLayout == LAYOUT_HORIZONTAL;
+					_showSelectedItems = _selectionLayout == LAYOUT_HORIZONTAL;
 					
-					var showMultiSelect:Boolean = (_multiSelectLayout == LAYOUT_VERTICAL && _isMultiSelect);
+					var showMultiSelect:Boolean = (_selectionLayout == LAYOUT_VERTICAL && _allowMultipleSelection);
 					showMultiSelectList( showMultiSelect );																			
 				}							
 			}
@@ -75,18 +75,18 @@
 					return;
 				}
 				
-				var useListBuilder:Boolean = _useListBuilder && _isMultiSelect;
+				var useListBuilder:Boolean = _useListBuilder && _allowMultipleSelection;
 				
 				if (useListBuilder)
 				{
 					_browser = new _listBuilderClass();	
-					ListBuilder( _browser ).isOrderable = _isOrderable;
+					ListBuilder( _browser ).showOrderButtons = _showOrderButtons;
 				}
 				else
 				{
 					_browser = new _browserClass();
 					Browser( _browser ).browserFields = _browserFields;
-					Browser( _browser ).isMultiSelect = _isMultiSelect;					
+					Browser( _browser ).allowMultipleSelection = _allowMultipleSelection;					
 				}
 				
 				var dp:ArrayCollection = new ArrayCollection( _dataProvider.source );
@@ -99,7 +99,7 @@
 				_browser.labelFunction = _labelFunction;
 				_browser.addEventListener( Event.CHANGE, handleBrowserChange );
 				
-				if (_isMultiSelect || useListBuilder)
+				if (_allowMultipleSelection || useListBuilder)
 				{
 					_browser.originalSelectedItems = _selectedItems;
 				}
@@ -119,7 +119,7 @@
 			{
 				var item:Object;
 				
-				if (useListBuilder || !_isMultiSelect)
+				if (useListBuilder || !_allowMultipleSelection)
 				{
 					_selectedItems.removeAll();				
 				}
@@ -131,7 +131,7 @@
 				
 				PopUpManager.removePopUp( IFlexDisplayObject( _browser ) );
 				
-				if (_isMultiSelect && _multiSelectLayout == LAYOUT_HORIZONTAL)
+				if (_allowMultipleSelection && _selectionLayout == LAYOUT_HORIZONTAL)
 				{
 					searchText = null;
 				}
@@ -145,7 +145,7 @@
 				dispatchEvent( event );
 			}
 			
-			private function showBrowseButton( show:Boolean ):void
+			private function setBrowseButtonVisible( show:Boolean ):void
 			{
 				if (show && _browseButton == null)
 				{
@@ -170,14 +170,14 @@
 				sizeTextInput();				
 			}
 			
-			private function showOrderingButtons( show:Boolean ):void
+			private function setOrderButtonsVisible( show:Boolean ):void
 			{
 				if (!_multiSelect)
 				{
 					return;
 				}
 				
-				_multiSelect.isOrderable = show;
+				_multiSelect.showOrderButtons = show;
 			}
 			
 			private function showMultiSelectList( show:Boolean ):void
@@ -188,7 +188,7 @@
 					_multiSelect.labelFunction = _labelFunction;
 					_multiSelect.addEventListener( Event.CHANGE, handleMultiSelectChange );
 					_multiSelect.dataProvider = _selectedItems;					
-					_multiSelect.isOrderable = _isOrderable;
+					_multiSelect.showOrderButtons = _showOrderButtons;
 					_multiSelect.removeLabel = _removeLabel;
 				}
 				
@@ -211,7 +211,7 @@
 			{
 				var width:int = width;
 				
-				if (_isBrowseable || _multiSelectLayout == LAYOUT_VERTICAL)
+				if (_showBrowseButton || _selectionLayout == LAYOUT_VERTICAL)
 				{
 					width -= Consts.BUTTON_WIDTH + 10;
 				}
@@ -221,14 +221,14 @@
 			
 			[Inspectable(enumeration="horizontal,vertical")]
 			/**
-			 * When isMultiSelect is set to true, this specifies whether to layout the selected
+			 * When allowMultipleSelection is set to true, this specifies whether to layout the selected
 			 * items horizontally (in a flow layout) or vertically (in a List).
 			 * @default horizontal
 			 */
-			public function set multiSelectLayout( value:String ):void
+			public function set selectionLayout( value:String ):void
 			{
-				_multiSelectLayout = value;
-				_multiSelectLayoutChanged = true;
+				_selectionLayout = value;
+				_selectionLayoutChanged = true;
 				
 				invalidateProperties();
 			}
@@ -241,10 +241,10 @@
 			 * is enabled an alternate List Builder browser will be displayed
 			 * @default false
 			 */
-			public function set isBrowseable( value:Boolean ):void
+			public function set showBrowseButton( value:Boolean ):void
 			{
-				_isBrowseable = value;
-				_isBrowseableChanged = true;
+				_showBrowseButton = value;
+				_showBrowseButtonChanged = true;
 				
 				invalidateProperties();
 			}
@@ -252,13 +252,13 @@
 			[Inspectable(enumeration="false,true")]
 			/**
 			 * A flag that indicates whether or not we display the ordering buttons and allow the 
-			 * items to be drag-and-drop reorderd. This is only enabled when isMultiSelect is
+			 * items to be drag-and-drop reorderd. This is only enabled when allowMultipleSelection is
 			 * set to true and the multiSelectLayout property is set to AutoComplete.LAYOUT_VERTICAL
 			 */
-			public function set isOrderable( value:Boolean ):void
+			public function set showOrderButtons( value:Boolean ):void
 			{
-				_isOrderable = value;
-				_isOrderableChanged = true;
+				_showOrderButtons = value;
+				_showOrderButtonsChanged = true;
 				
 				invalidateProperties();
 			}

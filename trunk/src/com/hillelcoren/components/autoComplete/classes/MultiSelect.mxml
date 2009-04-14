@@ -22,8 +22,8 @@
 			private var _labelFunction:Function;
 			
 			[Bindable]
-			private var _isOrderable:Boolean;
-			private var _isOrderableChanged:Boolean;
+			private var _showOrderButtons:Boolean;
+			private var _showOrderButtonsChanged:Boolean;
 			
 			[Bindable]
 			private var _removeLabel:String;
@@ -41,10 +41,10 @@
 				_labelFunction = value;
 			}
 			
-			public function set isOrderable( value:Boolean ):void
+			public function set showOrderButtons( value:Boolean ):void
 			{
-				_isOrderable = value;
-				_isOrderableChanged = true;
+				_showOrderButtons = value;
+				_showOrderButtonsChanged = true;
 				
 				invalidateProperties();
 			}
@@ -59,11 +59,11 @@
 					list.dataProvider = _dataProvider;
 				}
 				
-				if (_isOrderableChanged)
+				if (_showOrderButtonsChanged)
 				{
-					_isOrderableChanged = false;
-					orderingButtons.visible = _isOrderable;
-					orderingButtons.includeInLayout = _isOrderable;
+					_showOrderButtonsChanged = false;
+					orderingButtons.visible = _showOrderButtons;
+					orderingButtons.includeInLayout = _showOrderButtons;
 				}
 			}
 			
@@ -139,7 +139,7 @@
 	
 	<mx:GridItem width="100%">
 		<mx:List id="list" dataProvider="{ _dataProvider }" rowCount="10" width="100%" allowMultipleSelection="true" labelFunction="{ _labelFunction }"
-			variableRowHeight="true" dragEnabled="{ _isOrderable }" dragMoveEnabled="{ _isOrderable }" dropEnabled="{ _isOrderable }" dragDrop="handleDragDrop(event)"/>
+			variableRowHeight="true" dragEnabled="{ _showOrderButtons }" dragMoveEnabled="{ _showOrderButtons }" dropEnabled="{ _showOrderButtons }" dragDrop="handleDragDrop(event)"/>
 	</mx:GridItem>
 	
 	<mx:GridItem>

@@ -174,7 +174,7 @@
 			private function handleAutoCompleteChange():void
 			{
 				var color:Object = autoComplete.selectedItem;
-
+				
 				if (color != null && color.hasOwnProperty( "hex" ))
 				{
 					Application.application.setStyle( "backgroundColor", color.hex );
@@ -194,7 +194,7 @@
 			
 			private function handleLayoutComboChange():void
     		{
-    			autoComplete.multiSelectLayout = multiSelectLayout.selectedItem.data; 
+    			autoComplete.selectionLayout = multiSelectLayout.selectedItem.data; 
     			handleChangeOption();   			
     		}
     		
@@ -272,14 +272,12 @@
 		</mx:ComboBox>											
 	</mx:VBox>		
 	
-	<mx:Spacer width="5"/>
-	
 	<hc:AdvancedAutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
 		prompt="Choose your favorite Crayola crayon" width="320" change="{ handleAutoCompleteChange() }"
-		isStrict="{ !allowNew.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
-		isBrowseable="{ browesable.selected }" isMultiSelect="{ multiselect.selected }" 
-		allowDuplicates="{ !unique.selected }" isOrderable="{ orderable.selected }" 
-		useListBuilder="{ listBuilder.selected }" multiSelectLayout="horizontal"
-		areNewItemsEditable="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"	/>			
+		allowNewValues="{ allowNew.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
+		showBrowseButton="{ browesable.selected }" allowMultipleSelection="{ multiselect.selected }" 
+		allowDuplicates="{ !unique.selected }" showOrderButtons="{ orderable.selected }" 
+		useListBuilder="{ listBuilder.selected }" selectionLayout="horizontal"
+		allowEditingNewValues="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"/>
 	
 </mx:HBox>
