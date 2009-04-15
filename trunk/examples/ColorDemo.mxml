@@ -6,7 +6,7 @@
 	xmlns:local="*"
 	width="100%" height="100%" color="#000000"
 	verticalAlign="top" horizontalAlign="left" 
-	paddingLeft="20" paddingTop="15" paddingBottom="20" paddingRight="20"
+	paddingLeft="20" paddingTop="20" paddingBottom="20" paddingRight="20"
 	initialize="init()">
 
 	<mx:Script>
@@ -202,14 +202,14 @@
 
 	<mx:VBox horizontalAlign="left">
 
-		<mx:CheckBox id="multiselect" label="Allow multiple selection" selected="true"/>
-		<mx:CheckBox id="unique" label="Allow duplicates" enabled="{ multiselect.selected }"/>
-		<mx:CheckBox id="allowNew" label="Allow new values" selected="true"/>
-		<mx:CheckBox id="editable" label="Allow editing new values" enabled="{ allowNew.selected }"/>
+		<mx:CheckBox id="multiselect" label="Allow Multiple Selection" selected="true"/>
+		<mx:CheckBox id="unique" label="Allow Duplicates" enabled="{ multiselect.selected }"/>
+		<mx:CheckBox id="allowNew" label="Allow New Values" selected="true"/>
+		<mx:CheckBox id="editable" label="Allow Editing New Values" enabled="{ allowNew.selected }"/>
 		
 		<mx:Grid paddingTop="10">
 			<mx:GridRow>
-				<mx:GridItem>
+				<mx:GridItem verticalAlign="middle">
 					<mx:Label text="Style"/>		
 				</mx:GridItem>
 				<mx:GridItem>
@@ -221,7 +221,7 @@
 				</mx:GridItem>
 			</mx:GridRow>
 			<mx:GridRow>
-				<mx:GridItem>
+				<mx:GridItem verticalAlign="middle">
 					<mx:Label text="Match"/>		
 				</mx:GridItem>
 				<mx:GridItem>
@@ -236,10 +236,14 @@
 					
 	</mx:VBox>		
 	
-	<hc:AdvancedAutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
+	<mx:Spacer width="100%"/>
+	
+	<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
 		prompt="Choose your favorite Crayola crayon" width="250" change="{ handleAutoCompleteChange() }"
 		allowNewValues="{ allowNew.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
 		allowDuplicates="{ unique.selected }" allowMultipleSelection="{ multiselect.selected }"
 		allowEditingNewValues="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"/>
+	
+	<mx:Spacer width="100%"/>
 	
 </mx:HBox>

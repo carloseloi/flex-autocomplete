@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:hc="com.hillelcoren.components.*"
+	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*"
+	xmlns:local="*"
+	width="100%" height="100%" color="#000000"
+	verticalAlign="top" horizontalAlign="left" 
+	paddingLeft="20" paddingTop="15" paddingBottom="20" paddingRight="20"
+	initialize="init()">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			private function init():void
+			{
+				
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:VBox horizontalAlign="left">
+		<mx:CheckBox label="Show Browse Button"/>
+		<mx:CheckBox label="Show Order Buttons"/>
+		<mx:CheckBox label="Show Remove Button"/>
+		<mx:CheckBox label="Show Remove Icons"/>
+		<mx:CheckBox label="Use List Builder"/>		
+	</mx:VBox>
+	<mx:Spacer width="100%"/>
+	<hc:AdvancedAutoComplete showBrowseButton="true" width="300" 
+		allowMultipleSelection="true" selectionLayout="vertical"/>
+	<mx:Spacer width="100%"/>
+</mx:HBox>

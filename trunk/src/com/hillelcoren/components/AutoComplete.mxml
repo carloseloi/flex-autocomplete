@@ -217,8 +217,9 @@
 				{
 					_allowMultipleSelectionChanged = false;
 					
+					_selectedItems.removeAll();
 					flowBox.enableMultiRow = _allowMultipleSelection;
-					setClearIconEnabled();
+					setClearIconEnabled();					
 					searchText = null;					
 				}				
 				
@@ -1046,7 +1047,7 @@
 			
 			private function isPerfectMatch():Boolean
 			{
-				if (_dataProvider.length == 1)
+				if (_dataProvider && _dataProvider.length == 1)
 				{
 					var item:Object = _dataProvider.getItemAt( 0 );
 					
