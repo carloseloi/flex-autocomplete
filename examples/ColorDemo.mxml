@@ -180,65 +180,17 @@
 					Application.application.setStyle( "backgroundColor", color.hex );
 				}
 			}
-			
-			private function handleChangeOption():void
-			{
-				var event:Event = new Event( "changeOption" );
-				dispatchEvent( event );	
-			}
-			
-			private function handleMatchTypeComboChange():void
-			{
-				autoComplete.matchType = matchTypeCombo.selectedItem.data;				
-			}
-			
-			private function handleLayoutComboChange():void
-    		{
-    			autoComplete.selectionLayout = multiSelectLayout.selectedItem.data; 
-    			handleChangeOption();   			
-    		}
-    		
-    		private function handleStyleComboChange():void
-    		{
-    			autoComplete.style = style.selectedItem.data;
-    			autoComplete.enableRemoveIcon = style.selectedItem.data == AutoComplete.STYLE_FACEBOOK;    			
-    		}
-    		
-    		private function handleChangeMulti():void
-    		{
-    			if (!multiselect.selected)
-    			{
-    				multiSelectLayout.selectedIndex = 0;
-    				handleLayoutComboChange();
-    			}
-    			
-    			handleChangeOption();	
-    		}
-    		
-    		[Bindable(event="changeOption")]
-    		private function get orderableEnabled():Boolean
-    		{
-    			return multiselect.selected && multiSelectLayout.selectedItem.data == AutoComplete.LAYOUT_VERTICAL;
-    		}
-    		
-    		[Bindable(event="changeOption")]
-    		private function get listBuilderEnabled():Boolean
-    		{
-    			return multiselect.selected && browesable.selected;    			
-    		}
-    		
-    		[Bindable(event="changeOption")]
-    		private function get styleEnabled():Boolean
-    		{
-    			return multiSelectLayout.selectedItem.data == AutoComplete.LAYOUT_HORIZONTAL;
-    		}
-    		
-    		[Bindable(event="changeOption")]
-    		private function get editableEnabled():Boolean
-    		{
-    			return (multiSelectLayout.selectedItem.data == AutoComplete.LAYOUT_HORIZONTAL) && allowNew.selected;
-    		}
 
+			private function handleStyleChange():void
+			{
+				autoComplete.style = style.selectedItem.data;
+				autoComplete.showRemoveIcon = (style.selectedItem.data == AutoComplete.STYLE_FACEBOOK);				
+			}
+			
+			private function handleMatchChange():void
+			{
+				autoComplete.matchType = matchTypeCombo.selectedItem.data;
+			}
 		]]>
 	</mx:Script>
 	
@@ -249,35 +201,45 @@
 
 
 	<mx:VBox horizontalAlign="left">
-		<mx:ComboBox id="style" change="handleStyleComboChange()" enabled="{ styleEnabled }">					
-			<mx:Object label="Mac Mail" data="{ AutoComplete.STYLE_MAC_MAIL }"/>
-			<mx:Object label="Facebook" data="{ AutoComplete.STYLE_FACEBOOK }"/>
-			<mx:Object label="Underline" data="{ AutoComplete.STYLE_UNDERLINE }"/>																		
-		</mx:ComboBox>
-		<mx:CheckBox id="allowNew" label="Allow new values" selected="true" change="{ handleChangeOption() }"/>
-		<mx:CheckBox id="editable" enabled="{ editableEnabled }" label="New values editable"/>
-		<mx:CheckBox id="unique" label="Unique"/>
-		<mx:CheckBox id="browesable" label="Browesable" change="{ handleChangeOption() }"/>
-		<mx:CheckBox id="multiselect" label="Multiselect" selected="true" change="{ handleChangeMulti() }"/>
-		<mx:ComboBox id="multiSelectLayout" change="{ handleLayoutComboChange() }" enabled="{ multiselect.selected }">		
-			<mx:Object label="Horizontal" data="{ AutoComplete.LAYOUT_HORIZONTAL }"/>
-			<mx:Object label="Vertical" data="{ AutoComplete.LAYOUT_VERTICAL }"/>										
-		</mx:ComboBox>
-		<mx:CheckBox id="orderable" label="Orderable" enabled="{ orderableEnabled }"/>
-		<mx:CheckBox id="listBuilder" label="List Builder" enabled="{ listBuilderEnabled }"/>
-		<mx:ComboBox id="matchTypeCombo" change="{ handleMatchTypeComboChange() }">
-			<mx:Object label="Match Any Part" data="{ AutoComplete.MATCH_ANY_PART }"/>
-			<mx:Object label="Match Beginning" data="{ AutoComplete.MATCH_BEGINNING }"/>
-			<mx:Object label="Match Word" data="{ AutoComplete.MATCH_WORD }"/>					
-		</mx:ComboBox>											
+
+		<mx:CheckBox id="multiselect" label="Allow multiple selection" selected="true"/>
+		<mx:CheckBox id="unique" label="Allow duplicates" enabled="{ multiselect.selected }"/>
+		<mx:CheckBox id="allowNew" label="Allow new values" selected="true"/>
+		<mx:CheckBox id="editable" label="Allow editing new values" enabled="{ allowNew.selected }"/>
+		
+		<mx:Grid paddingTop="10">
+			<mx:GridRow>
+				<mx:GridItem>
+					<mx:Label text="Style"/>		
+				</mx:GridItem>
+				<mx:GridItem>
+					<mx:ComboBox id="style" change="handleStyleChange()">					
+						<mx:Object label="Mac Mail" data="{ AutoComplete.STYLE_MAC_MAIL }"/>
+						<mx:Object label="Facebook" data="{ AutoComplete.STYLE_FACEBOOK }"/>
+						<mx:Object label="Underline" data="{ AutoComplete.STYLE_UNDERLINE }"/>																		
+					</mx:ComboBox>			
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow>
+				<mx:GridItem>
+					<mx:Label text="Match"/>		
+				</mx:GridItem>
+				<mx:GridItem>
+					<mx:ComboBox id="matchTypeCombo" change="handleMatchChange()">
+						<mx:Object label="Any Part" data="{ AutoComplete.MATCH_ANY_PART }"/>
+						<mx:Object label="Beginning" data="{ AutoComplete.MATCH_BEGINNING }"/>
+						<mx:Object label="Word" data="{ AutoComplete.MATCH_WORD }"/>					
+					</mx:ComboBox>			
+				</mx:GridItem>
+			</mx:GridRow>
+		</mx:Grid>
+					
 	</mx:VBox>		
 	
 	<hc:AdvancedAutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
-		prompt="Choose your favorite Crayola crayon" width="320" change="{ handleAutoCompleteChange() }"
+		prompt="Choose your favorite Crayola crayon" width="250" change="{ handleAutoCompleteChange() }"
 		allowNewValues="{ allowNew.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
-		showBrowseButton="{ browesable.selected }" allowMultipleSelection="{ multiselect.selected }" 
-		allowDuplicates="{ !unique.selected }" showOrderButtons="{ orderable.selected }" 
-		useListBuilder="{ listBuilder.selected }" selectionLayout="horizontal"
+		allowDuplicates="{ unique.selected }" allowMultipleSelection="{ multiselect.selected }"
 		allowEditingNewValues="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"/>
 	
 </mx:HBox>

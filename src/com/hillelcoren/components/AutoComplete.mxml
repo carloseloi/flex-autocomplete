@@ -87,8 +87,8 @@
 			private var _enableClearIcon:Boolean;
 			private var _enableClearIconChanged:Boolean;
 			
-			private var _enableRemoveIcon:Boolean;
-			private var _enableRemoveIconChanged:Boolean;
+			private var _showRemoveIcon:Boolean;
+			private var _showRemoveIconChanged:Boolean;
 			
 			[Bindable]
 			protected var _selectedItems:ArrayCollection;
@@ -240,10 +240,10 @@
 					flowBox.style = _style;
 				}
 				
-				if (_enableRemoveIconChanged)
+				if (_showRemoveIconChanged)
 				{
-					_enableRemoveIconChanged = false;
-					flowBox.enableRemoveIcon = _enableRemoveIcon;
+					_showRemoveIconChanged = false;
+					flowBox.showRemoveIcon = _showRemoveIcon;
 				}		
 				
 				if (_dataProviderChanged && _dataProvider)
@@ -847,7 +847,7 @@
 						selectedItem.style = _style;
 						selectedItem.height = textInput.height;
 						selectedItem.allowMultipleSelection = _allowMultipleSelection;
-						selectedItem.enableRemoveIcon = _enableRemoveIcon;
+						selectedItem.showRemoveIcon = _showRemoveIcon;
 						selectedItem.addEventListener( SelectedItem.REMOVE_ITEM, handleItemRemove, false, 0, true );
 						selectedItem.addEventListener( TextEvent.TEXT_INPUT, handleItemTextInput );
 						selectedItem.maxWidth = flowBox.width - 4;
@@ -1427,12 +1427,12 @@
 			 * A flag that indicates whether or not to display the remove icon in the selected items.
 			 * @default false
 			 */			
-			public function set enableRemoveIcon( value:Boolean ):void
+			public function set showRemoveIcon( value:Boolean ):void
 			{
-				if (value != _enableRemoveIcon)
+				if (value != _showRemoveIcon)
 				{
-					_enableRemoveIcon = value;
-					_enableRemoveIconChanged = true;
+					_showRemoveIcon = value;
+					_showRemoveIconChanged = true;
 				
 					invalidateProperties();
 				}
