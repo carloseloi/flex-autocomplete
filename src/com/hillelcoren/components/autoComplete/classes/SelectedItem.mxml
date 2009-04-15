@@ -104,6 +104,9 @@
 					}
 				}
 				
+				// there are problems using ">"s and "<"s
+				label = label.replace( "<", "&lt;" ).replace( ">", "&gt;" );
+				
 				itemLabel.htmlText = label;
 				itemLabel.setStyle( "paddingLeft", padding );
 				spacer.width = padding;

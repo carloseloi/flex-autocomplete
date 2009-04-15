@@ -148,8 +148,7 @@ package com.hillelcoren.utils
 				matchType = AutoComplete.MATCH_ANY_PART;
 			}
 			
-			var regExp:RegExp = new RegExp( searchStr, "i" );
-			var matchPos:int = string.search( regExp );
+			var matchPos:int = string.toLowerCase().indexOf( searchStr.toLowerCase() );
 			
 			// if we're matching on word then we need to make sure 
 			// we're highliting the right part (ie, search for "st" in "Test String" 
@@ -158,15 +157,19 @@ package com.hillelcoren.utils
 			{
 				if (matchPos > 0 && string.charAt( matchPos - 1 ) != " ")
 				{
-					regExp = new RegExp( " " + searchStr, "i" );
-					matchPos = string.search( regExp ) + 1;			
+					matchPos = string.toLowerCase().indexOf( " " + searchStr.toLowerCase() ) + 1;	
 				}
 			}
 			
 			var returnStr:String = string.substring( 0, matchPos );
-			returnStr += "<b><u>" + string.substr( matchPos, searchStr.length) + "</u></b>";
+			var matchedPart:String = string.substr( matchPos, searchStr.length);
+			
+			// there are problems using ">"s and "<"s
+			matchedPart = matchedPart.replace( "<", "&lt;" ).replace( ">", "&gt;" );
+			
+			returnStr += "<b><u>" + matchedPart + "</u></b>";
 			returnStr += string.substr( matchPos + searchStr.length, string.length ) + " ";		
-
+			
 			return returnStr;
 		}
 	}
