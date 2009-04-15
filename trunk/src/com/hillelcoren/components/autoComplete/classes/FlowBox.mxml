@@ -17,8 +17,8 @@
 			private var _style:String;
 			private var _styleChanged:Boolean;
 			
-			private var _enableRemoveIcon:Boolean;
-			private var _enableRemoveIconChanged:Boolean;
+			private var _showRemoveIcon:Boolean;
+			private var _showRemoveIconChanged:Boolean;
 			
 			private var _enableMultiRow:Boolean;
 			
@@ -42,17 +42,17 @@
 			{
 				super.commitProperties();
 				
-				if (_styleChanged || _enableRemoveIconChanged)
+				if (_styleChanged || _showRemoveIconChanged)
 				{
 					_styleChanged = false;
-					_enableRemoveIconChanged = false;
+					_showRemoveIconChanged = false;
 					
 					for each (var item:iComboItem in getChildren())
 					{
 						if (item is SelectedItem)
 						{
 							SelectedItem( item ).style = _style;
-							SelectedItem( item ).enableRemoveIcon = _enableRemoveIcon;	
+							SelectedItem( item ).showRemoveIcon = _showRemoveIcon;	
 						}						
 					}
 				}
@@ -120,10 +120,10 @@
 				invalidateProperties();
 			}
 			
-			public function set enableRemoveIcon( value:Boolean ):void
+			public function set showRemoveIcon( value:Boolean ):void
 			{
-				_enableRemoveIcon = value;
-				_enableRemoveIconChanged = true;
+				_showRemoveIcon = value;
+				_showRemoveIconChanged = true;
 				
 				invalidateProperties();
 			}

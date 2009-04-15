@@ -13,6 +13,7 @@
 			<local:ColorDemo label="Color Chooser"/>
 			<local:DataGridDemo label="DataGrid Demo"/>
 			<local:EmailDemo label="Email Demo"/>
+			<local:AdvancedDemo label="Advanced AutoComplete"/>
 		</mx:TabNavigator>
 	</mx:Panel>
 	
