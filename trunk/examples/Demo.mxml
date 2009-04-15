@@ -7,9 +7,22 @@
 	verticalAlign="middle" horizontalAlign="center"
 	color="#000000" xmlns:local="*"
 	initialize="init()" viewSourceURL="srcview/index.html">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			// There's an issue with the TabNavigator where sometimes the background goes white 
+			// http://www.typeoneerror.com/background-disappearing-with-tabnavigator-in-flex/
+			private function hackToFixBgBug():void 
+			{
+				this.alpha = 0.99; 
+				this.alpha = 1.0;
+			}
 
-	<mx:Panel width="540" height="400" headerHeight="10">
-		<mx:TabNavigator width="100%" height="100%" focusEnabled="false">
+		]]>
+	</mx:Script>
+	<mx:Panel width="550" height="350" headerHeight="10">
+		<mx:TabNavigator width="100%" height="100%" focusEnabled="false" mouseDown="{ hackToFixBgBug() }">
 			<local:ColorDemo label="AutoComplete"/>
 			<local:DataGridDemo label="DataGrid Demo"/>
 			<local:EmailDemo label="Email Demo"/>			

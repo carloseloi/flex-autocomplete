@@ -22,9 +22,8 @@
 
 	<mx:VBox horizontalAlign="left">
 		<mx:CheckBox label="Show Browse Button"/>
-		<mx:CheckBox label="Show Order Buttons"/>
 		<mx:CheckBox label="Show Remove Button"/>
-		<mx:CheckBox label="Show Remove Icons"/>
+		<mx:CheckBox label="Show Order Buttons"/>
 		<mx:CheckBox label="Use List Builder"/>		
 	</mx:VBox>
 	<mx:Spacer width="100%"/>

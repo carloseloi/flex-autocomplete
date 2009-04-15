@@ -110,7 +110,7 @@
 			private var _keyField:String = "id";
 			private var _listData:DataGridListData;
 						
-			private static const ROW_COUNT:uint = 6; 
+			private static const ROW_COUNT:uint = 5; 
 			
 			public static const SEARCH_CHANGE:String = "searchChange";
 			
@@ -970,6 +970,11 @@
 			
 			public function handleChange( event:Event ):void
 			{
+				if (!_dataProvider)
+				{
+					return;
+				}				
+				
 				if (selectedItem && !_allowMultipleSelection)
 				{
 					_selectedItems.removeAll();							
@@ -1096,11 +1101,6 @@
 			
 			public function filterData():void
 			{
-				if (!_dataProvider)
-				{
-					return;
-				}
-				
 				_dataProvider.filterFunction = filterFunctionWrapper;
 				_dataProvider.refresh();
 			}
