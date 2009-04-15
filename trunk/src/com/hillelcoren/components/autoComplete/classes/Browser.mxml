@@ -233,7 +233,7 @@
 				}
 			}
 			
-			private function filterFunctionWrapper( item:Object ):Boolean
+			protected function filterFunctionWrapper( item:Object ):Boolean
 			{
 				return _filterFunction( item, searchTextInput.text );
 			}
