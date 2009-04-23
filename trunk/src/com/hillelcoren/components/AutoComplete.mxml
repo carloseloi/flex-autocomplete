@@ -18,6 +18,13 @@
 		 * Dispatched when the text in the search field is changed
 		 */
 		[Event(name="searchChange")]
+		
+		
+		/**
+		 * The color for the prompt shown when no value is set
+		 */
+		[Style(name="promptColor", type="uint", format="Color", inherit="yes")]
+		
 	</mx:Metadata>
 		
 	<mx:Script>
@@ -573,6 +580,11 @@
 				}
 				else
 				{
+					if (!focusManager)
+					{
+						return;
+					}
+					
 					var target:iComboItem = determineFocus();
 					
 					if (!target)
@@ -757,7 +769,7 @@
 			private function determineFocus():iComboItem
 			{
 				var comp:UIComponent = focusManager.getFocus() as UIComponent;
-				
+			
 				if (comp is iComboItem)
 				{
 					return comp as iComboItem;
