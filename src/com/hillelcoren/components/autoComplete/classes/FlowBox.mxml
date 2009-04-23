@@ -4,7 +4,7 @@
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	borderStyle="inset" backgroundColor="#FFFFFF"
 	initialize="init()" clipContent="false">
-	
+
 	<mx:Script>
 		<![CDATA[
 			import mx.core.UIComponent;
