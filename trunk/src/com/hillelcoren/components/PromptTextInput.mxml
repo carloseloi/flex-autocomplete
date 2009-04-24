@@ -4,7 +4,7 @@
 	implements="com.hillelcoren.components.autoComplete.interfaces.iComboItem"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	verticalAlign="middle" backgroundColor="#FFFFFF"
-	width="100" borderStyle="inset" initialize="init()" 
+	width="100" borderStyle="inset" initialize="init()"
 	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
 	
 	<mx:Metadata>
@@ -66,7 +66,7 @@
 			{
 				super.styleChanged( styleProp );
 				
-				if (styleProp=="promptColor") 
+				if (!styleProp || styleProp=="promptColor") 
 				{
 					_promptColor = getStyle( "promptColor" );
 					
