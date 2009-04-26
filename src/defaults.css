@@ -1,11 +1,11 @@
 .none 
 {
-	over-skin: ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
-	up-skin: ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
-	down-skin: ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
-	selected-over-skin : ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
-	selected-up-skin : ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
-	selected-down-skin : ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
+	over-skin: ClassReference("com.hillelcoren.assets.skins.BlankSkin");
+	up-skin: ClassReference("com.hillelcoren.assets.skins.BlankSkin");
+	down-skin: ClassReference("com.hillelcoren.assets.skins.BlankSkin");
+	selected-over-skin : ClassReference("com.hillelcoren.assets.skins.BlankSkin");
+	selected-up-skin : ClassReference("com.hillelcoren.assets.skins.BlankSkin");
+	selected-down-skin : ClassReference("com.hillelcoren.assets.skins.BlankSkin");
 	padding-top: 0;
 	padding-bottom: 0;
 	padding-left: 0;
@@ -17,12 +17,12 @@
   
 .underline
 {
-	over-skin: ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
-	up-skin: ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
-	down-skin: ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
-	selected-over-skin : ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
-	selected-up-skin : ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
-	selected-down-skin : ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
+	over-skin: ClassReference("com.hillelcoren.assets.skins.BlankSkin");
+	up-skin: ClassReference("com.hillelcoren.assets.skins.BlankSkin");
+	down-skin: ClassReference("com.hillelcoren.assets.skins.BlankSkin");
+	selected-over-skin : ClassReference("com.hillelcoren.assets.skins.BlankSkin");
+	selected-up-skin : ClassReference("com.hillelcoren.assets.skins.BlankSkin");
+	selected-down-skin : ClassReference("com.hillelcoren.assets.skins.BlankSkin");
 	padding-top: 0;
 	padding-bottom: 0;
 	padding-left: 0;
@@ -35,12 +35,12 @@
   
 .macMail 
 {
-	over-skin: ClassReference("com.hillelcoren.assets.skins.MacMailButtonSkin");
-	up-skin: ClassReference("com.hillelcoren.assets.skins.MacMailButtonSkin");
-	down-skin: ClassReference("com.hillelcoren.assets.skins.MacMailButtonSkin");
-	selected-over-skin : ClassReference("com.hillelcoren.assets.skins.MacMailButtonSkin");
-	selected-up-skin: ClassReference("com.hillelcoren.assets.skins.MacMailButtonSkin");
-	selected-down-skin : ClassReference("com.hillelcoren.assets.skins.MacMailButtonSkin");
+	over-skin: ClassReference("com.hillelcoren.assets.skins.MacMailSkin");
+	up-skin: ClassReference("com.hillelcoren.assets.skins.MacMailSkin");
+	down-skin: ClassReference("com.hillelcoren.assets.skins.MacMailSkin");
+	selected-over-skin : ClassReference("com.hillelcoren.assets.skins.MacMailSkin");
+	selected-up-skin: ClassReference("com.hillelcoren.assets.skins.MacMailSkin");
+	selected-down-skin : ClassReference("com.hillelcoren.assets.skins.MacMailSkin");
 	padding-top: 0;
 	padding-bottom: 0;
 	text-selected-color: #FFFFFF;
@@ -51,12 +51,12 @@
 
 .facebook 
 {
-	over-skin: ClassReference("com.hillelcoren.assets.skins.FacebookButtonSkin");
-	up-skin: ClassReference("com.hillelcoren.assets.skins.FacebookButtonSkin");
-	down-skin: ClassReference("com.hillelcoren.assets.skins.FacebookButtonSkin");
-	selected-over-skin : ClassReference("com.hillelcoren.assets.skins.FacebookButtonSkin");
-	selected-up-skin : ClassReference("com.hillelcoren.assets.skins.FacebookButtonSkin");
-	selected-down-skin : ClassReference("com.hillelcoren.assets.skins.FacebookButtonSkin");        
+	over-skin: ClassReference("com.hillelcoren.assets.skins.FacebookSkin");
+	up-skin: ClassReference("com.hillelcoren.assets.skins.FacebookSkin");
+	down-skin: ClassReference("com.hillelcoren.assets.skins.FacebookSkin");
+	selected-over-skin : ClassReference("com.hillelcoren.assets.skins.FacebookSkin");
+	selected-up-skin : ClassReference("com.hillelcoren.assets.skins.FacebookSkin");
+	selected-down-skin : ClassReference("com.hillelcoren.assets.skins.FacebookSkin");        
 	padding-top: 0;
 	padding-bottom: 0;
 	text-selected-color: #FFFFFF;
