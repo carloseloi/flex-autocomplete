@@ -147,10 +147,10 @@
 			<mx:Button id="removeButton" label="{ _removeLabel }" click="handleRemoveClick()" width="{ Consts.BUTTON_WIDTH }"/>
 			<mx:Spacer height="100%"/>
 			<mx:VBox id="orderingButtons">
-				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/top.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_TOP ) }" toolTip="Move to top"/>
-				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/up.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_UP ) }" toolTip="Move up"/>
-				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/down.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_DOWN ) }" toolTip="Move down"/>
-				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/bottom.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_BOTTOM ) }" toolTip="Move to bottom"/>	
+				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/top.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_TOP ) }" toolTip="Move to top"/>
+				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/up.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_UP ) }" toolTip="Move up"/>
+				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/down.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_DOWN ) }" toolTip="Move down"/>
+				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/bottom.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_BOTTOM ) }" toolTip="Move to bottom"/>	
 			</mx:VBox>				
 		</mx:VBox>
 	</mx:GridItem>

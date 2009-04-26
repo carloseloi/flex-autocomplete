@@ -42,16 +42,14 @@
 			{
 				super.commitProperties();
 				
-				if (_styleChanged || _showRemoveIconChanged)
+				if (_showRemoveIconChanged)
 				{
-					_styleChanged = false;
 					_showRemoveIconChanged = false;
 					
 					for each (var item:iComboItem in getChildren())
 					{
 						if (item is SelectedItem)
 						{
-							SelectedItem( item ).style = _style;
 							SelectedItem( item ).showRemoveIcon = _showRemoveIcon;	
 						}						
 					}

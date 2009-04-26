@@ -1,0 +1,66 @@
+.none 
+{
+	over-skin: ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
+	up-skin: ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
+	down-skin: ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
+	selected-over-skin : ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
+	selected-up-skin : ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
+	selected-down-skin : ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-left: 0;
+	padding-right: 0;
+	font-weight: normal;
+	selected-font-weight: bold;
+	show-comma: true;
+}
+  
+.underline
+{
+	over-skin: ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
+	up-skin: ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
+	down-skin: ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
+	selected-over-skin : ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
+	selected-up-skin : ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
+	selected-down-skin : ClassReference("com.hillelcoren.assets.skins.BlankButtonSkin");
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-left: 0;
+	padding-right: 0;
+	text-decoration: underline;
+	font-weight: normal;
+	selected-font-weight: bold;
+	show-comma: true;
+}
+  
+.macMail 
+{
+	over-skin: ClassReference("com.hillelcoren.assets.skins.MacMailButtonSkin");
+	up-skin: ClassReference("com.hillelcoren.assets.skins.MacMailButtonSkin");
+	down-skin: ClassReference("com.hillelcoren.assets.skins.MacMailButtonSkin");
+	selected-over-skin : ClassReference("com.hillelcoren.assets.skins.MacMailButtonSkin");
+	selected-up-skin: ClassReference("com.hillelcoren.assets.skins.MacMailButtonSkin");
+	selected-down-skin : ClassReference("com.hillelcoren.assets.skins.MacMailButtonSkin");
+	padding-top: 0;
+	padding-bottom: 0;
+	text-selected-color: #FFFFFF;
+	padding-left: 8;
+	padding-right: 8;
+	font-weight: normal; 
+}
+
+.facebook 
+{
+	over-skin: ClassReference("com.hillelcoren.assets.skins.FacebookButtonSkin");
+	up-skin: ClassReference("com.hillelcoren.assets.skins.FacebookButtonSkin");
+	down-skin: ClassReference("com.hillelcoren.assets.skins.FacebookButtonSkin");
+	selected-over-skin : ClassReference("com.hillelcoren.assets.skins.FacebookButtonSkin");
+	selected-up-skin : ClassReference("com.hillelcoren.assets.skins.FacebookButtonSkin");
+	selected-down-skin : ClassReference("com.hillelcoren.assets.skins.FacebookButtonSkin");        
+	padding-top: 0;
+	padding-bottom: 0;
+	text-selected-color: #FFFFFF;
+	padding-left: 2;
+	padding-right: 7;
+	font-weight: normal;                
+}

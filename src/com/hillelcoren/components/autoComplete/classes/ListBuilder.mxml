@@ -264,14 +264,14 @@
 			</mx:VBox>
 		
 			<mx:VBox verticalAlign="middle" height="100%">
-				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/right.png')" width="50" click="handleAddSelectedClick()" toolTip="Add Selected"/>
-				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/left.png')" width="50" click="handleRemoveSelectedClick()" toolTip="Remove Selected"/> 
+				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/right.png')" width="50" click="handleAddSelectedClick()" toolTip="Add Selected"/>
+				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/left.png')" width="50" click="handleRemoveSelectedClick()" toolTip="Remove Selected"/> 
 				<mx:VBox id="orderingButtons">
 					<mx:Spacer height="20"/>
-					<mx:Button icon="@Embed(source='/com/hillelcoren/assets/top.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_TOP ) }" toolTip="Move to top"/>
-					<mx:Button icon="@Embed(source='/com/hillelcoren/assets/up.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_UP ) }" toolTip="Move up"/>
-					<mx:Button icon="@Embed(source='/com/hillelcoren/assets/down.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_DOWN ) }" toolTip="Move down"/>
-					<mx:Button icon="@Embed(source='/com/hillelcoren/assets/bottom.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_BOTTOM ) }" toolTip="Move to bottom"/>	
+					<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/top.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_TOP ) }" toolTip="Move to top"/>
+					<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/up.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_UP ) }" toolTip="Move up"/>
+					<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/down.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_DOWN ) }" toolTip="Move down"/>
+					<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/bottom.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_BOTTOM ) }" toolTip="Move to bottom"/>	
 				</mx:VBox>							
 			</mx:VBox>
 		
