@@ -28,7 +28,7 @@
 		/**
 		 * The skin for the selected item
 		 */
-		[Style(name="selectedItemStyleName", type="String", inherit="yes")]
+		[Style(name="selectedItemStyleName", type="String", inherit="yes", enumeration="macMail,facebook,underline,none")]
 		
 	</mx:Metadata>
 		
@@ -159,7 +159,7 @@
 				if (_dropDownLabelFunction == null)
 				{			
 					dropDownLabelFunction = defaultDropDownLabelFunction;
-				}				
+				}
 				
 				addEventListener( MoveEvent.MOVE, handleMove );
 				addEventListener( FocusEvent.MOUSE_FOCUS_CHANGE, handleMouseFocusChange );

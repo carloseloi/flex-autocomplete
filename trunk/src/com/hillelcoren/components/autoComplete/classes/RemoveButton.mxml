@@ -6,7 +6,7 @@
 	<mx:Metadata>
 		[Event(name="removeClick")]
 		[Style(name="selectedFontWeight", type="String", inherit="yes")]
-		[Style(name="showComma", type="String", inherit="yes")]		
+		[Style(name="showComma", type="String", inherit="yes", enumeration="yes,no")]
 	</mx:Metadata>
 	
 	<mx:Script>
@@ -55,7 +55,7 @@
 				if (_showCommaChanged)
 				{
 					var showComma:String = getStyle( "showComma" );
-					label = StringUtils.trimCommas( label ) + ( showComma == "true" ? "," : "" );				
+					label = StringUtils.trimCommas( label ) + ( showComma == "yes" ? "," : "" );				
 				}
 			}
 			
@@ -96,7 +96,7 @@
 				
 				var showComma:String = getStyle( "showComma" );
 				
-				if (showComma == "true")
+				if (showComma == "yes")
 				{
 					format.underline = false;
 					textField.setTextFormat( format, label.length - 1, label.length );

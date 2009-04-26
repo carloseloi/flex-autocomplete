@@ -67,7 +67,8 @@
 		<mx:FormItem label="To: ">				
 			<components:AutoComplete id="autocomplete" dataProvider="{ _contacts }" width="350"
 				allowMultipleSelection="true" allowNewValues="true" allowEditingNewValues="true"
-				labelField="name" dropDownLabelFunction="dropDownLabelFunction" filterFunction="filterFunction"/>
+				labelField="name" dropDownLabelFunction="dropDownLabelFunction" 
+				filterFunction="filterFunction" selectedItemStyleName="macMail"/>
 		</mx:FormItem>
 		<mx:FormItem label="Subject: ">
 			<mx:TextInput width="350"/>

@@ -1,3 +1,8 @@
+AutoComplete
+{
+	selected-item-style-name: macMail;
+}
+
 .none 
 {
 	over-skin: ClassReference("com.hillelcoren.assets.skins.BlankSkin");
@@ -12,7 +17,7 @@
 	padding-right: 0;
 	font-weight: normal;
 	selected-font-weight: bold;
-	show-comma: true;
+	show-comma: yes;
 }
   
 .underline
@@ -30,7 +35,7 @@
 	text-decoration: underline;
 	font-weight: normal;
 	selected-font-weight: bold;
-	show-comma: true;
+	show-comma: yes;
 }
   
 .macMail 
