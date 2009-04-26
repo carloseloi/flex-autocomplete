@@ -3,6 +3,10 @@
 	xmlns="com.hillelcoren.components.*" 
 	xmlns:mx="http://www.adobe.com/2006/mxml">
 	
+	<mx:Metadata>
+		[IconFile("icon.png")]
+	</mx:Metadata>
+	
 	<mx:Script>
 		<![CDATA[
 			import mx.containers.GridRow;
@@ -189,7 +193,7 @@
 					_multiSelect.addEventListener( Event.CHANGE, handleMultiSelectChange );
 					_multiSelect.dataProvider = _selectedItems;					
 					_multiSelect.showOrderButtons = _showOrderButtons;
-					_multiSelect.removeLabel = _removeLabel;
+					_multiSelect.removeLabel = _removeLabel;					
 				}
 				
 				if (show)
@@ -213,10 +217,10 @@
 				
 				if (_showBrowseButton || _selectionLayout == LAYOUT_VERTICAL)
 				{
-					width -= Consts.BUTTON_WIDTH + 10;
+					width -= Consts.BUTTON_WIDTH + getStyle( "horizontalGap" );
 				}
 				
-				flowBox.width = width;
+				flowBox.width = width;				
 			}
 			
 			[Inspectable(enumeration="horizontal,vertical")]

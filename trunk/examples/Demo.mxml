@@ -6,14 +6,14 @@
 	width="100%" height="100%"
 	verticalAlign="middle" horizontalAlign="center"
 	color="#000000" xmlns:local="*"
-	initialize="init()" viewSourceURL="srcview/index.html">
+	initialize="init()">
 	
 	<mx:Script>
 		<![CDATA[
 			
 			// There's an issue with the TabNavigator where sometimes the background goes white 
 			// http://www.typeoneerror.com/background-disappearing-with-tabnavigator-in-flex/
-			private function hackToFixBgBug():void 
+			private function handleMouseDown():void 
 			{
 				this.alpha = 0.99; 
 				this.alpha = 1.0;
@@ -21,8 +21,8 @@
 
 		]]>
 	</mx:Script>
-	<mx:Panel width="550" height="350" headerHeight="10">
-		<mx:TabNavigator width="100%" height="100%" focusEnabled="false" mouseDown="{ hackToFixBgBug() }">
+	<mx:Panel width="525" height="300" headerHeight="10">
+		<mx:TabNavigator width="100%" height="100%" focusEnabled="false" mouseDown="{ handleMouseDown() }">
 			<local:ColorDemo label="AutoComplete"/>
 			<local:DataGridDemo label="DataGrid Demo"/>
 			<local:EmailDemo label="Email Demo"/>			

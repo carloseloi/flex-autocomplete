@@ -34,7 +34,7 @@ package com.hillelcoren.assets.skins
 			g.clear();
 			g.beginFill( color );
 			g.lineStyle( 1, borderColor );
-			g.drawRoundRect( 0, 0, w, h, RADIUS );
+			g.drawRoundRect( 0, 1, w, h-2, RADIUS );
 			g.endFill();
 		}
 	}

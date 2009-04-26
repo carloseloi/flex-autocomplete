@@ -194,7 +194,7 @@
 		<mx:CheckBox id="useListBuilder" label="Use List Builder" enabled="{ showBrowse.selected }"/>		
 	</mx:VBox>
 	<mx:Spacer width="100%"/>
-	<hc:AdvancedAutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" 
+	<hc:AdvancedAutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name"
 		width="300" useListBuilder="{ useListBuilder.selected }" matchType="anyPart"
 		showBrowseButton="{ showBrowse.selected }" showOrderButtons="{ showOrder.selected }"
 		allowMultipleSelection="true" selectionLayout="vertical" change="handleAutoCompleteChange()"
