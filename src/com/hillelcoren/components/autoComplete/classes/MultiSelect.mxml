@@ -138,7 +138,7 @@
 	
 	
 	<mx:GridItem width="100%">
-		<mx:List id="list" dataProvider="{ _dataProvider }" rowCount="10" width="100%" allowMultipleSelection="true" labelFunction="{ _labelFunction }"
+		<mx:List id="list" dataProvider="{ _dataProvider }" rowCount="8" width="100%" allowMultipleSelection="true" labelFunction="{ _labelFunction }"
 			variableRowHeight="true" dragEnabled="{ _showOrderButtons }" dragMoveEnabled="{ _showOrderButtons }" dropEnabled="{ _showOrderButtons }" dragDrop="handleDragDrop(event)"/>
 	</mx:GridItem>
 	

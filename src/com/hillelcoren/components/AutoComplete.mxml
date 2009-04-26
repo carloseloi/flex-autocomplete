@@ -10,6 +10,7 @@
 	initialize="init()">
 	
 	<mx:Metadata>
+		[IconFile("icon.png")]
 		/**
 		 * Dispatched when an item is selected or de-selelcted
 		 */
