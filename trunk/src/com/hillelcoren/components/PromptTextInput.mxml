@@ -29,9 +29,6 @@
 			private var _enablePrompt:Boolean = true;
 			private var _isMouseOver:Boolean;
 			
-			[Embed(source="/com/hillelcoren/assets/clear.png")]
-			private var _clearAsset:Class;
-			
 			private var _text:String;
 			private var _textChanged:Boolean;
 			
@@ -68,7 +65,7 @@
 				
 				if (!styleProp || styleProp=="promptColor") 
 				{
-					_promptColor = getStyle( "promptColor" );
+					_promptColor = getStyle( "promptColor" ) ? getStyle( "promptColor" ) : Consts.COLOR_TEXT_DISABLED;
 					
 					if (_isPromptSet)
 					{
@@ -99,7 +96,7 @@
 				
 				_isPromptSet = true;
 				textInput.text = _prompt;
-				
+
 				setStyle( "color", _promptColor );
 				setStyle( "fontStyle", "italic" );
 			}
@@ -365,7 +362,7 @@
 	</mx:Script>
 	
 	<classes:ShorterTextInput id="textInput" width="100%" borderStyle="none"/> 
-	<mx:Image id="clearIcon" source="@Embed('/com/hillelcoren/assets/clear.png')" verticalAlign="middle" 
+	<mx:Image id="clearIcon" source="@Embed('/com/hillelcoren/assets/icons/clear.png')" verticalAlign="middle" 
 		visible="false" includeInLayout="{ _enableClearIcon }" click="handleClearClick()"/>
 			
 </mx:HBox>

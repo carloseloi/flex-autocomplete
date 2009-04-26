@@ -77,7 +77,13 @@
 	
 	<mx:Component id="autocomplete">
 		<components:AutoComplete dataProvider="{ outerDocument.actors }" 
-			allowMultipleSelection="true" labelField="name" style="underline" backspaceAction="remove"/>
+			allowMultipleSelection="true" labelField="name" selectedItemStyleName="underline" backspaceAction="remove">
+			<mx:Script>
+				<![CDATA[
+					import com.hillelcoren.components.AutoComplete;
+				]]>
+			</mx:Script>
+		</components:AutoComplete>
 	</mx:Component>
 						
 	<mx:DataGrid dataProvider="{ characters }" editable="true" width="100%" height="100%">

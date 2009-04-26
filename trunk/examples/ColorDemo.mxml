@@ -8,7 +8,7 @@
 	verticalAlign="top" horizontalAlign="left" 
 	paddingLeft="20" paddingTop="15" paddingBottom="20" paddingRight="20"
 	initialize="init()">
-
+  
 	<mx:Script>
 		<![CDATA[
 			import com.hillelcoren.components.AutoComplete;
@@ -183,7 +183,7 @@
 
 			private function handleStyleChange():void
 			{
-				autoComplete.style = style.selectedItem.data;
+				autoComplete.setStyle( "selectedItemStyleName", style.selectedItem.data );
 				autoComplete.showRemoveIcon = (style.selectedItem.data == AutoComplete.STYLE_FACEBOOK);				
 			}
 			
@@ -240,7 +240,7 @@
 	
 	<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
 		prompt="Choose your favorite Crayola crayon" width="250" change="{ handleAutoCompleteChange() }"
-		allowNewValues="{ allowNew.selected }" style="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
+		allowNewValues="{ allowNew.selected }" selectedItemStyleName="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
 		allowDuplicates="{ unique.selected }" allowMultipleSelection="{ multiselect.selected }"
 		allowEditingNewValues="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"/>
 	

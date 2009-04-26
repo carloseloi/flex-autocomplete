@@ -25,10 +25,16 @@
 		 */
 		[Style(name="promptColor", type="uint", format="Color", inherit="yes")]
 		
+		/**
+		 * The skin for the selected item
+		 */
+		[Style(name="selectedItemStyleName", type="String", inherit="yes")]
+		
 	</mx:Metadata>
 		
 	<mx:Script>
 		<![CDATA[
+			import com.hillelcoren.components.autoComplete.classes.RemoveButton;
 			import mx.events.CollectionEventKind;
 			import mx.controls.dataGridClasses.DataGridListData;
 			import mx.events.MoveEvent;
@@ -166,7 +172,7 @@
 			{
 				positionDropDown();
 			}
-												
+
 			
 			// check if the focus has moved to the dropdown (otherwise, if we use the 
 			// component as an editor in the datagrid the focus out event will destroy
@@ -619,7 +625,7 @@
 							}
 						}
 						
-						if (focused is SelectedItem)
+						if (focused is RemoveButton)
 						{							
 							_selectedItems.removeItemAt( index );
 							iComboItem( flowBox.getChildAt( index ) ).setTextFocus();
@@ -643,7 +649,11 @@
 								var prevItem:UIComponent = flowBox.getChildAt( index - 1 ) as UIComponent;
 								prevItem.setFocus();
 								
-								if (prevItem is ComboTextInput)
+								if (prevItem is SelectedItem)
+								{
+									SelectedItem( prevItem ).selected = true;
+								}
+								else if (prevItem is ComboTextInput)
 								{
 									ComboTextInput( prevItem ).setSelectionEnd();
 								}
@@ -694,7 +704,7 @@
 							
 							// if you press left when a SelectedItem is focused then we'll move the
 							// cursor to the left of the focused item (rather than one item back)
-							if (focused is SelectedItem)
+							if (focused is RemoveButton)
 							{
 								comboItem = flowBox.getChildAt( index ) as iComboItem;
 							}
@@ -710,9 +720,9 @@
 								ComboTextInput( comboItem ).setSelectionEnd();
 							}
 						}
-						else if (index == 0 && focused is SelectedItem)
+						else if (index == 0 && focused is RemoveButton)
 						{
-							SelectedItem( focused ).setTextFocus();
+							SelectedItem( flowBox.getChildAt( 0 ) ).setTextFocus();
 						}		
 					}
 					else if (event.keyCode == Keyboard.RIGHT)
@@ -857,7 +867,7 @@
 						var selectedItem:SelectedItem = new SelectedItem();
 						selectedItem.text = _labelFunction( item );
 						selectedItem.item = item;
-						selectedItem.style = _style;
+						//selectedItem.style = _style;
 						selectedItem.height = textInput.height;
 						selectedItem.allowMultipleSelection = _allowMultipleSelection;
 						selectedItem.showRemoveIcon = _showRemoveIcon;
