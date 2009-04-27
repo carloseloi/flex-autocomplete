@@ -179,7 +179,7 @@
 
 			private function handleMouseOver( event:MouseEvent ):void
 			{
-				//contextTextInput.buttonVisible = true;
+				contextTextInput.buttonVisible = true;
 			}
 			
 			private function handleMouseOut( event:MouseEvent ):void
