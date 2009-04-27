@@ -81,7 +81,7 @@ package com.hillelcoren.components.autoComplete.classes
         	
         	var vm:EdgeMetrics = viewMetricsAndPadding;
         	height += tallest + vm.bottom;
-        	        	
+        	
         	measuredHeight = measuredMinHeight = height;
         }
 		
