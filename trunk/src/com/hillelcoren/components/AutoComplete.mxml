@@ -4,7 +4,7 @@
 	xmlns:components="com.hillelcoren.components.*" 
 	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*"
 	implements="mx.controls.listClasses.IDropInListItemRenderer,mx.managers.IFocusManagerComponent"
-	clipContent="false" width="250"
+	clipContent="false"
 	verticalAlign="middle" horizontalAlign="left"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	initialize="init()">
@@ -838,7 +838,7 @@
 					return;							
 				}
 				
-				var isNew:Boolean = item is String && _dataProvider.getItemIndex( item ) == -1;
+				var isNew:Boolean = item is String && (!_dataProvider || _dataProvider.getItemIndex( item ) == -1);
 				
 				if (isNew)
 				{
@@ -849,7 +849,7 @@
 				{
 					// we set the width so the flowBox doesn't temporarily 
 					// add a new row to fit the items
-					textInput.width = 0;
+					//textInput.width = 0;
 					
 					if (isNew && _allowEditingNewValues)
 					{
@@ -950,23 +950,30 @@
 			{
 				var newWidth:int;
 				
+				/*
 				if (flowBox.numChildren == 1)
 				{
-					newWidth = flowBox.width - 4;
+					//newWidth = flowBox.width - 4;
+					//textInput.percentWidth = 100;
 				}
 				else
 				{
-					/*
-					var lastIndex:int = flowBox.numChildren - 2;
-					var lastComp:UIComponent = flowBox.getChildAt( lastIndex ) as UIComponent;
-					newWidth = flowBox.width - (lastComp.x + lastComp.width + 4);
-					*/
+					//var lastIndex:int = flowBox.numChildren - 2;
+					//var lastComp:UIComponent = flowBox.getChildAt( lastIndex ) as UIComponent;
+					//newWidth = flowBox.width - (lastComp.x + lastComp.width + 4);
 					
 					newWidth = measureText( textInput.text ).width + 30;
 					newWidth = Math.min( newWidth, flowBox.width - 4 );
+					
+					textInput.width = newWidth;					
 				}
+				*/
 				
-				textInput.width = newWidth;								
+				newWidth = measureText( textInput.text ).width + 30;
+				newWidth = Math.min( newWidth, flowBox.width - 10 );
+				newWidth = Math.max( newWidth, 30 );
+				
+				textInput.width = newWidth;												
 			}
 			
 			private function handleItemClick( event:ListEvent ):void
@@ -993,11 +1000,6 @@
 			
 			public function handleChange( event:Event ):void
 			{
-				if (!_dataProvider)
-				{
-					return;
-				}				
-				
 				if (selectedItem && !_allowMultipleSelection)
 				{
 					_selectedItems.removeAll();							
@@ -1010,6 +1012,11 @@
 				}
 				
 				sizeTextInput();
+				
+				if (!_dataProvider)
+				{
+					return;
+				}				
 				
 				// we're splitting by comma to handle the case where the 
 				// user enters a comma separated list of values
@@ -1511,20 +1518,26 @@
 			{
 				_allowEditingNewValues = value;
 			}
-			
+			/*
 			override public function set width( value:Number ):void
 			{
 				super.width = value;
 				_widthChanged = true;
 			}
 			
+			override public function set percentWidth(value:Number):void
+			{
+				super.percentWidth = value;
+				_widthChanged = true;
+			}
+			*/
 		]]>
 	</mx:Script>
 	
 	<mx:GridRow id="mainGridRow" width="100%" height="100%">
 		<mx:GridItem id="mainGridItem" width="100%" height="100%">
 			<classes:FlowBox id="flowBox" width="100%" height="100%">
-				<components:PromptTextInput id="textInput" enableClearIcon="false" 
+				<components:PromptTextInput id="textInput" enableClearIcon="false" width="100%"
 					change="handleChange(event)" drawFocusBorder="false" borderStyle="none"/>		
 			</classes:FlowBox>			
 		</mx:GridItem>
