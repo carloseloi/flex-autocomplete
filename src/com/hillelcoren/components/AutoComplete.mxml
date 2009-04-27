@@ -10,7 +10,9 @@
 	initialize="init()">
 	
 	<mx:Metadata>
+		
 		[IconFile("icon.png")]
+		
 		/**
 		 * Dispatched when an item is selected or de-selelcted
 		 */
@@ -27,7 +29,7 @@
 		[Style(name="promptColor", type="uint", format="Color", inherit="yes")]
 		
 		/**
-		 * The skin for the selected item
+		 * The style/skin for the selected item
 		 */
 		[Style(name="selectedItemStyleName", type="String", inherit="yes", enumeration="macMail,facebook,underline,none")]
 		
@@ -74,6 +76,8 @@
 			protected var _dataProvider:ArrayCollection;
 			private var _dataProviderChanged:Boolean;
 			
+			private var _searchText:String;
+			
 			protected var _filterFunction:Function;
 			protected var _labelField:String;
 			protected var _labelFunction:Function;
@@ -114,9 +118,6 @@
 			protected var _selectedItemId:Number;
 			private var _selectedItemIdChanged:Boolean;
 						
-			private var _style:String = AutoComplete.STYLE_MAC_MAIL;
-			private var _styleChanged:Boolean;
-			
 			private var _allowDuplicates:Boolean;
 			private var _allowEditingNewValues:Boolean;
 			
@@ -163,8 +164,11 @@
 				
 				addEventListener( MoveEvent.MOVE, handleMove );
 				addEventListener( FocusEvent.MOUSE_FOCUS_CHANGE, handleMouseFocusChange );
+				
+				addEventListener( MouseEvent.MOUSE_OVER, handleMouseOver );
+				addEventListener( MouseEvent.MOUSE_OUT, handleMouseOut );				
+				
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
-				addEventListener( ResizeEvent.RESIZE, handleResize );
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );			
 			}
 			
@@ -173,7 +177,16 @@
 				positionDropDown();
 			}
 
+			private function handleMouseOver( event:MouseEvent ):void
+			{
+				//contextTextInput.buttonVisible = true;
+			}
 			
+			private function handleMouseOut( event:MouseEvent ):void
+			{
+				contextTextInput.buttonVisible = false;
+			}
+						
 			// check if the focus has moved to the dropdown (otherwise, if we use the 
 			// component as an editor in the datagrid the focus out event will destroy
 			// the editorInstance before the value gets set 
@@ -199,11 +212,6 @@
 				{
 					_selectedItems.addItem( searchText );
 				}	
-			}
-			
-			private function handleResize( event:Event ):void
-			{
-				sizeTextInput();
 			}
 			
 			override protected function commitProperties():void
@@ -240,12 +248,6 @@
 				{
 					_promptChanged = false;
 					textInput.prompt = _prompt;
-				}
-				
-				if (_styleChanged)
-				{
-					_styleChanged = false;
-					flowBox.style = _style;
 				}
 				
 				if (_showRemoveIconChanged)
@@ -349,6 +351,8 @@
 			private function handleSelectedItemsChange( event:CollectionEvent ):void
 			{
 				var item:Object;
+				
+				contextTextInput.buttonVisible = false;
 				
 				if (event.kind == CollectionEventKind.REMOVE)
 				{
@@ -799,8 +803,6 @@
 				
 				flowBox.removeChildAt( index );
 				
-				sizeTextInput();
-				
 				textInput.enablePrompt = flowBox.numChildren == 1;			
 			}
 			
@@ -840,10 +842,6 @@
 				
 				if (item)
 				{
-					// we set the width so the flowBox doesn't temporarily 
-					// add a new row to fit the items
-					//textInput.width = 0;
-					
 					if (isNew && _allowEditingNewValues)
 					{
 						var comboTextInput:ComboTextInput = new ComboTextInput();
@@ -853,7 +851,6 @@
 						comboTextInput.height = textInput.height;
 						comboTextInput.item = item;
 						comboTextInput.addEventListener( Event.CHANGE, handleComboItemChange, false, 0, true );
-						comboTextInput.maxWidth = flowBox.width - 4;
 						flowBox.addChildAt( comboTextInput, flowBox.numChildren - 1 );									
 					}
 					else
@@ -861,15 +858,13 @@
 						var selectedItem:SelectedItem = new SelectedItem();
 						selectedItem.text = _labelFunction( item );
 						selectedItem.item = item;
-						//selectedItem.style = _style;
 						selectedItem.height = textInput.height;
 						selectedItem.allowMultipleSelection = _allowMultipleSelection;
 						selectedItem.showRemoveIcon = _showRemoveIcon;
 						selectedItem.addEventListener( SelectedItem.REMOVE_ITEM, handleItemRemove, false, 0, true );
 						selectedItem.addEventListener( TextEvent.TEXT_INPUT, handleItemTextInput );
-						selectedItem.maxWidth = flowBox.width - 4;
 						flowBox.addChildAt( selectedItem, flowBox.numChildren - 1 );
-					}				
+					}
 				}
 				/*
 				// this means the user entered a comma after a value which has already
@@ -883,7 +878,6 @@
 				}
 				*/
 				
-				sizeTextInput();
 				textInput.enablePrompt = flowBox.numChildren == 1;
 			}
 			
@@ -939,28 +933,6 @@
 				}
 			}
 			
-			protected function sizeTextInput( event:Event = null ):void
-			{
-				var newWidth:int;
-				
-				if (flowBox.numChildren == 1)
-				{
-					textInput.percentWidth = 100;	
-				}
-				else
-				{
-					//var lastIndex:int = flowBox.numChildren - 2;
-					//var lastComp:UIComponent = flowBox.getChildAt( lastIndex ) as UIComponent;
-					//newWidth = flowBox.width - (lastComp.x + lastComp.width + 4);
-					
-					newWidth = measureText( textInput.text ).width + 30;
-					newWidth = Math.min( newWidth, flowBox.width - 10 );
-					newWidth = Math.max( newWidth, 30 );
-					
-					textInput.width = newWidth;
-				}
-			}
-			
 			private function handleItemClick( event:ListEvent ):void
 			{
 				_selectedItems.addItem( _dropDown.selectedItem );
@@ -985,6 +957,9 @@
 			
 			public function handleChange( event:Event ):void
 			{
+				flowBox.invalidateDisplayList();
+				contextTextInput.buttonVisible = false;
+				
 				if (selectedItem && !_allowMultipleSelection)
 				{
 					_selectedItems.removeAll();							
@@ -995,8 +970,6 @@
 					var event:Event = new Event( AutoComplete.SEARCH_CHANGE );
 					dispatchEvent( event );
 				}
-				
-				sizeTextInput();
 				
 				if (!_dataProvider)
 				{
@@ -1009,8 +982,7 @@
 				
 				for each (var searchStr:String in parts)
 				{
-					textInput.text = searchStr;
-					textInput.validateNow();
+					_searchText = searchStr;
 					
 					//var start:Date = new Date();
 					filterData();
@@ -1028,7 +1000,12 @@
 					if (_allowNewValues && parts.length > 1)
 					{
 						_selectedItems.addItem( searchStr );						
-					}
+					}					
+				}
+				
+				if (searchText && searchText != _searchText)
+				{
+					textInput.text = _searchText;
 				}
 				
 				if (_dataProvider.length == 0)
@@ -1110,8 +1087,6 @@
 				
 				var event:Event = new Event( SEARCH_CHANGE );
 				dispatchEvent( event );				
-				
-				sizeTextInput();
 			}
 			
 			public function filterData():void
@@ -1279,23 +1254,12 @@
 			
 			private function filterFunctionWrapper( item:Object ):Boolean
 			{
-				return _filterFunction( item, searchText );
+				return _filterFunction( item, _searchText );
 			}
 			
-			[Inspectable(enumeration="macMail,facebook,underline")]
-			/**
-			 * Specifies which style to use when displaying the selected items.
-			 * @default macMail
-			 */			
-			public function set style( value:String ):void
+			public function get textInput():PromptTextInput
 			{
-				if (value != _style)
-				{
-					_style = value;
-					_styleChanged = true;
-				
-					invalidateProperties();
-				}
+				return contextTextInput.textInput;
 			}
 			
 			public function set dataProvider( value:ArrayCollection ):void
@@ -1495,6 +1459,7 @@
 				_allowDuplicates = value;
 			}
 			
+			[Inspectable(enumeration="true,false")]
 			/**
 			 * A flag that indicates whether or not you can edit a new item which has been added. This only affects
 			 * the component when allowNewValues is set to false
@@ -1510,8 +1475,7 @@
 	<mx:GridRow id="mainGridRow" width="100%" height="100%">
 		<mx:GridItem id="mainGridItem" width="100%" height="100%">
 			<classes:FlowBox id="flowBox" width="100%" height="100%">
-				<components:PromptTextInput id="textInput" enableClearIcon="false" width="100%"
-					change="handleChange(event)" drawFocusBorder="false" borderStyle="none"/>		
+				<classes:ContextTextInput id="contextTextInput" change="handleChange(event)" width="100%"/>
 			</classes:FlowBox>			
 		</mx:GridItem>
 	</mx:GridRow>

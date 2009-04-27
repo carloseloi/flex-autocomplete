@@ -16,9 +16,6 @@
 			import mx.core.IUIComponent;
 			import com.hillelcoren.components.autoComplete.interfaces.iComboItem;
 			
-			private var _style:String;
-			private var _styleChanged:Boolean;
-			
 			private var _showRemoveIcon:Boolean;
 			private var _showRemoveIconChanged:Boolean;
 			
@@ -111,14 +108,6 @@
 				
 				return null;	
 			}								
-			
-			public function set style( value:String ):void
-			{
-				_style = value;
-				_styleChanged = true;
-				
-				invalidateProperties();
-			}
 			
 			public function set showRemoveIcon( value:Boolean ):void
 			{

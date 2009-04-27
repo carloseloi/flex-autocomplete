@@ -171,7 +171,6 @@
 				}			
 				
 				sizeFlowBox();
-				sizeTextInput();				
 			}
 			
 			private function setOrderButtonsVisible( show:Boolean ):void
@@ -206,7 +205,6 @@
 				}
 				
 				sizeFlowBox();
-				sizeTextInput();				
 
 				_selectedItems.removeAll();											
 			}
