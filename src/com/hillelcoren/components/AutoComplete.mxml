@@ -90,8 +90,7 @@
 			protected var _showSelectedItems:Boolean = true;
 			
 			private var _allowNewValues:Boolean;
-			private var _widthChanged:Boolean;
-		
+			
 			private var _prompt:String;
 			private var _promptChanged:Boolean;
 			
@@ -221,12 +220,6 @@
 					textInput.text = _text;
 				}
 			
-				if (_widthChanged)
-				{
-					_widthChanged = false;
-					flowBox.width = width;
-				}
-				
 				if (_allowMultipleSelectionChanged)
 				{
 					_allowMultipleSelectionChanged = false;
@@ -950,11 +943,9 @@
 			{
 				var newWidth:int;
 				
-				/*
 				if (flowBox.numChildren == 1)
 				{
-					//newWidth = flowBox.width - 4;
-					//textInput.percentWidth = 100;
+					textInput.percentWidth = 100;	
 				}
 				else
 				{
@@ -963,17 +954,11 @@
 					//newWidth = flowBox.width - (lastComp.x + lastComp.width + 4);
 					
 					newWidth = measureText( textInput.text ).width + 30;
-					newWidth = Math.min( newWidth, flowBox.width - 4 );
+					newWidth = Math.min( newWidth, flowBox.width - 10 );
+					newWidth = Math.max( newWidth, 30 );
 					
-					textInput.width = newWidth;					
+					textInput.width = newWidth;
 				}
-				*/
-				
-				newWidth = measureText( textInput.text ).width + 30;
-				newWidth = Math.min( newWidth, flowBox.width - 10 );
-				newWidth = Math.max( newWidth, 30 );
-				
-				textInput.width = newWidth;												
 			}
 			
 			private function handleItemClick( event:ListEvent ):void
@@ -1518,19 +1503,7 @@
 			{
 				_allowEditingNewValues = value;
 			}
-			/*
-			override public function set width( value:Number ):void
-			{
-				super.width = value;
-				_widthChanged = true;
-			}
-			
-			override public function set percentWidth(value:Number):void
-			{
-				super.percentWidth = value;
-				_widthChanged = true;
-			}
-			*/
+
 		]]>
 	</mx:Script>
 	
