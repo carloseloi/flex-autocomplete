@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FlowContainer
+<mx:Canvas
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns="com.hillelcoren.components.autoComplete.classes.*"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	borderStyle="inset" backgroundColor="#FFFFFF"
-	verticalGap="0" horizontalGap="0"
 	initialize="init()" clipContent="true">
 	
 	<mx:Script>
@@ -121,8 +120,95 @@
 			{
 				_enableMultiRow = value;
 			}
+			
+
+	        override protected function measure():void
+	        {
+	        	super.measure();
+	        	
+	        	var height:int;
+	        	var tallest:int;
+	        	var lastY:int;
+	        	
+	        	for each (var child:UIComponent in getChildren())
+	        	{
+	        		if (child.y > lastY)
+	        		{
+	        			height += tallest; 
+	        			tallest = 0;
+	        		}
+	        		
+	        		tallest = Math.max( tallest, child.getExplicitOrMeasuredHeight() );        		
+	        		lastY = child.y
+	        	}
+	        	
+	        	var vm:EdgeMetrics = viewMetricsAndPadding;
+	        	height += tallest + vm.bottom;
+	        	
+	        	measuredHeight = measuredMinHeight = height;
+	        }
+		
+			/**
+			 * The flow layout algorithm was written by Eric Cancil
+			 * http://blog.appdivision.com/2009/02/18/flex-flowcontainer/
+			 */
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+			{	        	
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				
+				var prevTallest:Number = 0;
+				var prevWidest:Number = 0;
+				var tallestForRow:Number = 0;
+				var rowNumber:Number = -1;    
+				var widestForColumn:Number = 0;
+				var columnNumber:Number = -1;        
+				
+				for (var i:Number = 0; i < numChildren; i ++)
+				{
+					var child:UIComponent = getChildAt(i) as UIComponent;
+					
+					if (child.height >= tallestForRow)
+					{
+						prevTallest = tallestForRow;
+						tallestForRow = child.height;
+					}
+					
+					if (i == 0)
+					{
+						child.x = child.y = 0;
+					}
+					else
+					{
+						var prevChild:DisplayObject = getChildAt(i - 1);
+						var newWidth:Number = prevChild.width + prevChild.x;
+						var newHeight:Number = prevChild.y;
+						
+						if (newWidth + child.minWidth > width)
+						{
+							child.x = 0;
+							
+							if (child.height == tallestForRow)
+							{
+								child.y = newHeight + prevTallest;
+							}
+							else
+							{
+								child.y = newHeight + tallestForRow;
+							}
+							
+							tallestForRow = child.height;                            
+						}
+						else
+						{
+							child.x = newWidth;
+							child.y = prevChild.y;
+						}
+					}
+				}
+			}           
+
 						
 		]]>
 	</mx:Script>
 	
-</FlowContainer>
+</mx:Canvas>
