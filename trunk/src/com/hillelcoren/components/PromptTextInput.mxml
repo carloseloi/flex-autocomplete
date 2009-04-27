@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:HBox
 	xmlns:mx="http://www.adobe.com/2006/mxml"	
-	implements="com.hillelcoren.components.autoComplete.interfaces.iComboItem"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	verticalAlign="middle" backgroundColor="#FFFFFF"
 	width="100" borderStyle="inset" initialize="init()"
@@ -160,11 +159,6 @@
 					
 					return textInput.text;
 				}
-			}
-			
-			public function get item():Object
-			{
-				return null;
 			}
 			
 			public function get selectionBeginIndex():int
@@ -341,11 +335,6 @@
 				return selectionBeginIndex == text.length;
 			}
 
-			public function isEditable():Boolean
-			{
-				return true;
-			}
-			
 			public function setCursorPosition( value:int ):void
 			{
 				_setCursorPosition( value );

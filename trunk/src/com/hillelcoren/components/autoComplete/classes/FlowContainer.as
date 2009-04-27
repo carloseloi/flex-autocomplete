@@ -9,7 +9,7 @@ package com.hillelcoren.components.autoComplete.classes
     
     import mx.collections.ArrayCollection;
     import mx.containers.Canvas;
-    import mx.controls.Alert;
+    import mx.core.UIComponent;
     
     [Style(name="verticalGap", type="Number", inherit="no")]
     [Style(name="horizontalGap", type="Number", inherit="no")]
@@ -68,7 +68,7 @@ package com.hillelcoren.components.autoComplete.classes
             var columnNumber:Number = -1;        
             
             for(var i:Number = 0; i < numChildren; i ++){
-                var child:DisplayObject = getChildAt(i);
+                var child:UIComponent = getChildAt(i) as UIComponent;
                 if(_direction == FlowContainerLayout.HORIZONTAL){
                     if(child.height >= tallestForRow){
                         prevTallest = tallestForRow;
@@ -80,7 +80,7 @@ package com.hillelcoren.components.autoComplete.classes
                         var prevChild:DisplayObject = getChildAt(i - 1);
                         var newWidth:Number = prevChild.width + prevChild.x + getStyle("horizontalGap");
                         var newHeight:Number = prevChild.y + getStyle("verticalGap");
-                        if(newWidth + child.width > width){
+                        if(newWidth + child.minWidth > width){
                             child.x = 0;
                             if(child.height == tallestForRow){
                                 child.y = newHeight + prevTallest;

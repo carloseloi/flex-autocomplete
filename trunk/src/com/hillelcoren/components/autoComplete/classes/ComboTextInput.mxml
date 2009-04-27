@@ -24,6 +24,11 @@
 				width = measureText( text ).width + 10;
 			}
 			
+			override public function get minWidth():Number
+			{
+				return measureText( text ).width + 10;
+			}
+			
 			public function setTextFocus():void
 			{
 				setSelection( 0, 0 );
@@ -37,6 +42,8 @@
 			
 			private function handleFocusIn( event:Event ):void
 			{
+				drawFocus( false );
+				
 				text = StringUtils.trimCommas( text );
 				//setSelection( 0, text.length );
 			}
