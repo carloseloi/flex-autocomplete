@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Container
+<FlowContainer
 	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns="com.hillelcoren.components.autoComplete.classes.*"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	borderStyle="inset" backgroundColor="#FFFFFF"
-	initialize="init()" clipContent="false">
-
+	verticalGap="0" horizontalGap="0"
+	initialize="init()" clipContent="true">
+	
 	<mx:Script>
 		<![CDATA[
 			import mx.core.UIComponent;
@@ -130,117 +132,8 @@
 			{
 				_enableMultiRow = value;
 			}
-			
-			override protected function measure():void
-			{
-				super.measure();
-				
-				var minWidth:Number = 0;
-				var minHeight:Number = 0;
-				
-				var preferredWidth:Number = 0;
-				var preferredHeight:Number = 0;
-				
-				var n:int = numChildren;
-				var numGaps:int = -1;
-	
-				for (var i:int = 0; i < n; i++)
-				{
-					var child:IUIComponent = IUIComponent(getChildAt(i));
-					
-					if (!child.includeInLayout)
-					{
-						continue;
-					}	
-					
-					numGaps++;
-					var wPref:Number = child.getExplicitOrMeasuredWidth();
-					var hPref:Number = child.getExplicitOrMeasuredHeight();
-					
-					minWidth = Math.max(minWidth, wPref);
-					minHeight = Math.max(minHeight, hPref);
-					preferredWidth += wPref;
-				}
-				
-				var vm:EdgeMetrics = viewMetricsAndPadding;
-				var wPadding:Number = vm.left + vm.right + numGaps * getStyle("horizontalGap");
-				var hPadding:Number = vm.top + vm.bottom;
-				
-				measuredMinHeight = minHeight + hPadding;
-				measuredHeight = minHeight + hPadding;
-				
-				measuredMinWidth = minWidth + wPadding;
-				measuredWidth = preferredWidth + wPadding;
-				
-				//measuredMinWidth = width;
-				//measuredWidth = width;				
-			}
-			
-			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
-			{
-				super.updateDisplayList(unscaledWidth, unscaledHeight);
-				
-				var vm:EdgeMetrics = viewMetricsAndPadding;
-				
-				var xPos:Number = vm.left;
-				var yPos:Number = vm.top;
-				var maxYPos:Number = 0;
-				
-				var n:int = numChildren;
-				var child:IUIComponent;
-				var lastChild:IUIComponent;
-				var childWidth:int;
-				var childHeight:int;
-				
-				var xEnd:Number = unscaledWidth - vm.right;
-				
-				for (var i:int = 0; i < n; i++)
-				{
-					child = IUIComponent(getChildAt(i));
-					
-					if (!child.includeInLayout)
-					{
-						continue;
-					}
-					
-					childWidth = child.getExplicitOrMeasuredWidth();
-					childHeight = child.getExplicitOrMeasuredHeight();
-					
-					// Start a new row?
-					if (xPos + childWidth > xEnd && xPos != vm.left && _enableMultiRow)
-					{
-						yPos = maxYPos;
-						xPos = vm.left;
 						
-						if (child is VRule)
-						{
-							child.setActualSize(0, 0);
-							child.move(xPos, yPos);
-							continue;
-						}
-						else if (lastChild is VRule)
-						{
-							lastChild.setActualSize(0, 0);
-						}
-					}
-					
-					child.setActualSize(childWidth, childHeight)
-					child.move(xPos, yPos);
-					lastChild = child;
-					
-					maxYPos = Math.max(maxYPos, yPos + childHeight);
-					xPos += childWidth;
-				}
-				
-				maxYPos += vm.bottom;
-				
-				if (height != maxYPos)
-				{
-					height = maxYPos;
-				}
-			}
-			
 		]]>
 	</mx:Script>
 	
-</mx:Container>
+</FlowContainer>
