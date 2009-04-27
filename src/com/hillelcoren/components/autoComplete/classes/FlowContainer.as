@@ -9,6 +9,7 @@ package com.hillelcoren.components.autoComplete.classes
     
     import mx.collections.ArrayCollection;
     import mx.containers.Canvas;
+    import mx.core.EdgeMetrics;
     import mx.core.UIComponent;
     
     [Style(name="verticalGap", type="Number", inherit="no")]
@@ -19,15 +20,15 @@ package com.hillelcoren.components.autoComplete.classes
         private var _direction:String;
         private var rowHeights:ArrayCollection;
         private var columnWidths:ArrayCollection;
-                
+        
         public function set direction(val:String):void{
             _direction = val;
             if(_direction == FlowContainerLayout.HORIZONTAL){
-                verticalScrollPolicy = "auto";
+                verticalScrollPolicy = "off";
                 horizontalScrollPolicy = "off"
             }else{
                 verticalScrollPolicy = "off";
-                horizontalScrollPolicy = "auto"
+                horizontalScrollPolicy = "off"
             }
             invalidateDisplayList();
         }
@@ -58,7 +59,34 @@ package com.hillelcoren.components.autoComplete.classes
             initStyles();
         }
         
-        override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void{
+        override protected function measure():void
+        {
+        	super.measure();
+        	
+        	var height:int;
+        	var tallest:int;
+        	var lastY:int;
+        	
+        	for each (var child:UIComponent in getChildren())
+        	{
+        		if (child.y > lastY)
+        		{
+        			height += tallest; 
+        			tallest = 0;
+        		}
+        		
+        		tallest = Math.max( tallest, child.getExplicitOrMeasuredHeight() );        		
+        		lastY = child.y
+        	}
+        	
+        	var vm:EdgeMetrics = viewMetricsAndPadding;
+        	height += tallest + vm.bottom;
+        	        	
+        	measuredHeight = measuredMinHeight = height;
+        }
+		
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void{
+        	
             super.updateDisplayList(unscaledWidth, unscaledHeight);
             var prevTallest:Number = 0;
             var prevWidest:Number = 0;
@@ -120,8 +148,7 @@ package com.hillelcoren.components.autoComplete.classes
                         }
                     }
                 }
-            }
+            }           
         }
-        
     }
 }
