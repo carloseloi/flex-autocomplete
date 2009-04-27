@@ -75,6 +75,7 @@
 	
 	<components:PromptTextInput id="textInput" enableClearIcon="false" width="100%"
 		change="handleTextChange(event)" drawFocusBorder="false" borderStyle="none"/>
-	<mx:Button id="contextButton" width="20" height="20" visible="false" click="handleButtonClick()"/>
+	<mx:Button id="contextButton" width="20" height="20" visible="false" 
+		click="handleButtonClick()" tabEnabled="false"/>
 	
 </mx:HBox>
