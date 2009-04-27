@@ -143,7 +143,7 @@
 	        	}
 	        	
 	        	var vm:EdgeMetrics = viewMetricsAndPadding;
-	        	height += tallest + vm.bottom;
+	        	height += tallest + vm.bottom + vm.top;
 	        	
 	        	measuredHeight = measuredMinHeight = height;
 	        }
