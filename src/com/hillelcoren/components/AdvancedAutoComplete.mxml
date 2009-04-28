@@ -107,10 +107,16 @@
 						button.height = 12;
 						button.addEventListener( MouseEvent.CLICK, handleButtonClick );
 						
-						inlineButton = button;
-						invalidateProperties();
-					}					
-				}												
+						inlineButton = button;						
+					}
+					else
+					{
+						inlineButton = null;
+					}	
+					
+					// I haven't been able to figure out why this is needed
+					super.commitProperties();			
+				}
 			}
 			
 			private function handleButtonClick( event:Event ):void
@@ -119,7 +125,7 @@
 				
 				_floatingMenu = new FloatingMenu();
 				_floatingMenu.dataProvider = _menuDataProvider;
-				_floatingMenu.width = width;
+				_floatingMenu.width = flowBox.width;
 				
 				_floatingMenu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
 				_floatingMenu.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );

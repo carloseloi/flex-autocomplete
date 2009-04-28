@@ -215,10 +215,10 @@
 	</mx:XML>
 
 	<mx:VBox horizontalAlign="left">
+		<mx:CheckBox id="enableMenu" label="Enable Context Menu" click="handleEnableMenuClick()"/>
 		<mx:CheckBox id="showBrowse" label="Show Browse Button" selected="true"/>
 		<mx:CheckBox id="showOrder" label="Show Order Buttons"/>
-		<mx:CheckBox id="useListBuilder" label="Use List Builder" enabled="{ showBrowse.selected }"/>
-		<mx:CheckBox id="enableMenu" label="Enable Context Menu" click="handleEnableMenuClick()"/>
+		<mx:CheckBox id="useListBuilder" label="Use List Builder" enabled="{ showBrowse.selected || enableMenu.selected }"/>
 	</mx:VBox>
 	<mx:Spacer width="100%"/>
 	<hc:AdvancedAutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name"

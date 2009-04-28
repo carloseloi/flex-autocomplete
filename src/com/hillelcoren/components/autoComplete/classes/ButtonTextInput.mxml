@@ -31,12 +31,15 @@
 				{
 					_buttonChanged = false;
 					
-					_button.tabEnabled = false;
-					_button.visible = false;
-					_button.includeInLayout = false;
-					_button.addEventListener( MouseEvent.CLICK, handleButtonClick );
-					
-					addChild( _button );
+					if (_button)
+					{
+						_button.tabEnabled = false;
+						_button.visible = false;
+						_button.includeInLayout = false;
+						_button.addEventListener( MouseEvent.CLICK, handleButtonClick );
+						
+						addChild( _button );
+					}
 				}
 			}
 			
@@ -106,10 +109,18 @@
 			
 			public function set button( value:Button ):void
 			{	
-				_button = value;
-				_buttonChanged = true;
+				if (_button && !value)
+				{
+					removeChild( _button );
+				}
 				
-				invalidateProperties();
+				if (_button != value)
+				{
+					_button = value;
+					_buttonChanged = true;
+				
+					invalidateProperties();
+				}
 			}
 			
 			public function get button():Button
