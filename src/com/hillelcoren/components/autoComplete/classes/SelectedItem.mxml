@@ -193,7 +193,7 @@
 	
 	<classes:ShorterTextInput id="textInput" width="5" borderStyle="none" 
 		focusThickness="0" textInput="handleTextInput(event)"/>
-	<classes:RemoveButton id="button" showRemoveIcon="{ _showRemoveIcon }" 
+	<classes:IconButton id="button" showRemoveIcon="{ _showRemoveIcon }" 
 		click="handleClick()" removeClick="handleRemoveClick()" toggle="true"/>
 	<mx:Spacer id="spacer"/>
 	

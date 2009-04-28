@@ -37,14 +37,14 @@
 		
 	<mx:Script>
 		<![CDATA[
-			import com.hillelcoren.components.autoComplete.classes.RemoveButton;
+			import com.hillelcoren.components.autoComplete.classes.IconButton;
 			import mx.events.CollectionEventKind;
 			import mx.controls.dataGridClasses.DataGridListData;
 			import mx.events.MoveEvent;
 			import mx.controls.listClasses.BaseListData;
 			import com.hillelcoren.components.autoComplete.classes.DropDownItemRenderer;
 			import com.hillelcoren.components.autoComplete.classes.SelectedItem;
-			import com.hillelcoren.components.autoComplete.classes.ComboTextInput;
+			import com.hillelcoren.components.autoComplete.classes.EditableItem;
 			import mx.managers.FocusManager;
 			import mx.events.ResizeEvent;
 			import com.hillelcoren.components.AutoComplete;
@@ -165,9 +165,6 @@
 				addEventListener( MoveEvent.MOVE, handleMove );
 				addEventListener( FocusEvent.MOUSE_FOCUS_CHANGE, handleMouseFocusChange );
 				
-				addEventListener( MouseEvent.MOUSE_OVER, handleMouseOver );
-				addEventListener( MouseEvent.MOUSE_OUT, handleMouseOut );				
-				
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );			
 			}
@@ -177,16 +174,6 @@
 				positionDropDown();
 			}
 
-			private function handleMouseOver( event:MouseEvent ):void
-			{
-				contextTextInput.buttonVisible = true;
-			}
-			
-			private function handleMouseOut( event:MouseEvent ):void
-			{
-				contextTextInput.buttonVisible = false;
-			}
-						
 			// check if the focus has moved to the dropdown (otherwise, if we use the 
 			// component as an editor in the datagrid the focus out event will destroy
 			// the editorInstance before the value gets set 
@@ -352,7 +339,7 @@
 			{
 				var item:Object;
 				
-				contextTextInput.buttonVisible = false;
+				flowBox.buttonTextInput.buttonVisible = false;
 				
 				if (event.kind == CollectionEventKind.REMOVE)
 				{
@@ -615,15 +602,15 @@
 							return;
 						}
 						
-						if (target is ComboTextInput)
+						if (target is EditableItem)
 						{
-							if (ComboTextInput( target ).isTextSelected())
+							if (EditableItem( target ).isTextSelected())
 							{
 								return;
 							}
 						}
 						
-						if (focused is RemoveButton)
+						if (focused is IconButton)
 						{							
 							_selectedItems.removeItemAt( index );
 							iComboItem( flowBox.getChildAt( index ) ).setTextFocus();
@@ -651,9 +638,9 @@
 								{
 									SelectedItem( prevItem ).selected = true;
 								}
-								else if (prevItem is ComboTextInput)
+								else if (prevItem is EditableItem)
 								{
-									ComboTextInput( prevItem ).setSelectionEnd();
+									EditableItem( prevItem ).setSelectionEnd();
 								}
 							}
 						}												
@@ -684,11 +671,11 @@
 					}
 					else if (event.keyCode == Keyboard.LEFT)
 					{
-						if (target is ComboTextInput)
+						if (target is EditableItem)
 						{
-							if (ComboTextInput( target ).isTextSelected())
+							if (EditableItem( target ).isTextSelected())
 							{
-								ComboTextInput( target ).setSelectionBeginning();
+								EditableItem( target ).setSelectionBeginning();
 								return;
 							}
 						}
@@ -702,7 +689,7 @@
 							
 							// if you press left when a SelectedItem is focused then we'll move the
 							// cursor to the left of the focused item (rather than one item back)
-							if (focused is RemoveButton)
+							if (focused is IconButton)
 							{
 								comboItem = flowBox.getChildAt( index ) as iComboItem;
 							}
@@ -713,12 +700,12 @@
 							
 							comboItem.setTextFocus();
 							
-							if (comboItem is ComboTextInput)
+							if (comboItem is EditableItem)
 							{
-								ComboTextInput( comboItem ).setSelectionEnd();
+								EditableItem( comboItem ).setSelectionEnd();
 							}
 						}
-						else if (index == 0 && focused is RemoveButton)
+						else if (index == 0 && focused is IconButton)
 						{
 							SelectedItem( flowBox.getChildAt( 0 ) ).setTextFocus();
 						}		
@@ -735,20 +722,20 @@
 							comboItem = flowBox.getChildAt( index + 1 ) as iComboItem;
 							comboItem.setTextFocus();
 							
-							if (comboItem is ComboTextInput)
+							if (comboItem is EditableItem)
 							{
-								ComboTextInput( comboItem ).setSelectionBeginning();
+								EditableItem( comboItem ).setSelectionBeginning();
 							}
 						}
 					}
 					else if (event.keyCode == Keyboard.ENTER || event.charCode == 44)
 					{
-						if (target is ComboTextInput)
+						if (target is EditableItem)
 						{
 							// we're going to remove and then re-add it so that we
 							// can run the unqiue check against it
 							_selectedItems.removeItemAt( index );
-							_selectedItems.addItemAt( ComboTextInput( target ).item, index );
+							_selectedItems.addItemAt( EditableItem( target ).item, index );
 							
 							textInput.setFocus();
 						}
@@ -844,14 +831,14 @@
 				{
 					if (isNew && _allowEditingNewValues)
 					{
-						var comboTextInput:ComboTextInput = new ComboTextInput();
-						comboTextInput.allowMultipleSelection = _allowMultipleSelection;
-						comboTextInput.text = item + (_allowMultipleSelection ? "," : "");
-						comboTextInput.width = measureText( item as String ).width + 10;
-						comboTextInput.height = textInput.height;
-						comboTextInput.item = item;
-						comboTextInput.addEventListener( Event.CHANGE, handleComboItemChange, false, 0, true );
-						flowBox.addChildAt( comboTextInput, flowBox.numChildren - 1 );									
+						var editableItem:EditableItem = new EditableItem();
+						editableItem.allowMultipleSelection = _allowMultipleSelection;
+						editableItem.text = item + (_allowMultipleSelection ? "," : "");
+						editableItem.width = measureText( item as String ).width + 10;
+						editableItem.height = textInput.height;
+						editableItem.item = item;
+						editableItem.addEventListener( Event.CHANGE, handleEditableItemChange, false, 0, true );
+						flowBox.addChildAt( editableItem, flowBox.numChildren - 1 );									
 					}
 					else
 					{
@@ -911,18 +898,18 @@
 				handleChange( null ); 
 			}
 			
-			private function handleComboItemChange( event:Event ):void
+			private function handleEditableItemChange( event:Event ):void
 			{
-				var comboTextInput:ComboTextInput = event.currentTarget as ComboTextInput;
-				var index:int = flowBox.getChildIndex( comboTextInput );
+				var editableItem:EditableItem = event.currentTarget as EditableItem;
+				var index:int = flowBox.getChildIndex( editableItem );
 				
-				var text:String = comboTextInput.text;
+				var text:String = editableItem.text;
 				text = StringUtils.trimCommas( text );
 				
 				if (text.length > 0)
 				{
 					_selectedItems.setItemAt( text, index );
-					comboTextInput.item = text;				
+					editableItem.item = text;				
 				}
 				else
 				{
@@ -958,7 +945,7 @@
 			public function handleChange( event:Event ):void
 			{
 				flowBox.invalidateDisplayList();
-				contextTextInput.buttonVisible = false;
+				flowBox.buttonTextInput.buttonVisible = false;
 				
 				if (selectedItem && !_allowMultipleSelection)
 				{
@@ -1259,7 +1246,7 @@
 			
 			public function get textInput():PromptTextInput
 			{
-				return contextTextInput.textInput;
+				return flowBox.buttonTextInput.textInput;
 			}
 			
 			public function set dataProvider( value:ArrayCollection ):void
@@ -1474,9 +1461,7 @@
 	
 	<mx:GridRow id="mainGridRow" width="100%" height="100%">
 		<mx:GridItem id="mainGridItem" width="100%" height="100%">
-			<classes:FlowBox id="flowBox" width="100%" height="100%">
-				<classes:ContextTextInput id="contextTextInput" change="handleChange(event)" width="100%"/>
-			</classes:FlowBox>			
+			<classes:FlowBox id="flowBox" width="100%" height="100%" change="handleChange(event)"/>
 		</mx:GridItem>
 	</mx:GridRow>
 	
