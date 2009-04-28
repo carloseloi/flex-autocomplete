@@ -4,6 +4,10 @@
 	backgroundColor="#FFFFFF" focusEnabled="true"
 	initialize="init()" creationComplete="handleCreationComplete()">
 	
+	<mx:Metadata>
+		[Event(name="menuHide")]
+	</mx:Metadata>
+	
 	<mx:Script>
 		<![CDATA[
 			import mx.managers.PopUpManager;
@@ -12,11 +16,11 @@
 			import mx.core.UIComponent;
 			
 			public static const TOP_PADDING:int = 2;
-			public static const RIGHT_PADDING:int = 2;
+			public static const RIGHT_PADDING:int = 3;
 			public static const TOP_WIDTH:int = 28;
 			public static const TOP_HEIGHT:int = 20;
 			public static const RADIUS:int = 5;
-			public static const MENU_PADDING:int = 4;
+			public static const MENU_PADDING:int = 6;
 			
 			private var _menu:Menu;
 			
@@ -36,8 +40,8 @@
 				_menu.setStyle( "openDuration", 0 );
 				_menu.setStyle( "dropShadowEnabled", false );
 				_menu.setStyle( "borderStyle", "none" );
-				_menu.width = width - (2 * MENU_PADDING ) - RIGHT_PADDING;
-				_menu.show( globalPoint.x + MENU_PADDING, globalPoint.y + TOP_HEIGHT + MENU_PADDING);
+				_menu.width = width - RIGHT_PADDING;
+				_menu.show( globalPoint.x, globalPoint.y + TOP_HEIGHT + MENU_PADDING);
 				_menu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );						
 			}
 			
@@ -104,6 +108,8 @@
 				{
 					PopUpManager.removePopUp( this );
 				}
+				
+				dispatchEvent( event );
 			}
 			
 			override public function hitTestPoint( x:Number, y:Number, shapeFlag:Boolean=false):Boolean
