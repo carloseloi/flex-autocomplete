@@ -15,19 +15,52 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.Button;
 			import mx.managers.PopUpManager;
 			import mx.containers.VBox;
 			import com.hillelcoren.components.autoComplete.classes.*;
 			
+			private var _button:Button;
+			private var _buttonChanged:Boolean;
+			
+			override protected function commitProperties():void
+			{
+				super.commitProperties();
+				
+				if (_buttonChanged)
+				{
+					_buttonChanged = false;
+					
+					_button.tabEnabled = false;
+					_button.visible = false;
+					_button.includeInLayout = false;
+					_button.addEventListener( MouseEvent.CLICK, handleButtonClick );
+					
+					addChild( _button );
+				}
+			}
+			
 			override public function get minWidth():Number
 			{
-				return measureText( textInput.text ).width + button.width + 30;
+				var width:int = measureText( textInput.text ).width + 30 
+				
+				if (_button)
+				{
+					width += _button.width;
+				}
+				
+				return width;
 			}
 			
 			public function set buttonVisible( value:Boolean ):void
 			{
-				button.visible = value;
-				button.includeInLayout = value;
+				if (!_button)
+				{
+					return;
+				}
+				
+				_button.visible = value;
+				_button.includeInLayout = value;
 			}
 			
 			public function setTextFocus():void
@@ -65,10 +98,23 @@
 				dispatchEvent( event );
 			}
 			
-			private function handleButtonClick():void
+			private function handleButtonClick( event:Event ):void
 			{
 				var event:Event = new Event( "buttonClick" );
 				dispatchEvent( event );
+			}
+			
+			public function set button( value:Button ):void
+			{	
+				_button = value;
+				_buttonChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			public function get button():Button
+			{
+				return _button;
 			}
 			
 		]]>
@@ -76,8 +122,5 @@
 	
 	<components:PromptTextInput id="textInput" enableClearIcon="false" width="100%"
 		change="handleTextChange(event)" drawFocusBorder="false" borderStyle="none"/>
-	<mx:Button id="button" width="24" height="12" visible="false" includeInLayout="false" 
-		click="handleButtonClick()" tabEnabled="false"/>
-	<mx:Spacer width="2"/>
 	
 </mx:HBox>

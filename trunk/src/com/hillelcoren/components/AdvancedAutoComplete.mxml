@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AutoComplete 
 	xmlns="com.hillelcoren.components.*" 
-	xmlns:mx="http://www.adobe.com/2006/mxml">
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	initialize="init()">
 	
 	<mx:Metadata>
 		[IconFile("icon.png")]
+		
+		/**
+		 * These events are active when the context menu is used
+		 */
+		[Event(name="menuHide",type="mx.events.MenuEvent")]
+		[Event(name="menuShow",type="mx.events.MenuEvent")]
+		[Event(name="itemClick",type="mx.events.MenuEvent")]
+				
 	</mx:Metadata>
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.events.ResizeEvent;
+			import mx.events.MoveEvent;
+			import mx.events.MenuEvent;
 			import mx.containers.GridRow;
 			import mx.containers.GridItem;
 			import mx.core.UIComponent;
@@ -44,6 +56,19 @@
 			private var _showOrderButtons:Boolean;
 			private var _showOrderButtonsChanged:Boolean;			
 			
+			private var _menuDataProvider:Object;
+			private var _menuDataProviderChanged:Boolean;
+					
+			private var _floatingMenu:FloatingMenu;
+					
+			private function init():void
+			{
+				addEventListener( MoveEvent.MOVE, handleMove );
+				
+				systemManager.addEventListener( ResizeEvent.RESIZE, handleResize );		
+				systemManager.addEventListener( MouseEvent.MOUSE_UP, handleMouseUp );				
+			}							
+			
 			override protected function commitProperties():void
 			{
 				super.commitProperties();
@@ -69,10 +94,111 @@
 					
 					var showMultiSelect:Boolean = (_selectionLayout == LAYOUT_VERTICAL && _allowMultipleSelection);
 					showMultiSelectList( showMultiSelect );																			
-				}							
+				}		
+				
+				if (_menuDataProviderChanged)
+				{
+					_menuDataProviderChanged = false;
+					
+					if (_menuDataProvider)
+					{
+						var button:Button = new Button();
+						button.width = 24;
+						button.height = 12;
+						button.addEventListener( MouseEvent.CLICK, handleButtonClick );
+						
+						inlineButton = button;
+						invalidateProperties();
+					}					
+				}												
+			}
+			
+			private function handleButtonClick( event:Event ):void
+			{
+				_inlineButton.enabled = false;
+				
+				_floatingMenu = new FloatingMenu();
+				_floatingMenu.dataProvider = _menuDataProvider;
+				_floatingMenu.width = width;
+				
+				_floatingMenu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
+				_floatingMenu.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );
+				_floatingMenu.addEventListener( MenuEvent.ITEM_CLICK, handleItemClick );	
+
+				positionFloatingMenu();
+				
+				PopUpManager.addPopUp( _floatingMenu, this );
+			}
+			
+			/**
+			 * This bit of code makes sure that if the user clicks the top
+			 * right nub of the floating when it's shown that the menu
+			 * disappears (rather than disappearing and then immediately
+			 * re-appearing
+			 */
+			private function handleMouseUp( event:Event ):void
+			{
+				callLater( enableButton );	
+			}
+			
+			private function enableButton():void
+			{
+				if (_inlineButton)
+				{
+					_inlineButton.enabled = true;
+				}
+			}
+			
+			private function positionFloatingMenu():void
+			{
+				if (!_floatingMenu)
+				{
+					return;
+				}
+				
+				var localPoint:Point = new Point( 0, height - FloatingMenu.TOP_HEIGHT + FloatingMenu.TOP_PADDING );
+				var globalPoint:Point = localToGlobal( localPoint );
+				
+				_floatingMenu.x = globalPoint.x;
+				_floatingMenu.y = globalPoint.y;			
+			}
+			
+			private function handleMenuHide( event:Event ):void
+			{
+				if (focusManager.getFocus() == _inlineButton)
+				{
+					stage.focus = null;
+				}
+				
+				dispatchEvent( event );
+			}
+			
+			private function handleMenuShow( event:MenuEvent ):void
+			{
+				dispatchEvent( event );
 			}
 						
+			private function handleItemClick( event:MenuEvent ):void
+			{
+				dispatchEvent( event );
+			}								
+					
+			private function handleMove( event:Event ):void
+			{
+				callLater( positionFloatingMenu );
+			}
+			
+			private function handleResize( event:Event ):void
+			{
+				callLater( positionFloatingMenu );
+			}
+									
 			private function handleBrowseClick( event:Event ):void
+			{
+				showBrowser();
+			}
+				
+			public function showBrowser():void
 			{
 				if (!_dataProvider)
 				{
@@ -337,6 +463,18 @@
 					return null;
 				}
 			}
+
+			public function set menuDataProvider( value:Object ):void
+			{
+				if (_menuDataProvider != value)
+				{
+					_menuDataProvider = value;
+					_menuDataProviderChanged = true;
+				
+					invalidateProperties();
+				}
+			}
+			
 			
 		]]>
 	</mx:Script>

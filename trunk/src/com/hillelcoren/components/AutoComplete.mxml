@@ -23,13 +23,6 @@
 		[Event(name="searchChange")]
 		
 		/**
-		 * These events are active when the context menu is used
-		 */
-		[Event(name="menuHide",type="mx.events.MenuEvent")]
-		[Event(name="menuShow",type="mx.events.MenuEvent")]
-		[Event(name="itemClick",type="mx.events.MenuEvent")]
-		
-		/**
 		 * The color for the prompt shown when no value is set
 		 */
 		[Style(name="promptColor", type="uint", format="Color", inherit="yes")]
@@ -43,6 +36,7 @@
 		
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.Button;
 			import mx.events.MenuEvent;
 			import com.hillelcoren.components.autoComplete.classes.IconButton;
 			import mx.events.CollectionEventKind;
@@ -126,8 +120,8 @@
 			protected var _selectedItemId:Number;
 			private var _selectedItemIdChanged:Boolean;
 			
-			private var _menuDataProvider:Object;
-			private var _menuDataProviderChanged:Boolean;
+			protected var _inlineButton:Button;
+			private var _inlineButtonChanged:Boolean;
 						
 			private var _allowDuplicates:Boolean;
 			private var _allowEditingNewValues:Boolean;
@@ -236,7 +230,7 @@
 			override protected function commitProperties():void
 			{
 				super.commitProperties();
-			
+				
 				var item:Object;
 			
 				if (_textChanged)
@@ -269,10 +263,11 @@
 					textInput.prompt = _prompt;
 				}
 				
-				if (_menuDataProviderChanged)
+				if (_inlineButtonChanged)
 				{
-					_menuDataProviderChanged = false;
-					flowBox.menuDataProvider = _menuDataProvider;
+					trace(">> setting button");
+					_inlineButtonChanged = false;
+					flowBox.inlineButton = _inlineButton;	
 				}
 				
 				if (_showRemoveIconChanged)
@@ -1494,13 +1489,13 @@
 				_allowEditingNewValues = value;
 			}
 			
-			public function set menuDataProvider( value:Object ):void
+			public function set inlineButton( value:Button ):void
 			{
-				if (_menuDataProvider != value)
+				if (_inlineButton != value)
 				{
-					_menuDataProvider = value;
-					_menuDataProviderChanged = true;
-				
+					_inlineButton = value;
+					_inlineButtonChanged = true;
+					
 					invalidateProperties();
 				}
 			}
