@@ -117,6 +117,9 @@
 			
 			protected var _selectedItemId:Number;
 			private var _selectedItemIdChanged:Boolean;
+			
+			private var _menuDataProvider:Object;
+			private var _menuDataProviderChanged:Boolean;
 						
 			private var _allowDuplicates:Boolean;
 			private var _allowEditingNewValues:Boolean;
@@ -124,6 +127,7 @@
 			private var _keyField:String = "id";
 			private var _listData:DataGridListData;
 						
+			
 			private static const ROW_COUNT:uint = 5; 
 			
 			public static const SEARCH_CHANGE:String = "searchChange";
@@ -235,6 +239,12 @@
 				{
 					_promptChanged = false;
 					textInput.prompt = _prompt;
+				}
+				
+				if (_menuDataProviderChanged)
+				{
+					_menuDataProviderChanged = false;
+					flowBox.menuDataProvider = _menuDataProvider;
 				}
 				
 				if (_showRemoveIconChanged)
@@ -1454,6 +1464,17 @@
 			public function set allowEditingNewValues( value:Boolean ):void
 			{
 				_allowEditingNewValues = value;
+			}
+			
+			public function set menuDataProvider( value:Object ):void
+			{
+				if (_menuDataProvider != value)
+				{
+					_menuDataProvider = value;
+					_menuDataProviderChanged = true;
+				
+					invalidateProperties();
+				}
 			}
 
 		]]>

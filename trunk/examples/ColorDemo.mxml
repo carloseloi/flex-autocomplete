@@ -168,7 +168,13 @@
 					{ "name":"Yellow", "hex":"#FBE870" },
 					{ "name":"Yellow Green", "hex":"#C5E17A" },
 					{ "name":"Yellow Orange", "hex":"#FFAE42" }
-				] );														
+				] );		
+				
+				autoComplete.menuDataProvider = <root>
+										<menuitem label="MenuItem A"/>
+										<menuitem label="MenuItem B"/>										
+										<menuitem label="MenuItem C"/>
+									</root>;												
 			}			
 			
 			private function handleAutoCompleteChange():void

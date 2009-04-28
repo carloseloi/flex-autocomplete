@@ -12,6 +12,9 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.events.ResizeEvent;
+			import mx.events.MoveEvent;
+			import mx.events.FlexEvent;
 			import mx.events.MenuEvent;
 			import mx.managers.PopUpManager;
 			import mx.core.UIComponent;
@@ -26,19 +29,38 @@
 			
 			private var _enableMultiRow:Boolean;
 			private var _floatingMenu:FloatingMenu;
+			private var _menuDataProvider:Object;
 			
 			private function init():void
 			{
+				systemManager.addEventListener( MouseEvent.MOUSE_UP, handleMouseUp );
+				
 				addEventListener( MouseEvent.MOUSE_OVER, handleMouseOver );
 				addEventListener( MouseEvent.MOUSE_OUT, handleMouseOut );				
 								
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );
+				
+				addEventListener( MoveEvent.MOVE, handleMove );
+				systemManager.addEventListener( ResizeEvent.RESIZE, handleResize );
+			}
+			
+			private function handleMove( event:Event ):void
+			{
+				callLater( positionFloatingMenu );
+			}
+			
+			private function handleResize( event:Event ):void
+			{
+				callLater( positionFloatingMenu );
 			}
 			
 			private function handleMouseOver( event:MouseEvent ):void
 			{
-				buttonTextInput.buttonVisible = true;
+				if (_menuDataProvider)
+				{
+					buttonTextInput.buttonVisible = true;
+				}
 			}
 			
 			private function handleMouseOut( event:MouseEvent ):void
@@ -66,16 +88,46 @@
 			
 			private function handleButtonClick():void
 			{
-				var localPoint:Point = new Point( 0, height - FloatingMenu.TOP_HEIGHT + FloatingMenu.TOP_PADDING );
-				var globalPoint:Point = localToGlobal( localPoint );
+				buttonTextInput.button.enabled = false;
 				
 				_floatingMenu = new FloatingMenu();
-				_floatingMenu.x = globalPoint.x;
-				_floatingMenu.y = globalPoint.y;
+				_floatingMenu.dataProvider = _menuDataProvider;
 				_floatingMenu.width = width;
 				_floatingMenu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
 				
+				positionFloatingMenu();
+				
 				PopUpManager.addPopUp( _floatingMenu, this );
+			}
+			
+			/**
+			 * This bit of code makes sure that if the user clicks the top
+			 * right nub of the floating when it's shown that the menu
+			 * disappears (rather than disappearing and then immediately
+			 * re-appearing
+			 */
+			private function handleMouseUp( event:Event ):void
+			{
+				callLater( enableButton );	
+			}
+			
+			private function enableButton():void
+			{
+				buttonTextInput.button.enabled = true;
+			}
+			
+			private function positionFloatingMenu():void
+			{
+				if (!_floatingMenu)
+				{
+					return;
+				}
+				
+				var localPoint:Point = new Point( 0, height - FloatingMenu.TOP_HEIGHT + FloatingMenu.TOP_PADDING );
+				var globalPoint:Point = localToGlobal( localPoint );
+				
+				_floatingMenu.x = globalPoint.x;
+				_floatingMenu.y = globalPoint.y;			
 			}
 			
 			private function handleMenuHide( event:Event ):void
@@ -157,6 +209,11 @@
 				
 				return null;	
 			}								
+			
+			public function set menuDataProvider( value:Object ):void
+			{
+				_menuDataProvider = value;
+			}
 			
 			public function set showRemoveIcon( value:Boolean ):void
 			{
