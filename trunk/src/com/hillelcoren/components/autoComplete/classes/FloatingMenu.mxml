@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	backgroundColor="#FFFFFF" focusEnabled="true"
+	initialize="init()">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			import mx.events.MenuEvent;
+			import mx.controls.Menu;
+			import mx.core.UIComponent;
+			
+			public static const TOP_PADDING:int = 2;
+			public static const RIGHT_PADDING:int = 2;
+			public static const TOP_WIDTH:int = 34;
+			public static const TOP_HEIGHT:int = 20;
+			public static const RADIUS:int = 5;
+			public static const MENU_PADDING:int = 4;
+			
+			private var _menu:Menu;
+			
+			private function init():void
+			{
+				var comp:UIComponent = new UIComponent();
+				var mask:Shape = new Shape();
+				var point:Point;
+				var g:Graphics;
+				
+				g = mask.graphics;
+				g.clear();
+				g.beginFill(0x000000,1.0);
+				g.lineStyle(0, 0xFF0000);
+				
+				point = new Point( width - TOP_WIDTH, TOP_HEIGHT );
+				drawShape( g, 0, TOP_PADDING, width - RIGHT_PADDING, height - TOP_PADDING, point, RADIUS );
+				g.endFill();
+				
+				comp.addChild( mask );
+				addChild( comp );
+				
+				this.mask = comp; 		
+										
+				var ds:DropShadowFilter = new DropShadowFilter();
+				ds.distance = 1;
+				ds.blurX = 6;
+				ds.blurY = 6;
+				ds.alpha = .5;
+				this.filters = [ds];
+				
+				var menuData:XML =	<root>
+										<menuitem label="MenuItem A"/>
+										<menuitem label="MenuItem B"/>										
+										<menuitem label="MenuItem C"/>
+									</root>;
+        		
+        		var localPoint:Point = new Point( 0, 0 );
+				var globalPoint:Point = localToGlobal( localPoint ); 
+				
+        		_menu = Menu.createMenu( null, menuData, false );	
+				_menu.labelField="@label";
+				_menu.setStyle( "openDuration", 0 );
+				_menu.setStyle( "dropShadowEnabled", false );
+				_menu.setStyle( "borderStyle", "none" );
+				_menu.width = width - (2 * MENU_PADDING ) - RIGHT_PADDING;
+				_menu.show( globalPoint.x + MENU_PADDING, globalPoint.y + TOP_HEIGHT + MENU_PADDING);
+				_menu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );						
+			}
+			
+			private function drawShape( g:Graphics, x:int, y:int, width:int, height:int, point:Point, radius:int ):void
+			{
+				g.moveTo( x, point.y + radius);
+				g.lineTo( x, height - radius );
+				g.curveTo( x, height, radius, height );
+				g.lineTo( width - radius, height );
+				g.curveTo( width, height, width, height - radius );
+				g.lineTo( width, radius );
+				g.curveTo( width, y, width - radius, y );
+				g.lineTo( point.x + radius, y );
+				g.curveTo( point.x, y, point.x, radius );
+				g.lineTo( point.x, point.y - radius );
+				g.curveTo( point.x, point.y, point.x - radius, point.y );
+				g.lineTo( radius, point.y );
+				g.curveTo( x, point.y, x, point.y + radius );
+			}
+			
+			private function handleMenuHide( event:MenuEvent ):void
+			{
+				if (event.menu == _menu)
+				{
+					PopUpManager.removePopUp( this );
+				}
+			}
+			
+			override public function hitTestPoint( x:Number, y:Number, shapeFlag:Boolean=false):Boolean
+			{
+				var globalPoint:Point = new Point( x, y );
+				var localPoint:Point = globalToLocal( globalPoint ); 
+				
+				if (localPoint.x < width - TOP_WIDTH && localPoint.y < TOP_HEIGHT)
+				{
+					return false;
+				}
+				
+				return super.hitTestPoint( x, y, shapeFlag );
+			}
+			
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>
