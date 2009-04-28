@@ -99,7 +99,6 @@
 				if (_inlineButtonChanged)
 				{
 					_inlineButtonChanged = false;
-					trace(">> adding button: " + _inlineButton);
 					buttonTextInput.button = _inlineButton;
 				}
 			}
@@ -183,27 +182,17 @@
 	        override protected function measure():void
 	        {
 	        	super.measure();
+				
+				var comp:DisplayObject = getChildAt( numChildren - 1 );
+	        	var height:int = comp.y + comp.height;
 	        	
-	        	var height:int;
-	        	var tallest:int;
-	        	var lastY:int;
-	        	
-	        	for each (var child:UIComponent in getChildren())
+	        	if (height > 0)
 	        	{
-	        		if (child.y > lastY)
-	        		{
-	        			height += tallest; 
-	        			tallest = 0;
-	        		}
-	        		
-	        		tallest = Math.max( tallest, child.getExplicitOrMeasuredHeight() );        		
-	        		lastY = child.y
-	        	}
+	        		var vm:EdgeMetrics = viewMetricsAndPadding;
+	        		height += vm.bottom + vm.top;
 	        	
-	        	var vm:EdgeMetrics = viewMetricsAndPadding;
-	        	height += tallest + vm.bottom;// + vm.top;
-	        	
-	        	measuredHeight = measuredMinHeight = height;
+	        		measuredHeight = measuredMinHeight = height;
+	        	} 
 	        }
 		
 			/**
