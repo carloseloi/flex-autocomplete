@@ -9,21 +9,24 @@
 	
 	<mx:Metadata>
 		[Event(name="change")]
+		[Event(name="buttonClick")]
 	</mx:Metadata>
 	
 	<mx:Script>
 		<![CDATA[
 			import mx.managers.PopUpManager;
 			import mx.containers.VBox;
+			import com.hillelcoren.components.autoComplete.classes.*;
 			
 			override public function get minWidth():Number
 			{
-				return measureText( textInput.text ).width + contextButton.width + 30;
+				return measureText( textInput.text ).width + button.width + 30;
 			}
 			
 			public function set buttonVisible( value:Boolean ):void
 			{
-				contextButton.visible = value;
+				button.visible = value;
+				button.includeInLayout = value;
 			}
 			
 			public function setTextFocus():void
@@ -63,11 +66,8 @@
 			
 			private function handleButtonClick():void
 			{
-				var vBox:VBox = new VBox();
-				vBox.width = 100;
-				vBox.height = 100;
-				
-				PopUpManager.addPopUp( vBox, this );
+				var event:Event = new Event( "buttonClick" );
+				dispatchEvent( event );
 			}
 			
 		]]>
@@ -75,7 +75,7 @@
 	
 	<components:PromptTextInput id="textInput" enableClearIcon="false" width="100%"
 		change="handleTextChange(event)" drawFocusBorder="false" borderStyle="none"/>
-	<mx:Button id="contextButton" width="20" height="20" visible="false" 
+	<mx:Button id="button" width="32" height="12" visible="false" includeInLayout="false" 
 		click="handleButtonClick()" tabEnabled="false"/>
 	
 </mx:HBox>

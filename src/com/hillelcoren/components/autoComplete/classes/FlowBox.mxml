@@ -12,6 +12,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.managers.PopUpManager;
 			import mx.core.UIComponent;
 			import mx.controls.VRule;
 			import mx.core.Container;
@@ -23,6 +24,7 @@
 			private var _showRemoveIconChanged:Boolean;
 			
 			private var _enableMultiRow:Boolean;
+			private var _floatingMenu:FloatingMenu;
 			
 			private function init():void
 			{
@@ -32,7 +34,7 @@
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );
 			}
-
+			
 			private function handleMouseOver( event:MouseEvent ):void
 			{
 				buttonTextInput.buttonVisible = true;
@@ -40,12 +42,15 @@
 			
 			private function handleMouseOut( event:MouseEvent ):void
 			{
-				buttonTextInput.buttonVisible = false;
+				if (!event.relatedObject || !contains( event.relatedObject ))
+				{
+					buttonTextInput.buttonVisible = false;
+				}
 			}
 						
 			private function handleFocusIn( event:Event ):void
 			{
-				drawFocus( true );				
+				drawFocus( true );
 			}
 			
 			private function handleFocusOut( event:Event ):void
@@ -56,6 +61,21 @@
 			private function handleChange( event:Event ):void
 			{
 				dispatchEvent( event );
+			}
+			
+			private function handleButtonClick():void
+			{
+				var localPoint:Point = new Point( 0, height - FloatingMenu.TOP_HEIGHT + FloatingMenu.TOP_PADDING );
+				var globalPoint:Point = localToGlobal( localPoint );
+				
+				_floatingMenu = new FloatingMenu();
+				_floatingMenu.x = globalPoint.x;
+				_floatingMenu.y = globalPoint.y;
+				_floatingMenu.width = width;
+				_floatingMenu.height = 100;
+				
+				PopUpManager.addPopUp( _floatingMenu, this );
+				
 			}
 			
 			override protected function commitProperties():void
@@ -233,6 +253,6 @@
 		]]>
 	</mx:Script>
 	
-	<ButtonTextInput id="buttonTextInput" change="handleChange(event)" width="100%"/>
+	<ButtonTextInput id="buttonTextInput" change="handleChange(event)" buttonClick="handleButtonClick()" width="100%"/>
 	
 </mx:Canvas>
