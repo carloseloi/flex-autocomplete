@@ -72,7 +72,6 @@
 				_floatingMenu.x = globalPoint.x;
 				_floatingMenu.y = globalPoint.y;
 				_floatingMenu.width = width;
-				_floatingMenu.height = 100;
 				
 				PopUpManager.addPopUp( _floatingMenu, this );
 				

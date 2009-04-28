@@ -2,7 +2,7 @@
 <mx:Canvas 
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
 	backgroundColor="#FFFFFF" focusEnabled="true"
-	initialize="init()">
+	initialize="init()" creationComplete="handleCreationComplete()">
 	
 	<mx:Script>
 		<![CDATA[
@@ -13,7 +13,7 @@
 			
 			public static const TOP_PADDING:int = 2;
 			public static const RIGHT_PADDING:int = 2;
-			public static const TOP_WIDTH:int = 34;
+			public static const TOP_WIDTH:int = 28;
 			public static const TOP_HEIGHT:int = 20;
 			public static const RADIUS:int = 5;
 			public static const MENU_PADDING:int = 4;
@@ -22,38 +22,12 @@
 			
 			private function init():void
 			{
-				var comp:UIComponent = new UIComponent();
-				var mask:Shape = new Shape();
-				var point:Point;
-				var g:Graphics;
-				
-				g = mask.graphics;
-				g.clear();
-				g.beginFill(0x000000,1.0);
-				g.lineStyle(0, 0xFF0000);
-				
-				point = new Point( width - TOP_WIDTH, TOP_HEIGHT );
-				drawShape( g, 0, TOP_PADDING, width - RIGHT_PADDING, height - TOP_PADDING, point, RADIUS );
-				g.endFill();
-				
-				comp.addChild( mask );
-				addChild( comp );
-				
-				this.mask = comp; 		
-										
-				var ds:DropShadowFilter = new DropShadowFilter();
-				ds.distance = 1;
-				ds.blurX = 6;
-				ds.blurY = 6;
-				ds.alpha = .5;
-				this.filters = [ds];
-				
 				var menuData:XML =	<root>
 										<menuitem label="MenuItem A"/>
 										<menuitem label="MenuItem B"/>										
 										<menuitem label="MenuItem C"/>
-									</root>;
-        		
+									</root>;								
+				
         		var localPoint:Point = new Point( 0, 0 );
 				var globalPoint:Point = localToGlobal( localPoint ); 
 				
@@ -82,6 +56,46 @@
 				g.curveTo( point.x, point.y, point.x - radius, point.y );
 				g.lineTo( radius, point.y );
 				g.curveTo( x, point.y, x, point.y + radius );
+			}
+			
+			private function handleCreationComplete():void
+			{
+				var comp:UIComponent = new UIComponent();
+				var mask:Shape = new Shape();
+				var point:Point;
+				var g:Graphics;
+				
+				g = mask.graphics;
+				g.clear();
+				g.beginFill(0x000000,1.0);
+				g.lineStyle(0, 0xFF0000);
+				
+				height = TOP_HEIGHT + (MENU_PADDING * 2) + _menu.height;
+				point = new Point( width - TOP_WIDTH, TOP_HEIGHT );								
+				
+				drawShape( g, 0, TOP_PADDING, width - RIGHT_PADDING, height, point, RADIUS );
+				g.endFill();
+				
+				comp.addChild( mask );
+				addChild( comp );
+				
+				this.mask = comp; 		
+										
+				var ds:DropShadowFilter = new DropShadowFilter();
+				ds.distance = 1;
+				ds.blurX = 5;
+				ds.blurY = 5;
+				ds.alpha = .5;
+				
+				var gf:GlowFilter = new GlowFilter();
+				gf.color = 0x000000;
+				gf.alpha = .3;
+				gf.blurX = 3;
+				gf.blurY = 3;
+				gf.quality = 1;
+				gf.strength = 1;
+				
+				this.filters = [gf, ds];				
 			}
 			
 			private function handleMenuHide( event:MenuEvent ):void
