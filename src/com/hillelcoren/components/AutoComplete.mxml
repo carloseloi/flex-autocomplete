@@ -22,6 +22,12 @@
 		 */
 		[Event(name="searchChange")]
 		
+		/**
+		 * These events are active when the context menu is used
+		 */
+		[Event(name="menuHide",type="mx.events.MenuEvent")]
+		[Event(name="menuShow",type="mx.events.MenuEvent")]
+		[Event(name="itemClick",type="mx.events.MenuEvent")]
 		
 		/**
 		 * The color for the prompt shown when no value is set
@@ -37,6 +43,7 @@
 		
 	<mx:Script>
 		<![CDATA[
+			import mx.events.MenuEvent;
 			import com.hillelcoren.components.autoComplete.classes.IconButton;
 			import mx.events.CollectionEventKind;
 			import mx.controls.dataGridClasses.DataGridListData;
@@ -62,6 +69,7 @@
 			import mx.managers.CursorManager;
 			import mx.events.ListEvent;
 			import mx.events.CollectionEvent;
+			import mx.events.MenuEvent;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 			import mx.core.UIComponent;
@@ -170,7 +178,11 @@
 				addEventListener( FocusEvent.MOUSE_FOCUS_CHANGE, handleMouseFocusChange );
 				
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
-				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );			
+				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );
+				
+				flowBox.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
+				flowBox.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );
+				flowBox.addEventListener( MenuEvent.ITEM_CLICK, handleItemClick );							
 			}
 			
 			private function handleMove( event:MoveEvent ):void
@@ -204,6 +216,22 @@
 					_selectedItems.addItem( searchText );
 				}	
 			}
+			
+			private function handleMenuHide( event:MenuEvent ):void
+			{
+				dispatchEvent( event );
+			}
+			
+			private function handleMenuShow( event:MenuEvent ):void
+			{
+				dispatchEvent( event );
+			}
+						
+			private function handleItemClick( event:MenuEvent ):void
+			{
+				dispatchEvent( event );
+			}
+						
 			
 			override protected function commitProperties():void
 			{
@@ -531,7 +559,7 @@
 				_dropDown.dataProvider 	= _dataProvider;
 				_dropDown.labelFunction = _dropDownLabelFunction;
 				_dropDown.itemRenderer  = _dropDownItemRenderer ? _dropDownItemRenderer : new ClassFactory( DropDownItemRenderer );
-				_dropDown.addEventListener( ListEvent.ITEM_CLICK, handleItemClick );
+				_dropDown.addEventListener( ListEvent.ITEM_CLICK, handleDropDownItemClick );
 
 				systemManager.addEventListener( MouseEvent.CLICK, handleMouseClick );
 			}
@@ -930,7 +958,7 @@
 				}
 			}
 			
-			private function handleItemClick( event:ListEvent ):void
+			private function handleDropDownItemClick( event:ListEvent ):void
 			{
 				_selectedItems.addItem( _dropDown.selectedItem );
 			}

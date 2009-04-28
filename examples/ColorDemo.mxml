@@ -11,6 +11,8 @@
   
 	<mx:Script>
 		<![CDATA[
+			import mx.utils.ObjectUtil;
+			import mx.events.MenuEvent;
 			import com.hillelcoren.components.AutoComplete;
 			import mx.core.Application;
 			import mx.core.UIComponent;
@@ -168,13 +170,10 @@
 					{ "name":"Yellow", "hex":"#FBE870" },
 					{ "name":"Yellow Green", "hex":"#C5E17A" },
 					{ "name":"Yellow Orange", "hex":"#FFAE42" }
-				] );		
+				] );
+						
 				
-				autoComplete.menuDataProvider = <root>
-										<menuitem label="MenuItem A"/>
-										<menuitem label="MenuItem B"/>										
-										<menuitem label="MenuItem C"/>
-									</root>;												
+				
 			}			
 			
 			private function handleAutoCompleteChange():void
@@ -184,7 +183,7 @@
 				if (color != null && color.hasOwnProperty( "hex" ))
 				{
 					Application.application.setStyle( "backgroundColor", color.hex );
-				}
+				}				
 			}
 
 			private function handleStyleChange():void
@@ -197,6 +196,20 @@
 			{
 				autoComplete.matchType = matchTypeCombo.selectedItem.data;
 			}
+
+			private function handleEnableMenuClick():void
+			{
+				autoComplete.menuDataProvider = enableMenu.selected ? menuData : null;
+			}
+			
+			private function handleItemClick( event:MenuEvent ):void
+			{
+				if (event.item.@data == "remove")
+				{
+					autoComplete.selectedItems.removeAll();
+				}
+			}
+			
 		]]>
 	</mx:Script>
 	
@@ -205,6 +218,11 @@
 		<local:ColorItemRenderer selectedItems="{ outerDocument.autoComplete.selectedItems }" />
 	</mx:Component>
 
+    <mx:XML format="e4x" id="menuData">
+		<root>
+			<menuitem data="remove" label="Remove All"/>
+		</root>
+	</mx:XML>
 	
 	<mx:HBox width="100%" minWidth="200">
 		
@@ -214,6 +232,7 @@
 			<mx:CheckBox id="unique" label="Allow Duplicates" enabled="{ multiselect.selected }"/>
 			<mx:CheckBox id="allowNew" label="Allow New Values" selected="true"/>
 			<mx:CheckBox id="editable" label="Allow Editing New Values" enabled="{ allowNew.selected }"/>
+			<mx:CheckBox id="enableMenu" label="Enable Context Menu" click="handleEnableMenuClick()"/>
 			
 			<mx:Grid paddingTop="10">
 				<mx:GridRow>
@@ -249,7 +268,7 @@
 		<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
 			prompt="Choose your favorite Crayola crayon" width="100%" change="{ handleAutoCompleteChange() }"
 			allowNewValues="{ allowNew.selected }" selectedItemStyleName="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
-			allowDuplicates="{ unique.selected }" allowMultipleSelection="{ multiselect.selected }"
+			allowDuplicates="{ unique.selected }" allowMultipleSelection="{ multiselect.selected }" itemClick="handleItemClick(event)"
 			allowEditingNewValues="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"/>
 		
 	</mx:HBox>

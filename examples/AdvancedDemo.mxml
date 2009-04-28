@@ -168,7 +168,7 @@
 					{ "name":"Yellow", "hex":"#FBE870" },
 					{ "name":"Yellow Green", "hex":"#C5E17A" },
 					{ "name":"Yellow Orange", "hex":"#FFAE42" }
-				] );				
+				] );
 			}			
 			
 			private function handleAutoCompleteChange():void
@@ -180,7 +180,7 @@
 					Application.application.setStyle( "backgroundColor", color.hex );
 				}
 			}
-
+			
 		]]>
 	</mx:Script>
 	
@@ -188,17 +188,18 @@
 		<local:ColorItemRenderer selectedItems="{ outerDocument.autoComplete.selectedItems }" />
 	</mx:Component>
 
+
 	<mx:VBox horizontalAlign="left">
 		<mx:CheckBox id="showBrowse" label="Show Browse Button" selected="true"/>
 		<mx:CheckBox id="showOrder" label="Show Order Buttons"/>
-		<mx:CheckBox id="useListBuilder" label="Use List Builder" enabled="{ showBrowse.selected }"/>		
+		<mx:CheckBox id="useListBuilder" label="Use List Builder" enabled="{ showBrowse.selected }"/>
 	</mx:VBox>
 	<mx:Spacer width="100%"/>
 	<hc:AdvancedAutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name"
 		width="300" useListBuilder="{ useListBuilder.selected }" matchType="anyPart"
 		showBrowseButton="{ showBrowse.selected }" showOrderButtons="{ showOrder.selected }"
 		allowMultipleSelection="true" selectionLayout="vertical" change="handleAutoCompleteChange()"
-		prompt="Choose your favorite Crayola crayon" dropDownItemRenderer="{ dropDownItemRenderer }"/>
+		dropDownItemRenderer="{ dropDownItemRenderer }"/>
 	<mx:Spacer width="100%"/>
 	
 </mx:HBox>
