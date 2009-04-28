@@ -6,6 +6,10 @@
 	borderStyle="inset" backgroundColor="#FFFFFF"
 	initialize="init()" clipContent="true">
 	
+	<mx:Metadata>
+		[Event(name="change")]
+	</mx:Metadata>
+	
 	<mx:Script>
 		<![CDATA[
 			import mx.core.UIComponent;
@@ -22,10 +26,23 @@
 			
 			private function init():void
 			{
+				addEventListener( MouseEvent.MOUSE_OVER, handleMouseOver );
+				addEventListener( MouseEvent.MOUSE_OUT, handleMouseOut );				
+								
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );
 			}
+
+			private function handleMouseOver( event:MouseEvent ):void
+			{
+				buttonTextInput.buttonVisible = true;
+			}
 			
+			private function handleMouseOut( event:MouseEvent ):void
+			{
+				buttonTextInput.buttonVisible = false;
+			}
+						
 			private function handleFocusIn( event:Event ):void
 			{
 				drawFocus( true );				
@@ -34,6 +51,11 @@
 			private function handleFocusOut( event:Event ):void
 			{
 				drawFocus( false );
+			}
+			
+			private function handleChange( event:Event ):void
+			{
+				dispatchEvent( event );
 			}
 			
 			override protected function commitProperties():void
@@ -143,7 +165,7 @@
 	        	}
 	        	
 	        	var vm:EdgeMetrics = viewMetricsAndPadding;
-	        	height += tallest + vm.bottom + vm.top;
+	        	height += tallest + vm.bottom;// + vm.top;
 	        	
 	        	measuredHeight = measuredMinHeight = height;
 	        }
@@ -210,5 +232,7 @@
 						
 		]]>
 	</mx:Script>
+	
+	<ButtonTextInput id="buttonTextInput" change="handleChange(event)" width="100%"/>
 	
 </mx:Canvas>
