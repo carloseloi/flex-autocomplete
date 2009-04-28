@@ -8,6 +8,9 @@
 	
 	<mx:Metadata>
 		[Event(name="change")]
+		[Event(name="menuHide",type="mx.events.MenuEvent")]
+		[Event(name="menuShow",type="mx.events.MenuEvent")]
+		[Event(name="itemClick",type="mx.events.MenuEvent")]
 	</mx:Metadata>
 	
 	<mx:Script>
@@ -93,8 +96,11 @@
 				_floatingMenu = new FloatingMenu();
 				_floatingMenu.dataProvider = _menuDataProvider;
 				_floatingMenu.width = width;
-				_floatingMenu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
 				
+				_floatingMenu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
+				_floatingMenu.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );
+				_floatingMenu.addEventListener( MenuEvent.ITEM_CLICK, handleItemClick );	
+
 				positionFloatingMenu();
 				
 				PopUpManager.addPopUp( _floatingMenu, this );
@@ -136,8 +142,20 @@
 				{
 					stage.focus = null;
 				}
+				
+				dispatchEvent( event );
 			}
 			
+			private function handleMenuShow( event:MenuEvent ):void
+			{
+				dispatchEvent( event );
+			}
+						
+			private function handleItemClick( event:MenuEvent ):void
+			{
+				dispatchEvent( event );
+			}
+						
 			override protected function commitProperties():void
 			{
 				super.commitProperties();

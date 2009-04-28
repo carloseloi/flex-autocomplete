@@ -5,7 +5,9 @@
 	initialize="init()" creationComplete="handleCreationComplete()">
 	
 	<mx:Metadata>
-		[Event(name="menuHide")]
+		[Event(name="menuHide",type="mx.events.MenuEvent")]
+		[Event(name="menuShow",type="mx.events.MenuEvent")]
+		[Event(name="itemClick",type="mx.events.MenuEvent")]
 	</mx:Metadata>
 	
 	<mx:Script>
@@ -42,9 +44,32 @@
 				_menu.setStyle( "borderStyle", "none" );
 				_menu.width = width - RIGHT_PADDING;
 				_menu.show( globalPoint.x, globalPoint.y + TOP_HEIGHT + MENU_PADDING);
-				_menu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );						
+				
+				_menu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
+				_menu.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );
+				_menu.addEventListener( MenuEvent.ITEM_CLICK, handleItemClick );	
+			}
+
+			private function handleMenuHide( event:MenuEvent ):void
+			{
+				if (event.menu == _menu)
+				{
+					PopUpManager.removePopUp( this );
+				}
+				
+				dispatchEvent( event );
 			}
 			
+			private function handleMenuShow( event:MenuEvent ):void
+			{
+				dispatchEvent( event );
+			}
+						
+			private function handleItemClick( event:MenuEvent ):void
+			{
+				dispatchEvent( event );
+			}
+						
 			private function positionMenu():void
 			{
 				var localPoint:Point = new Point( 0, 0 );
@@ -123,16 +148,6 @@
 				gf.strength = 1;
 				
 				this.filters = [gf, ds];				
-			}
-			
-			private function handleMenuHide( event:MenuEvent ):void
-			{
-				if (event.menu == _menu)
-				{
-					PopUpManager.removePopUp( this );
-				}
-				
-				dispatchEvent( event );
 			}
 			
 			override public function hitTestPoint( x:Number, y:Number, shapeFlag:Boolean=false):Boolean
