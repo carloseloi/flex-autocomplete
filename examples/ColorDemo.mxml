@@ -196,19 +196,6 @@
 			{
 				autoComplete.matchType = matchTypeCombo.selectedItem.data;
 			}
-
-			private function handleEnableMenuClick():void
-			{
-				autoComplete.menuDataProvider = enableMenu.selected ? menuData : null;
-			}
-			
-			private function handleItemClick( event:MenuEvent ):void
-			{
-				if (event.item.@data == "remove")
-				{
-					autoComplete.selectedItems.removeAll();
-				}
-			}
 			
 		]]>
 	</mx:Script>
@@ -218,12 +205,6 @@
 		<local:ColorItemRenderer selectedItems="{ outerDocument.autoComplete.selectedItems }" />
 	</mx:Component>
 
-    <mx:XML format="e4x" id="menuData">
-		<root>
-			<menuitem data="remove" label="Remove All"/>
-		</root>
-	</mx:XML>
-	
 	<mx:HBox width="100%" minWidth="200">
 		
 		<mx:VBox horizontalAlign="left" height="100%">
@@ -232,7 +213,6 @@
 			<mx:CheckBox id="unique" label="Allow Duplicates" enabled="{ multiselect.selected }"/>
 			<mx:CheckBox id="allowNew" label="Allow New Values" selected="true"/>
 			<mx:CheckBox id="editable" label="Allow Editing New Values" enabled="{ allowNew.selected }"/>
-			<mx:CheckBox id="enableMenu" label="Enable Context Menu" click="handleEnableMenuClick()"/>
 			
 			<mx:Grid paddingTop="10">
 				<mx:GridRow>
@@ -268,7 +248,7 @@
 		<hc:AutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name" matchType="anyPart" 
 			prompt="Choose your favorite Crayola crayon" width="100%" change="{ handleAutoCompleteChange() }"
 			allowNewValues="{ allowNew.selected }" selectedItemStyleName="{ AutoComplete.STYLE_MAC_MAIL }" backspaceAction="focus" 
-			allowDuplicates="{ unique.selected }" allowMultipleSelection="{ multiselect.selected }" itemClick="handleItemClick(event)"
+			allowDuplicates="{ unique.selected }" allowMultipleSelection="{ multiselect.selected }"
 			allowEditingNewValues="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"/>
 		
 	</mx:HBox>

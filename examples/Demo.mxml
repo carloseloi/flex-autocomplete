@@ -22,7 +22,7 @@
 		]]>
 	</mx:Script>
 	
-	<mx:Panel width="525" height="300" headerHeight="10">
+	<mx:Panel width="530" height="300" headerHeight="10">
 		<mx:TabNavigator width="100%" height="100%" focusEnabled="false" mouseDown="{ handleMouseDown() }">
 			<local:ColorDemo label="AutoComplete"/>
 			<local:DataGridDemo label="DataGrid Demo"/>

@@ -11,6 +11,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.events.MenuEvent;
 			import com.hillelcoren.components.AutoComplete;
 			import mx.core.Application;
 			import mx.core.UIComponent;
@@ -179,6 +180,24 @@
 				{
 					Application.application.setStyle( "backgroundColor", color.hex );
 				}
+			}			
+
+			private function handleEnableMenuClick():void
+			{
+				autoComplete.menuDataProvider = enableMenu.selected ? menuData : null;
+			}
+			
+			private function handleItemClick( event:MenuEvent ):void
+			{
+				switch (String(event.item.@data))
+				{
+					case "browse":
+						autoComplete.showBrowser();
+						break;
+					case "remove":
+						autoComplete.selectedItems.removeAll();
+						break;		
+				}
 			}
 			
 		]]>
@@ -188,18 +207,25 @@
 		<local:ColorItemRenderer selectedItems="{ outerDocument.autoComplete.selectedItems }" />
 	</mx:Component>
 
+    <mx:XML format="e4x" id="menuData">
+		<root>
+			<menuitem data="browse" label="Browse..."/>
+			<menuitem data="remove" label="Remove All"/>
+		</root>
+	</mx:XML>
 
 	<mx:VBox horizontalAlign="left">
 		<mx:CheckBox id="showBrowse" label="Show Browse Button" selected="true"/>
 		<mx:CheckBox id="showOrder" label="Show Order Buttons"/>
 		<mx:CheckBox id="useListBuilder" label="Use List Builder" enabled="{ showBrowse.selected }"/>
+		<mx:CheckBox id="enableMenu" label="Enable Context Menu" click="handleEnableMenuClick()"/>
 	</mx:VBox>
 	<mx:Spacer width="100%"/>
 	<hc:AdvancedAutoComplete id="autoComplete" dataProvider="{ colors }" labelField="name"
 		width="300" useListBuilder="{ useListBuilder.selected }" matchType="anyPart"
 		showBrowseButton="{ showBrowse.selected }" showOrderButtons="{ showOrder.selected }"
 		allowMultipleSelection="true" selectionLayout="vertical" change="handleAutoCompleteChange()"
-		dropDownItemRenderer="{ dropDownItemRenderer }"/>
+		dropDownItemRenderer="{ dropDownItemRenderer }" itemClick="handleItemClick(event)"/> 
 	<mx:Spacer width="100%"/>
 	
 </mx:HBox>

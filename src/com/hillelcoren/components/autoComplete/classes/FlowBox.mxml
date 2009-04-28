@@ -8,13 +8,11 @@
 	
 	<mx:Metadata>
 		[Event(name="change")]
-		[Event(name="menuHide",type="mx.events.MenuEvent")]
-		[Event(name="menuShow",type="mx.events.MenuEvent")]
-		[Event(name="itemClick",type="mx.events.MenuEvent")]
 	</mx:Metadata>
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.Button;
 			import mx.events.ResizeEvent;
 			import mx.events.MoveEvent;
 			import mx.events.FlexEvent;
@@ -30,37 +28,24 @@
 			private var _showRemoveIcon:Boolean;
 			private var _showRemoveIconChanged:Boolean;
 			
-			private var _enableMultiRow:Boolean;
-			private var _floatingMenu:FloatingMenu;
-			private var _menuDataProvider:Object;
+			private var _inlineButton:Button;
+			private var _inlineButtonChanged:Boolean;
 			
+			private var _enableMultiRow:Boolean;
+			
+						
 			private function init():void
 			{
-				systemManager.addEventListener( MouseEvent.MOUSE_UP, handleMouseUp );
-				
 				addEventListener( MouseEvent.MOUSE_OVER, handleMouseOver );
 				addEventListener( MouseEvent.MOUSE_OUT, handleMouseOut );				
 								
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
-				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );
-				
-				addEventListener( MoveEvent.MOVE, handleMove );
-				systemManager.addEventListener( ResizeEvent.RESIZE, handleResize );
-			}
-			
-			private function handleMove( event:Event ):void
-			{
-				callLater( positionFloatingMenu );
-			}
-			
-			private function handleResize( event:Event ):void
-			{
-				callLater( positionFloatingMenu );
+				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );				
 			}
 			
 			private function handleMouseOver( event:MouseEvent ):void
 			{
-				if (_menuDataProvider)
+				if (_inlineButton)
 				{
 					buttonTextInput.buttonVisible = true;
 				}
@@ -68,6 +53,11 @@
 			
 			private function handleMouseOut( event:MouseEvent ):void
 			{
+				if (!_inlineButton)
+				{
+					return;
+				}
+				
 				if (!event.relatedObject || !contains( event.relatedObject ))
 				{
 					buttonTextInput.buttonVisible = false;
@@ -87,75 +77,8 @@
 			private function handleChange( event:Event ):void
 			{
 				dispatchEvent( event );
-			}
+			}			
 			
-			private function handleButtonClick():void
-			{
-				buttonTextInput.button.enabled = false;
-				
-				_floatingMenu = new FloatingMenu();
-				_floatingMenu.dataProvider = _menuDataProvider;
-				_floatingMenu.width = width;
-				
-				_floatingMenu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
-				_floatingMenu.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );
-				_floatingMenu.addEventListener( MenuEvent.ITEM_CLICK, handleItemClick );	
-
-				positionFloatingMenu();
-				
-				PopUpManager.addPopUp( _floatingMenu, this );
-			}
-			
-			/**
-			 * This bit of code makes sure that if the user clicks the top
-			 * right nub of the floating when it's shown that the menu
-			 * disappears (rather than disappearing and then immediately
-			 * re-appearing
-			 */
-			private function handleMouseUp( event:Event ):void
-			{
-				callLater( enableButton );	
-			}
-			
-			private function enableButton():void
-			{
-				buttonTextInput.button.enabled = true;
-			}
-			
-			private function positionFloatingMenu():void
-			{
-				if (!_floatingMenu)
-				{
-					return;
-				}
-				
-				var localPoint:Point = new Point( 0, height - FloatingMenu.TOP_HEIGHT + FloatingMenu.TOP_PADDING );
-				var globalPoint:Point = localToGlobal( localPoint );
-				
-				_floatingMenu.x = globalPoint.x;
-				_floatingMenu.y = globalPoint.y;			
-			}
-			
-			private function handleMenuHide( event:Event ):void
-			{
-				if (focusManager.getFocus() == buttonTextInput.button)
-				{
-					stage.focus = null;
-				}
-				
-				dispatchEvent( event );
-			}
-			
-			private function handleMenuShow( event:MenuEvent ):void
-			{
-				dispatchEvent( event );
-			}
-						
-			private function handleItemClick( event:MenuEvent ):void
-			{
-				dispatchEvent( event );
-			}
-						
 			override protected function commitProperties():void
 			{
 				super.commitProperties();
@@ -171,6 +94,13 @@
 							SelectedItem( item ).showRemoveIcon = _showRemoveIcon;	
 						}						
 					}
+				}
+				
+				if (_inlineButtonChanged)
+				{
+					_inlineButtonChanged = false;
+					trace(">> adding button: " + _inlineButton);
+					buttonTextInput.button = _inlineButton;
 				}
 			}
 			
@@ -228,9 +158,12 @@
 				return null;	
 			}								
 			
-			public function set menuDataProvider( value:Object ):void
+			public function set inlineButton( value:Button ):void
 			{
-				_menuDataProvider = value;
+				_inlineButton = value;
+				_inlineButtonChanged = true;
+				
+				invalidateProperties();
 			}
 			
 			public function set showRemoveIcon( value:Boolean ):void
@@ -336,6 +269,6 @@
 		]]>
 	</mx:Script>
 	
-	<ButtonTextInput id="buttonTextInput" change="handleChange(event)" buttonClick="handleButtonClick()" width="100%"/>
+	<ButtonTextInput id="buttonTextInput" change="handleChange(event)" width="100%"/>
 	
 </mx:Canvas>
