@@ -12,6 +12,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.events.MenuEvent;
 			import mx.managers.PopUpManager;
 			import mx.core.UIComponent;
 			import mx.controls.VRule;
@@ -48,12 +49,12 @@
 				}
 			}
 						
-			private function handleFocusIn( event:Event ):void
+			private function handleFocusIn( event:FocusEvent ):void
 			{
-				drawFocus( true );
+				drawFocus( true );													
 			}
 			
-			private function handleFocusOut( event:Event ):void
+			private function handleFocusOut( event:FocusEvent ):void
 			{
 				drawFocus( false );
 			}
@@ -72,9 +73,17 @@
 				_floatingMenu.x = globalPoint.x;
 				_floatingMenu.y = globalPoint.y;
 				_floatingMenu.width = width;
+				_floatingMenu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
 				
 				PopUpManager.addPopUp( _floatingMenu, this );
-				
+			}
+			
+			private function handleMenuHide( event:Event ):void
+			{
+				if (focusManager.getFocus() == buttonTextInput.button)
+				{
+					stage.focus = null;
+				}
 			}
 			
 			override protected function commitProperties():void
