@@ -178,7 +178,6 @@
 				_enableMultiRow = value;
 			}
 			
-
 	        override protected function measure():void
 	        {
 	        	super.measure();
