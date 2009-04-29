@@ -173,10 +173,6 @@
 				
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );
-				
-				flowBox.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
-				flowBox.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );
-				flowBox.addEventListener( MenuEvent.ITEM_CLICK, handleItemClick );							
 			}
 			
 			private function handleMove( event:MoveEvent ):void
@@ -210,23 +206,7 @@
 					_selectedItems.addItem( searchText );
 				}	
 			}
-			
-			private function handleMenuHide( event:MenuEvent ):void
-			{
-				dispatchEvent( event );
-			}
-			
-			private function handleMenuShow( event:MenuEvent ):void
-			{
-				dispatchEvent( event );
-			}
 						
-			private function handleItemClick( event:MenuEvent ):void
-			{
-				dispatchEvent( event );
-			}
-						
-			
 			override protected function commitProperties():void
 			{
 				super.commitProperties();
