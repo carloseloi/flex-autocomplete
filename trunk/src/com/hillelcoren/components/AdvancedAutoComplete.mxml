@@ -69,7 +69,6 @@
 				addEventListener( MoveEvent.MOVE, handleMove );
 				
 				systemManager.addEventListener( ResizeEvent.RESIZE, handleResize );		
-				systemManager.addEventListener( MouseEvent.MOUSE_UP, handleMouseUp );				
 			}							
 			
 			override protected function commitProperties():void
@@ -138,8 +137,6 @@
 			
 			private function handleButtonClick( event:Event ):void
 			{
-				_inlineButton.enabled = false;
-				
 				_floatingMenu = new FloatingMenu();
 				_floatingMenu.dataProvider = _menuDataProvider;
 				_floatingMenu.width = flowBox.width;
@@ -151,25 +148,6 @@
 				positionFloatingMenu();
 				
 				PopUpManager.addPopUp( _floatingMenu, this );
-			}
-			
-			/**
-			 * This bit of code makes sure that if the user clicks the top
-			 * right nub of the floating when it's shown that the menu
-			 * disappears (rather than disappearing and then immediately
-			 * re-appearing
-			 */
-			private function handleMouseUp( event:Event ):void
-			{
-				callLater( enableButton );	
-			}
-			
-			private function enableButton():void
-			{
-				if (_inlineButton)
-				{
-					_inlineButton.enabled = true;
-				}
 			}
 			
 			private function positionFloatingMenu():void
