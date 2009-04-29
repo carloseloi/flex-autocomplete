@@ -5,8 +5,8 @@
 	implements="com.hillelcoren.components.autoComplete.interfaces.iComboItem"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	verticalAlign="middle" horizontalAlign="left"
-	height="100%"
-	horizontalGap="0" verticalGap="0">
+	horizontalGap="0" verticalGap="0"
+	height="100%">
 	
 	<mx:Metadata>
 		[Event(name="change")]
@@ -33,12 +33,18 @@
 					
 					if (_button)
 					{
+						setStyle( "paddingRight", 2 );
+						
 						_button.tabEnabled = false;
 						_button.visible = false;
 						_button.includeInLayout = false;
 						_button.addEventListener( MouseEvent.CLICK, handleButtonClick );
 						
-						addChild( _button );
+						addChild( _button );						
+					}
+					else
+					{
+						setStyle( "paddingRight", 0 );
 					}
 				}
 			}

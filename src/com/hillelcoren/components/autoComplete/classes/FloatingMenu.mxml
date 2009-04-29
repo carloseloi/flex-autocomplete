@@ -22,7 +22,7 @@
 			public static const TOP_PADDING:int = 2;
 			public static const RIGHT_PADDING:int = 3;
 			public static const TOP_WIDTH:int = 28;
-			public static const TOP_HEIGHT:int = 20;
+			public static const TOP_HEIGHT:int = 22;
 			public static const RADIUS:int = 5;
 			public static const MENU_PADDING:int = 6;
 			
