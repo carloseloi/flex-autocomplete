@@ -36,11 +36,13 @@
 						
 			private function init():void
 			{
+				addEventListener( MouseEvent.CLICK, handleClick );
+				
 				addEventListener( MouseEvent.MOUSE_OVER, handleMouseOver );
 				addEventListener( MouseEvent.MOUSE_OUT, handleMouseOut );				
 								
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
-				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );				
+				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );		
 			}
 			
 			private function handleMouseOver( event:MouseEvent ):void
@@ -63,7 +65,12 @@
 					buttonTextInput.buttonVisible = false;
 				}
 			}
-						
+			
+			private function handleClick( event:MouseEvent ):void
+			{
+				buttonTextInput.buttonVisible = false;
+			}
+			
 			private function handleFocusIn( event:FocusEvent ):void
 			{
 				drawFocus( true );													

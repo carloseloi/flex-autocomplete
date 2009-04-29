@@ -16,57 +16,39 @@
 						
 			[Bindable]
 			private var _dataProvider:ArrayCollection;
-			private var _dataProviderChanged:Boolean;
 			
 			[Bindable]
 			private var _labelFunction:Function;
 			
 			[Bindable]
 			private var _showOrderButtons:Boolean;
-			private var _showOrderButtonsChanged:Boolean;
+			
+			[Bindable]
+			private var _showRemoveButton:Boolean;
 			
 			[Bindable]
 			private var _removeLabel:String;
-			
-			public function set dataProvider( value:ArrayCollection ):void
-			{
-				_dataProvider = value;
-				_dataProviderChanged = true;
-				
-				invalidateProperties();
-			}
 			
 			public function set labelFunction( value:Function ):void
 			{
 				_labelFunction = value;
 			}
 			
+			public function set dataProvider( value:ArrayCollection ):void
+			{
+				_dataProvider = value;
+			}
+			
 			public function set showOrderButtons( value:Boolean ):void
 			{
 				_showOrderButtons = value;
-				_showOrderButtonsChanged = true;
-				
-				invalidateProperties();
 			}
 			
-			override protected function commitProperties():void
+			public function set showRemoveButton( value:Boolean ):void
 			{
-				super.commitProperties();
-				
-				if (_dataProviderChanged)
-				{
-					_dataProviderChanged = false;
-					list.dataProvider = _dataProvider;
-				}
-				
-				if (_showOrderButtonsChanged)
-				{
-					_showOrderButtonsChanged = false;
-					orderingButtons.visible = _showOrderButtons;
-					orderingButtons.includeInLayout = _showOrderButtons;
-				}
+				_showRemoveButton = value;
 			}
-			
+						
 			private function handleRemoveClick():void
 			{
 				if (list.selectedIndices.length == 0)
@@ -144,9 +126,10 @@
 	
 	<mx:GridItem>
 		<mx:VBox height="100%">
-			<mx:Button id="removeButton" label="{ _removeLabel }" click="handleRemoveClick()" width="{ Consts.BUTTON_WIDTH }"/>
+			<mx:Button id="removeButton" label="{ _removeLabel }" click="handleRemoveClick()" 
+				width="{ Consts.BUTTON_WIDTH }" visible="{ _showRemoveButton }" includeInLayout="{ _showRemoveButton }"/>
 			<mx:Spacer height="100%"/>
-			<mx:VBox id="orderingButtons">
+			<mx:VBox id="orderingButtons" visible="{ _showOrderButtons }" includeInLayout="{ _showOrderButtons }">
 				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/top.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_TOP ) }" toolTip="Move to top"/>
 				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/up.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_UP ) }" toolTip="Move up"/>
 				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/down.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_DOWN ) }" toolTip="Move down"/>

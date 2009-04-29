@@ -215,8 +215,9 @@
 	</mx:XML>
 
 	<mx:VBox horizontalAlign="left">
-		<mx:CheckBox id="enableMenu" label="Enable Context Menu" click="handleEnableMenuClick()"/>
-		<mx:CheckBox id="showBrowse" label="Show Browse Button" selected="true"/>
+		<mx:CheckBox id="enableMenu" label="Enable Context Menu" selected="true" click="handleEnableMenuClick()"/>
+		<mx:CheckBox id="showBrowse" label="Show Browse Button"/>
+		<mx:CheckBox id="showRemove" label="Show Remove Button" selected="true"/>
 		<mx:CheckBox id="showOrder" label="Show Order Buttons"/>
 		<mx:CheckBox id="useListBuilder" label="Use List Builder" enabled="{ showBrowse.selected || enableMenu.selected }"/>
 	</mx:VBox>
@@ -225,7 +226,8 @@
 		width="300" useListBuilder="{ useListBuilder.selected }" matchType="anyPart"
 		showBrowseButton="{ showBrowse.selected }" showOrderButtons="{ showOrder.selected }"
 		allowMultipleSelection="true" selectionLayout="vertical" change="handleAutoCompleteChange()"
-		dropDownItemRenderer="{ dropDownItemRenderer }" itemClick="handleItemClick(event)"/> 
+		dropDownItemRenderer="{ dropDownItemRenderer }" itemClick="handleItemClick(event)"
+		menuDataProvider="{ menuData }" showRemoveButton="{ showRemove.selected }"/> 
 	<mx:Spacer width="100%"/>
 	
 </mx:HBox>
