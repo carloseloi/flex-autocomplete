@@ -60,8 +60,8 @@
 			private var _showRemoveButton:Boolean;
 			private var _showRemoveButtonChanged:Boolean;
 			
-			private var _menuDataProvider:Object;
-			private var _menuDataProviderChanged:Boolean;
+			private var _actionsMenuDataProvider:Object;
+			private var _actionsMenuDataProviderChanged:Boolean;
 					
 			private var _actionsMenu:ActionsMenu;
 					
@@ -93,11 +93,11 @@
 					showMultiSelectList( showMultiSelect );																			
 				}		
 				
-				if (_menuDataProviderChanged)
+				if (_actionsMenuDataProviderChanged)
 				{
-					_menuDataProviderChanged = false;
+					_actionsMenuDataProviderChanged = false;
 					
-					if (_menuDataProvider)
+					if (_actionsMenuDataProvider)
 					{
 						var button:Button = new Button();
 						button.width = 24;
@@ -142,7 +142,7 @@
 	        	var textHeight:int = textInput.height + vm.top + vm.bottom;
 	        	
 	        	_actionsMenu = new ActionsMenu();
-				_actionsMenu.dataProvider = _menuDataProvider;
+				_actionsMenu.dataProvider = _actionsMenuDataProvider;
 				_actionsMenu.parentWidth = flowBox.width;
 				_actionsMenu.rowHeight = textHeight;
 				
@@ -459,12 +459,12 @@
 			 * The menu options displayed in the Actions Menu. Set this value
 			 * to enable the menu feature.
 			 */
-			public function set menuDataProvider( value:Object ):void
+			public function set actionsMenuDataProvider( value:Object ):void
 			{
-				if (_menuDataProvider != value)
+				if (_actionsMenuDataProvider != value)
 				{
-					_menuDataProvider = value;
-					_menuDataProviderChanged = true;
+					_actionsMenuDataProvider = value;
+					_actionsMenuDataProviderChanged = true;
 				
 					invalidateProperties();
 				}
