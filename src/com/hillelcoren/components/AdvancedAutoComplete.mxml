@@ -18,6 +18,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.core.EdgeMetrics;
 			import mx.events.ResizeEvent;
 			import mx.events.MoveEvent;
 			import mx.events.MenuEvent;
@@ -137,9 +138,13 @@
 			
 			private function handleButtonClick( event:Event ):void
 			{
-				_actionsMenu = new ActionsMenu();
+				var vm:EdgeMetrics = flowBox.viewMetricsAndPadding;
+	        	var textHeight:int = textInput.height + vm.top + vm.bottom;
+	        	
+	        	_actionsMenu = new ActionsMenu();
 				_actionsMenu.dataProvider = _menuDataProvider;
-				_actionsMenu.width = flowBox.width;
+				_actionsMenu.parentWidth = flowBox.width;
+				_actionsMenu.rowHeight = textHeight;
 				
 				_actionsMenu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
 				_actionsMenu.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );
@@ -157,11 +162,14 @@
 					return;
 				}
 				
-				var localPoint:Point = new Point( 0, height - ActionsMenu.TOP_HEIGHT + ActionsMenu.TOP_PADDING);
+				var localPoint:Point = new Point( 0, 0 );
 				var globalPoint:Point = localToGlobal( localPoint );
 				
-				_actionsMenu.x = globalPoint.x;
-				_actionsMenu.y = globalPoint.y;			
+				var vm:EdgeMetrics = flowBox.viewMetricsAndPadding;
+	        	var textHeight:int = textInput.height + vm.top + vm.bottom;
+	        	
+	        	_actionsMenu.x = globalPoint.x;
+				_actionsMenu.y = globalPoint.y + (height - textHeight);			
 			}
 			
 			private function handleMenuHide( event:Event ):void

@@ -2,7 +2,8 @@
 <mx:Canvas 
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
 	backgroundColor="#FFFFFF" focusEnabled="true"
-	initialize="init()" creationComplete="handleCreationComplete()">
+	initialize="init()" creationComplete="handleCreationComplete()"
+	width="{ _parentWidth }">
 	
 	<mx:Metadata>
 		[Event(name="menuHide",type="mx.events.MenuEvent")]
@@ -19,15 +20,18 @@
 			import mx.controls.Menu;
 			import mx.core.UIComponent;
 			
-			public static const TOP_PADDING:int = 2;
+			public static const TOP_PADDING:int = 3;
 			public static const RIGHT_PADDING:int = 3;
-			public static const TOP_WIDTH:int = 28;
-			public static const TOP_HEIGHT:int = 22;
+			public static const NUB_WIDTH:int = 28;
 			public static const RADIUS:int = 5;
 			public static const MENU_PADDING:int = 6;
 			
 			private var _menu:Menu;
 			private var _dataProvider:Object;
+			
+			[Bindable]
+			private var _parentWidth:int;
+			private var _rowHeight:int;
 			
 			private function init():void
 			{
@@ -41,9 +45,8 @@
 				_menu.labelField="@label";
 				_menu.setStyle( "openDuration", 0 );
 				_menu.setStyle( "dropShadowEnabled", false );
-				_menu.setStyle( "borderStyle", "none" );
-				_menu.width = width - RIGHT_PADDING;
-				_menu.show( globalPoint.x, globalPoint.y + TOP_HEIGHT + MENU_PADDING);
+				_menu.setStyle( "borderStyle", "none" );				
+				_menu.show( 0, 0 );
 				
 				_menu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
 				_menu.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );
@@ -74,8 +77,11 @@
 			{
 				var localPoint:Point = new Point( 0, 0 );
 				var globalPoint:Point = localToGlobal( localPoint ); 
-				        		
-				_menu.move( globalPoint.x, globalPoint.y + TOP_HEIGHT + MENU_PADDING );				
+				
+				var x:int = globalPoint.x + (_parentWidth - _menu.width - RIGHT_PADDING);
+				var y:int = globalPoint.y + _rowHeight + MENU_PADDING + TOP_PADDING;
+
+				_menu.move( x, y );				
 			}
 		
 			private function handleMove( event:Event ):void
@@ -93,28 +99,37 @@
 				_dataProvider = value;
 			}
 			
-			private function drawShape( g:Graphics, x:int, y:int, width:int, height:int, point:Point, radius:int ):void
+			public function set parentWidth( value:int ):void
 			{
-				g.moveTo( x, point.y + radius);
-				g.lineTo( x, height - radius );
-				g.curveTo( x, height, radius, height );
+				_parentWidth = value;
+			}
+			
+			public function set rowHeight( value:int ):void
+			{
+				_rowHeight = value;
+			}			
+			
+			private function drawShape( g:Graphics, width:int, height:int, point:Point, radius:int ):void
+			{
+				g.moveTo( 0, point.y + radius);
+				g.lineTo( 0, height - radius );
+				g.curveTo( 0, height, radius, height );
 				g.lineTo( width - radius, height );
 				g.curveTo( width, height, width, height - radius );
 				g.lineTo( width, radius );
-				g.curveTo( width, y, width - radius, y );
-				g.lineTo( point.x + radius, y );
-				g.curveTo( point.x, y, point.x, radius );
+				g.curveTo( width, 0, width - radius, 0 );
+				g.lineTo( point.x + radius, 0 );
+				g.curveTo( point.x, 0, point.x, radius );
 				g.lineTo( point.x, point.y - radius );
 				g.curveTo( point.x, point.y, point.x - radius, point.y );
 				g.lineTo( radius, point.y );
-				g.curveTo( x, point.y, x, point.y + radius );
+				g.curveTo( 0, point.y, 0, point.y + radius );				
 			}
 			
 			private function handleCreationComplete():void
 			{
 				var comp:UIComponent = new UIComponent();
 				var mask:Shape = new Shape();
-				var point:Point;
 				var g:Graphics;
 				
 				g = mask.graphics;
@@ -122,15 +137,19 @@
 				g.beginFill(0x000000,1.0);
 				g.lineStyle(0, 0xFF0000);
 				
-				height = TOP_HEIGHT + (MENU_PADDING * 2) + _menu.height;
-				point = new Point( width - TOP_WIDTH, TOP_HEIGHT );								
+				var height:int = _rowHeight + (MENU_PADDING * 2) + _menu.height;
+				var point:Point = new Point( _menu.width - NUB_WIDTH, _rowHeight );								
 				
-				drawShape( g, 0, TOP_PADDING, width - RIGHT_PADDING, height, point, RADIUS );
+				drawShape( g, _menu.width, height, point, RADIUS );
 				g.endFill();
+				
+				mask.x = _parentWidth - _menu.width - RIGHT_PADDING;
+				mask.y = TOP_PADDING;
 				
 				comp.addChild( mask );
 				addChild( comp );
 				
+				this.height = height + MENU_PADDING; 
 				this.mask = comp; 		
 										
 				var ds:DropShadowFilter = new DropShadowFilter();
@@ -150,19 +169,21 @@
 				this.filters = [gf, ds];				
 			}
 			
+			/*
 			override public function hitTestPoint( x:Number, y:Number, shapeFlag:Boolean=false):Boolean
 			{
 				var globalPoint:Point = new Point( x, y );
 				var localPoint:Point = globalToLocal( globalPoint ); 
 				
-				if (localPoint.x < width - TOP_WIDTH && localPoint.y < TOP_HEIGHT)
+				if (localPoint.x < width - NUB_WIDTH && localPoint.y < _rowHeight)
 				{
 					return false;
 				}
 				
 				return super.hitTestPoint( x, y, shapeFlag );
 			}
-			
+			*/
+						
 		]]>
 	</mx:Script>
 	

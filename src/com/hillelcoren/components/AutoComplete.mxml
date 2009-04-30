@@ -21,6 +21,10 @@
 		 * Dispatched when the text in the search field is changed
 		 */
 		[Event(name="searchChange")]
+		/**
+		 * Dispatched when focusing out of the comment
+		 */
+		[Event(name="valueCommit")]
 		
 		/**
 		 * The color for the prompt shown when no value is set
@@ -85,6 +89,8 @@
 			protected var _labelFunction:Function;
 			private var _dropDownLabelFunction:Function;
 			private var _dropDownItemRenderer:IFactory;
+			private var _dropDownWidth:int;
+			
 			private var _backspaceAction:String;
 			
 			private var _autoSelectEnabled:Boolean = true;
@@ -108,6 +114,9 @@
 			
 			private var _showRemoveIcon:Boolean;
 			private var _showRemoveIconChanged:Boolean;
+			
+			private var _errorStr:String;
+			private var _errorStrChanged:Boolean;
 			
 			[Bindable]
 			protected var _selectedItems:ArrayCollection;
@@ -196,6 +205,9 @@
 			
 			private function handleFocusOut( event:FocusEvent ):void
 			{
+				var commitEvent:Event = new Event( FlexEvent.VALUE_COMMIT );
+				dispatchEvent( commitEvent );
+				
 				if (event.relatedObject && contains( event.relatedObject))
 				{
 					return;
@@ -254,6 +266,12 @@
 					_showRemoveIconChanged = false;
 					flowBox.showRemoveIcon = _showRemoveIcon;
 				}		
+				
+				if (_errorStrChanged)
+				{
+					_errorStrChanged = false;
+					flowBox.errorString = _errorStr;
+				}
 				
 				if (_dataProviderChanged && _dataProvider)
 				{
@@ -1101,7 +1119,7 @@
 					createDropDown();
 				}
 				
-				_dropDown.width = flowBox.width;
+				_dropDown.width = _dropDownWidth ? _dropDownWidth : flowBox.width;
 				_dropDown.owner = this;
 				_dropDown.scrollToIndex(0);
 				
@@ -1293,6 +1311,11 @@
 				invalidateProperties();
 			}
 			
+			public function set dropDownWidth( value:int ):void
+			{
+				_dropDownWidth = value;
+			}
+			
 			/**
 			 * Checks if the component is in the process of resolving the selecteItemId to it's respective object.
 			 */
@@ -1436,6 +1459,19 @@
 			override public function setFocus():void
 			{
 				textInput.setFocus();
+			}
+			
+			override public function set errorString( value:String ):void
+			{
+				_errorStr = value;
+				_errorStrChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			override public function get errorString():String
+			{
+				return flowBox ? flowBox.errorString : null;
 			}
 			
 			[Inspectable(enumeration="focus,remove")]
