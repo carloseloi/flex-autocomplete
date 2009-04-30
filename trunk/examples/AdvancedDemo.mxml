@@ -184,7 +184,7 @@
 
 			private function handleEnableMenuClick():void
 			{
-				autoComplete.menuDataProvider = enableMenu.selected ? menuData : null;
+				autoComplete.actionsMenuDataProvider = enableMenu.selected ? menuData : null;
 			}
 			
 			private function handleItemClick( event:MenuEvent ):void
@@ -227,7 +227,7 @@
 		showBrowseButton="{ showBrowse.selected }" showOrderButtons="{ showOrder.selected }"
 		allowMultipleSelection="true" selectionLayout="vertical" change="handleAutoCompleteChange()"
 		dropDownItemRenderer="{ dropDownItemRenderer }" itemClick="handleItemClick(event)"
-		menuDataProvider="{ menuData }" showRemoveButton="{ showRemove.selected }"/> 
+		actionsMenuDataProvider="{ menuData }" showRemoveButton="{ showRemove.selected }"/> 
 	<mx:Spacer width="100%"/>
 	
 </mx:HBox>

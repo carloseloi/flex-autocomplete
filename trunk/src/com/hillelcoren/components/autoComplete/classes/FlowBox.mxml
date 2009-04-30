@@ -38,14 +38,14 @@
 			{
 				addEventListener( MouseEvent.CLICK, handleClick );
 				
-				addEventListener( MouseEvent.MOUSE_OVER, handleMouseOver );
+				addEventListener( MouseEvent.MOUSE_MOVE, handleMouseMove );
 				addEventListener( MouseEvent.MOUSE_OUT, handleMouseOut );				
 								
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );		
 			}
 			
-			private function handleMouseOver( event:MouseEvent ):void
+			private function handleMouseMove( event:MouseEvent ):void
 			{
 				if (_inlineButton)
 				{
@@ -198,7 +198,7 @@
 	        		height += vm.bottom + vm.top;
 	        	
 	        		measuredHeight = measuredMinHeight = height;
-	        	} 
+	        	}
 	        }
 		
 			/**
