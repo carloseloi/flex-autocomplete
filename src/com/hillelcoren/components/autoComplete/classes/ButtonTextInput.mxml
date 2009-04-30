@@ -137,6 +137,6 @@
 	</mx:Script>
 	
 	<components:PromptTextInput id="textInput" enableClearIcon="false" width="100%"
-		change="handleTextChange(event)" drawFocusBorder="false" borderStyle="solid"/>
+		change="handleTextChange(event)" drawFocusBorder="false" borderStyle="none"/>
 	
 </mx:HBox>
