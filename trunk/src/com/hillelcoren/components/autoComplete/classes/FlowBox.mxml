@@ -219,6 +219,7 @@
 				for (var i:Number = 0; i < numChildren; i ++)
 				{
 					var child:UIComponent = getChildAt(i) as UIComponent;
+					var prevChild:DisplayObject;
 					
 					if (child.height >= tallestForRow)
 					{
@@ -232,7 +233,8 @@
 					}
 					else
 					{
-						var prevChild:DisplayObject = getChildAt(i - 1);
+						prevChild = getChildAt(i - 1);
+						
 						var newWidth:Number = prevChild.width + prevChild.x;
 						var newHeight:Number = prevChild.y;
 						
@@ -257,6 +259,20 @@
 							child.y = prevChild.y;
 						}
 					}
+					
+					/*
+					if (child is ButtonTextInput && child.width > parent.width)
+					{
+						var width:int = parent.width - 4;
+						
+						if (prevChild && prevChild.y == child.y)
+						{
+							width -= (prevChild.x + prevChild.width); 
+						}
+							
+						child.width = width;			
+					}
+					*/
 				}
 			}           
 
@@ -264,6 +280,6 @@
 		]]>
 	</mx:Script>
 	
-	<ButtonTextInput id="buttonTextInput" change="handleChange(event)" width="100%"/>
+	<ButtonTextInput id="buttonTextInput" change="handleChange(event)" width="100%" borderStyle="none"/>
 	
 </mx:Canvas>
