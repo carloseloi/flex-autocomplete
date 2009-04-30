@@ -62,7 +62,7 @@
 			private var _menuDataProvider:Object;
 			private var _menuDataProviderChanged:Boolean;
 					
-			private var _floatingMenu:FloatingMenu;
+			private var _actionsMenu:ActionsMenu;
 					
 			private function init():void
 			{
@@ -137,31 +137,31 @@
 			
 			private function handleButtonClick( event:Event ):void
 			{
-				_floatingMenu = new FloatingMenu();
-				_floatingMenu.dataProvider = _menuDataProvider;
-				_floatingMenu.width = flowBox.width;
+				_actionsMenu = new ActionsMenu();
+				_actionsMenu.dataProvider = _menuDataProvider;
+				_actionsMenu.width = flowBox.width;
 				
-				_floatingMenu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
-				_floatingMenu.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );
-				_floatingMenu.addEventListener( MenuEvent.ITEM_CLICK, handleItemClick );	
+				_actionsMenu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
+				_actionsMenu.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );
+				_actionsMenu.addEventListener( MenuEvent.ITEM_CLICK, handleItemClick );	
 
-				positionFloatingMenu();
+				positionActionsMenu();
 				
-				PopUpManager.addPopUp( _floatingMenu, this );
+				PopUpManager.addPopUp( _actionsMenu, this );
 			}
 			
-			private function positionFloatingMenu():void
+			private function positionActionsMenu():void
 			{
-				if (!_floatingMenu)
+				if (!_actionsMenu)
 				{
 					return;
 				}
 				
-				var localPoint:Point = new Point( 0, height - FloatingMenu.TOP_HEIGHT + FloatingMenu.TOP_PADDING);
+				var localPoint:Point = new Point( 0, height - ActionsMenu.TOP_HEIGHT + ActionsMenu.TOP_PADDING);
 				var globalPoint:Point = localToGlobal( localPoint );
 				
-				_floatingMenu.x = globalPoint.x;
-				_floatingMenu.y = globalPoint.y;			
+				_actionsMenu.x = globalPoint.x;
+				_actionsMenu.y = globalPoint.y;			
 			}
 			
 			private function handleMenuHide( event:Event ):void
@@ -186,12 +186,12 @@
 					
 			private function handleMove( event:Event ):void
 			{
-				callLater( positionFloatingMenu );
+				callLater( positionActionsMenu );
 			}
 			
 			private function handleResize( event:Event ):void
 			{
-				callLater( positionFloatingMenu );
+				callLater( positionActionsMenu );
 			}
 									
 			private function handleBrowseClick( event:Event ):void
@@ -446,7 +446,11 @@
 					return null;
 				}
 			}
-
+			
+			/**
+			 * The menu options displayed in the Actions Menu. Set this value
+			 * to enable the menu feature.
+			 */
 			public function set menuDataProvider( value:Object ):void
 			{
 				if (_menuDataProvider != value)

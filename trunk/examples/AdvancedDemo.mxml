@@ -215,7 +215,7 @@
 	</mx:XML>
 
 	<mx:VBox horizontalAlign="left">
-		<mx:CheckBox id="enableMenu" label="Enable Context Menu" selected="true" click="handleEnableMenuClick()"/>
+		<mx:CheckBox id="enableMenu" label="Enable Actions Menu" selected="true" click="handleEnableMenuClick()"/>
 		<mx:CheckBox id="showBrowse" label="Show Browse Button"/>
 		<mx:CheckBox id="showRemove" label="Show Remove Button" selected="true"/>
 		<mx:CheckBox id="showOrder" label="Show Order Buttons"/>
