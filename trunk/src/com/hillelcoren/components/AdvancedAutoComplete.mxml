@@ -18,6 +18,8 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.LinkButton;
+			import mx.controls.Button;
 			import mx.core.EdgeMetrics;
 			import mx.events.ResizeEvent;
 			import mx.events.MoveEvent;
@@ -201,12 +203,26 @@
 			{
 				callLater( positionActionsMenu );
 			}
+			
+			override protected function handleMouseFocusChange( event:FocusEvent ):void
+			{
+				super.handleMouseFocusChange( event );
+				
+				if (_actionsMenu && _actionsMenu.parent)
+				{
+					if (event.relatedObject && _actionsMenu.contains( event.relatedObject ))
+					{
+						event.preventDefault();
+					}					
+				}
+			} 
+			
 									
 			private function handleBrowseClick( event:Event ):void
 			{
 				showBrowser();
 			}
-				
+			
 			public function showBrowser():void
 			{
 				if (!_dataProvider)
