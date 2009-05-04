@@ -178,8 +178,6 @@
 				}
 				
 				addEventListener( MoveEvent.MOVE, handleMove );
-				addEventListener( FocusEvent.MOUSE_FOCUS_CHANGE, handleMouseFocusChange );
-				
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );
 			}
@@ -188,20 +186,6 @@
 			{
 				positionDropDown();
 			}
-
-			// check if the focus has moved to the dropdown (otherwise, if we use the 
-			// component as an editor in the datagrid the focus out event will destroy
-			// the editorInstance before the value gets set 
-			protected function handleMouseFocusChange( event:FocusEvent ):void
-			{
-				if (isDropDownVisible())
-				{
-					if (event.relatedObject && dropDown.contains( event.relatedObject ))
-					{
-						event.preventDefault();
-					}
-				}				
-			}			
 			
 			private function handleFocusOut( event:FocusEvent ):void
 			{
@@ -1071,6 +1055,7 @@
 						if (_autoSelectFunction( item, searchText ))
 						{
 							_selectedItems.addItem( item );
+							dispatchEvent( new Event( Event.CHANGE ) );
 							return true;
 						}
 					}
@@ -1081,6 +1066,7 @@
 						if (str.toLowerCase() == searchText.toLowerCase())
 						{
 							_selectedItems.addItem( item );
+							dispatchEvent( new Event( Event.CHANGE ) );
 							return true;
 						}
 					}

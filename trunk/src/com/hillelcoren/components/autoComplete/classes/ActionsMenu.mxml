@@ -41,7 +41,7 @@
 				var localPoint:Point = new Point( 0, 0 );
 				var globalPoint:Point = localToGlobal( localPoint ); 
 				
-        		_menu = Menu.createMenu( null, _dataProvider, false );	
+        		_menu = Menu.createMenu( this, _dataProvider, false );	
 				_menu.labelField="@label";
 				_menu.setStyle( "openDuration", 0 );
 				_menu.setStyle( "dropShadowEnabled", false );
