@@ -230,6 +230,16 @@
 				_dataProvider.refresh();		
 			}
 	
+			private function handleLeftDoubleClick():void
+			{
+				handleAddSelectedClick();
+			}
+	
+			private function handleRightDoubleClick():void
+			{
+				handleRemoveSelectedClick();
+			}
+	
 			private function handleRemoveSelectedClick():void
 			{
 				for each (var item:Object in rightList.selectedItems)
@@ -260,7 +270,7 @@
 			<mx:VBox width="45%" height="100%">
 				<hc:PromptTextInput prompt="Filter Items" id="leftTextInput" change="handleLeftSearchChange()" width="100%"/>
 				<mx:List id="leftList" dataProvider="{ _dataProvider }" labelFunction="{ _labelFunction }" allowMultipleSelection="true" rowCount="10" width="100%"
-					dragEnabled="true" dropEnabled="true" variableRowHeight="true" dragDrop="handleLeftDrop(event)"/>				
+					dragEnabled="true" dropEnabled="true" variableRowHeight="true" dragDrop="handleLeftDrop(event)" doubleClickEnabled="true" doubleClick="handleLeftDoubleClick()"/>				
 			</mx:VBox>
 		
 			<mx:VBox verticalAlign="middle" height="100%">
@@ -278,7 +288,7 @@
 			<mx:VBox width="45%" height="100%">
 				<hc:PromptTextInput prompt="Filter Selected" id="rightTextInput" change="handleRightSearchChange()" width="100%"/>
 				<mx:List id="rightList" dataProvider="{ _selectedItems }" labelFunction="{ _labelFunction }" allowMultipleSelection="true" rowCount="10" width="100%"
-					dragEnabled="true" dropEnabled="true" dragMoveEnabled="true" variableRowHeight="true" dragDrop="handleRightDrop(event)"/>	
+					dragEnabled="true" dropEnabled="true" dragMoveEnabled="true" variableRowHeight="true" dragDrop="handleRightDrop(event)" doubleClickEnabled="true" doubleClick="handleRightDoubleClick()"/>	
 			</mx:VBox>
 			
 		</mx:HBox>

@@ -364,7 +364,7 @@
 					removeAll();
 				}	
 				else if (event.kind == CollectionEventKind.ADD)
-				{					
+				{				
 					hideDropDown();
 					
 					for each (item in event.items)
@@ -475,6 +475,11 @@
 			
 			private function defaultFilterFunction( item:Object, searchStr:String ):Boolean
 			{
+				if (searchStr.length == 0)
+				{
+					return true;
+				}
+				
 				var str:String = labelFunction( item );
 				
 				switch (_matchType)
@@ -537,7 +542,7 @@
 				_dropDown.itemRenderer  = _dropDownItemRenderer ? _dropDownItemRenderer : new ClassFactory( DropDownItemRenderer );
 				_dropDown.addEventListener( ListEvent.ITEM_CLICK, handleDropDownItemClick );
 
-				systemManager.addEventListener( MouseEvent.CLICK, handleMouseClick );
+				systemManager.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseDown );
 			}
 			
 			private function handleKeyDown( event:KeyboardEvent ):void
@@ -944,7 +949,7 @@
 			 * If the list is visible and we click somewhere else
 			 * we're going to close it
 			 */
-			private function handleMouseClick( event:MouseEvent ):void
+			private function handleMouseDown( event:MouseEvent ):void
 			{
 				if (!isDropDownVisible())
 				{
@@ -1029,13 +1034,6 @@
 					{
 						showDropDown();	
 					}
-				}
-				
-				if (isDropDownVisible())
-				{
-					callLater( highlightFirstItem );
-					callLater( callLater, [positionDropDown] );
-					_dropDown.rowCount = (_dataProvider.length < ROW_COUNT ? _dataProvider.length : ROW_COUNT);
 				}				
 			}
 			
@@ -1099,7 +1097,7 @@
 				_dataProvider.refresh();
 			}
 			
-			private function showDropDown():void
+			public function showDropDown():void
 			{
 				if (_dropDown == null)
 				{
@@ -1111,6 +1109,10 @@
 				_dropDown.scrollToIndex(0);
 				
 				PopUpManager.addPopUp( _dropDown, this );
+				
+				callLater( highlightFirstItem );
+				callLater( callLater, [positionDropDown] );
+				_dropDown.rowCount = (_dataProvider.length < ROW_COUNT ? _dataProvider.length : ROW_COUNT);
 			}
 			
 			public function positionDropDown():void
