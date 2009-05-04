@@ -103,7 +103,7 @@
 					{
 						var button:Button = new Button();
 						button.width = 24;
-						button.height = 14;
+						button.height = 16;
 						button.addEventListener( MouseEvent.CLICK, handleButtonClick );
 						
 						inlineButton = button;						
@@ -204,20 +204,6 @@
 				callLater( positionActionsMenu );
 			}
 			
-			override protected function handleMouseFocusChange( event:FocusEvent ):void
-			{
-				super.handleMouseFocusChange( event );
-				
-				if (_actionsMenu && _actionsMenu.parent)
-				{
-					if (event.relatedObject && _actionsMenu.contains( event.relatedObject ))
-					{
-						event.preventDefault();
-					}					
-				}
-			} 
-			
-									
 			private function handleBrowseClick( event:Event ):void
 			{
 				showBrowser();
