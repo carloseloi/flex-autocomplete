@@ -1034,7 +1034,13 @@
 					{
 						showDropDown();	
 					}
-				}				
+				}			
+				
+				if (isDropDownVisible())
+				{
+					callLater( highlightFirstItem );
+					_dropDown.rowCount = (_dataProvider.length < ROW_COUNT ? _dataProvider.length : ROW_COUNT);					
+				}	
 			}
 			
 			private function highlightFirstItem():void
@@ -1109,10 +1115,8 @@
 				_dropDown.scrollToIndex(0);
 				
 				PopUpManager.addPopUp( _dropDown, this );
-				
-				callLater( highlightFirstItem );
+
 				callLater( callLater, [positionDropDown] );
-				_dropDown.rowCount = (_dataProvider.length < ROW_COUNT ? _dataProvider.length : ROW_COUNT);
 			}
 			
 			public function positionDropDown():void
@@ -1507,6 +1511,19 @@
 			public function get inlineButton():Button
 			{
 				return _inlineButton;
+			}
+			
+			public function showInlineButton():void
+			{
+				if (_inlineButton)
+				{
+					flowBox.buttonTextInput.buttonVisible = true;
+				}
+			}
+			
+			public function isItemSelected( item:Object ):Boolean
+			{
+				return _selectedItems.getItemIndex( item ) >= 0;
 			}
 
 		]]>

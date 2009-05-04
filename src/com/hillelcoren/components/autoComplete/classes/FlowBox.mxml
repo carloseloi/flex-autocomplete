@@ -39,7 +39,7 @@
 				addEventListener( MouseEvent.CLICK, handleClick );
 				
 				addEventListener( MouseEvent.MOUSE_MOVE, handleMouseMove );
-				addEventListener( MouseEvent.MOUSE_OUT, handleMouseOut );				
+				addEventListener( MouseEvent.ROLL_OUT, handleRollOut );				
 								
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );		
@@ -53,17 +53,14 @@
 				}
 			}
 			
-			private function handleMouseOut( event:MouseEvent ):void
+			private function handleRollOut( event:MouseEvent ):void
 			{
 				if (!_inlineButton)
 				{
 					return;
 				}
 				
-				if (!event.relatedObject || !contains( event.relatedObject ))
-				{
-					buttonTextInput.buttonVisible = false;
-				}
+				buttonTextInput.buttonVisible = false;
 			}
 			
 			private function handleClick( event:MouseEvent ):void
