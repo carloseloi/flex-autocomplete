@@ -202,7 +202,7 @@
 			 * The flow layout algorithm was written by Eric Cancil
 			 * http://blog.appdivision.com/2009/02/18/flex-flowcontainer/
 			 */
-			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+			override protected function updateDisplayList( unscaledWidth:Number, unscaledHeight:Number ):void
 			{	        	
 				super.updateDisplayList(unscaledWidth, unscaledHeight);
 				
@@ -235,7 +235,7 @@
 						var newWidth:Number = prevChild.width + prevChild.x;
 						var newHeight:Number = prevChild.y;
 						
-						if (newWidth + child.minWidth > width)
+						if (_enableMultiRow && newWidth + child.minWidth > width)
 						{
 							child.x = 0;
 							
@@ -248,28 +248,25 @@
 								child.y = newHeight + tallestForRow;
 							}
 							
-							tallestForRow = child.height;                            
+							tallestForRow = child.height;                 
 						}
 						else
 						{
 							child.x = newWidth;
 							child.y = prevChild.y;
 						}
-					}
-					
-					/*
-					if (child is ButtonTextInput && child.width > parent.width)
-					{
-						var width:int = parent.width - 4;
 						
-						if (prevChild && prevChild.y == child.y)
+						if (child is ButtonTextInput)
 						{
-							width -= (prevChild.x + prevChild.width); 
-						}
+							var vm:EdgeMetrics = viewMetricsAndPadding;
+							var sidePadding:int = vm.left + vm.right;
 							
-						child.width = width;			
+							if (child.width > parent.width - sidePadding)
+							{
+								child.width = parent.width - sidePadding;
+							}
+						}
 					}
-					*/
 				}
 			}           
 
