@@ -50,14 +50,7 @@
 			
 			override public function get minWidth():Number
 			{
-				var width:int = measureText( textInput.text ).width + 30 
-				
-				if (_button)
-				{
-					width += _button.width;
-				}
-				
-				return width;
+				return measureText( textInput.text ).width + 30; 
 			}
 			
 			public function set buttonVisible( value:Boolean ):void

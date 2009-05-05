@@ -187,6 +187,11 @@
 				positionDropDown();
 			}
 			
+			private function handleFlowBoxResize():void
+			{
+				positionDropDown();
+			}
+			
 			private function handleFocusOut( event:FocusEvent ):void
 			{
 				var commitEvent:Event = new Event( FlexEvent.VALUE_COMMIT );
@@ -1000,6 +1005,7 @@
 					{
 						if (isPerfectMatch())
 						{
+							_searchText = "";
 							continue;
 						}						
 					}
@@ -1030,7 +1036,7 @@
 				}
 				else
 				{
-					if (searchStr.length > 0 && _dataProvider.length > 0)
+					if (_searchText.length > 0 && _dataProvider.length > 0)
 					{
 						showDropDown();	
 					}
@@ -1524,7 +1530,7 @@
 	
 	<mx:GridRow id="mainGridRow" width="100%" height="100%">
 		<mx:GridItem id="mainGridItem" width="100%" height="100%">
-			<classes:FlowBox id="flowBox" width="100%" height="100%" change="handleChange(event)"/>
+			<classes:FlowBox id="flowBox" width="100%" height="100%" change="handleChange(event)" resize="handleFlowBoxResize()"/>
 		</mx:GridItem>
 	</mx:GridRow>
 	
