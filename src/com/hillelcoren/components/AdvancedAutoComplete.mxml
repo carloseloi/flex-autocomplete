@@ -66,7 +66,7 @@
 			private var _actionsMenuDataProviderChanged:Boolean;
 					
 			private var _actionsMenu:ActionsMenu;
-					
+			
 			private function init():void
 			{
 				addEventListener( MoveEvent.MOVE, handleMove );
@@ -102,8 +102,9 @@
 					if (_actionsMenuDataProvider)
 					{
 						var button:Button = new Button();
-						button.width = 24;
-						button.height = 16;
+						button.setStyle( "styleName", "actionsMenuButton" );
+						//button.width = 24;
+						//button.height = 16;
 						button.addEventListener( MouseEvent.CLICK, handleButtonClick );
 						
 						inlineButton = button;						
