@@ -1513,14 +1513,6 @@
 				return _inlineButton;
 			}
 			
-			public function showInlineButton():void
-			{
-				if (_inlineButton)
-				{
-					flowBox.buttonTextInput.buttonVisible = true;
-				}
-			}
-			
 			public function isItemSelected( item:Object ):Boolean
 			{
 				return _selectedItems.getItemIndex( item ) >= 0;
