@@ -1110,6 +1110,11 @@
 					createDropDown();
 				}
 				
+				if (focusManager)
+				{
+					focusManager.defaultButtonEnabled = false;
+				}				
+				
 				_dropDown.width = _dropDownWidth ? _dropDownWidth : flowBox.width;
 				_dropDown.owner = this;
 				_dropDown.scrollToIndex(0);
@@ -1147,15 +1152,11 @@
 			
 			public function hideDropDown():void
 			{
-				// we're using a callLater here as a workaround for not being
-				// able to prevent the enter keyboard event from bubbling. Delaying
-				// the selection gives the UI a chance to check if the enter key
-				// was clicked while the drop down was visible 
-				callLater( _hideDropDown );					
-			}
-
-			private function _hideDropDown():void
-			{
+				if (focusManager)
+				{
+					focusManager.defaultButtonEnabled = true;
+				}				
+				
 				PopUpManager.removePopUp( _dropDown );
 			}
 			
@@ -1387,7 +1388,7 @@
 				}
 			}
 			
-			public function isDropDownVisible():Boolean
+			private function isDropDownVisible():Boolean
 			{
 				return _dropDown && _dropDown.parent;
 			}
