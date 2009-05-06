@@ -4,7 +4,7 @@
 	xmlns="com.hillelcoren.components.autoComplete.classes.*"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	borderStyle="inset" backgroundColor="#FFFFFF"
-	initialize="init()" clipContent="true" minHeight="22" 
+	initialize="init()" clipContent="true" 
 	xmlns:components="com.hillelcoren.components.*">
 	
 	<mx:Metadata>
@@ -14,6 +14,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.containers.Canvas;
 			import mx.controls.Button;
 			import mx.events.ResizeEvent;
 			import mx.events.MoveEvent;
@@ -284,7 +285,7 @@
 						var newWidth:Number = prevChild.width + prevChild.x;
 						var newHeight:Number = prevChild.y;
 						
-						if (_enableMultiRow && newWidth + child.minWidth > width)
+						if (_enableMultiRow && newWidth + child.minWidth > width - sidePadding)
 						{
 							child.x = 0;
 							

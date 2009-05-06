@@ -89,6 +89,10 @@
 					if (getStyle( "selectedFontWeight" ) == "bold")
 					{
 						format.bold = true;
+						
+						// the bold text gets a bit longer so we need to make the font 
+						// a bit smaller so the end doesn't get cut off
+						format.size = getStyle( "fontSize" ) - 1;
 					}
 				}
 				
