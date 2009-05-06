@@ -41,10 +41,6 @@
 			
 			private function init():void
 			{
-				//addEventListener( MouseEvent.MOUSE_OVER, handleMouseOver );
-				//addEventListener( MouseEvent.MOUSE_OUT, handleMouseOut );
-				//addEventListener( MouseEvent.MOUSE_DOWN, handleMouseDown );
-				
 				button.addEventListener( FocusEvent.FOCUS_OUT, handleButtonFocusOut );
 			}
 			
@@ -155,9 +151,6 @@
 			
 			public function set text( value:String ):void
 			{
-				// there are problems using ">"s and "<"s
-				//value = value.replace( "<", "&lt;" ).replace( ">", "&gt;" );				
-				
 				if (_text != value)
 				{
 					_text = value;

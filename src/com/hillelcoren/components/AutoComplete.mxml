@@ -177,7 +177,7 @@
 					dropDownLabelFunction = defaultDropDownLabelFunction;
 				}
 				
-				if (!width)
+				if (!width && !percentWidth)
 				{
 					width = DEFAULT_MEASURED_WIDTH;
 				}
@@ -195,7 +195,7 @@
 			private function handleFlowBoxResize():void
 			{
 				positionDropDown();
-			}
+			}			
 			
 			private function handleFocusOut( event:FocusEvent ):void
 			{
@@ -527,6 +527,9 @@
 				var string:String = _labelFunction( item );
 				var searchStr:String = searchText;
 				
+				// there are problems using ">"s and "<"s in HTML
+				string = string.replace( "<", "&lt;" ).replace( ">", "&gt;" );				
+
 				var returnStr:String = StringUtils.highlighMatch( string, searchStr, _matchType );
 				
 				if (_selectedItems.getItemIndex( item ) >= 0)
@@ -779,14 +782,6 @@
 							textInput.setFocus();
 						}
 					}
-					/*
-					else if (focused is SelectedItem && event.keyCode != Keyboard.TAB)
-					{
-						_selectedItems.removeItemAt( index );
-						iComboItem( flowBox.getChildAt( index ) ).setTextFocus();
-						dispatchEvent( new Event( Event.CHANGE ) );	
-					}
-					*/					
 				}
 			}
 			
@@ -882,17 +877,6 @@
 						flowBox.addChildAt( selectedItem, flowBox.numChildren - 1 );
 					}
 				}
-				/*
-				// this means the user entered a comma after a value which has already
-				// been added, in this case we just need to readd the comma
-				else if (_selectedItems.getItemIndex( item ) >= 0 && isNew)
-				{
-					var index:int = _selectedItems.getItemIndex( item );
-					var comboItem:iComboItem = flowBox.getChildAt( index + 1 ) as iComboItem;
-					
-					comboItem.setTextFocus();
-				}
-				*/
 				
 				textInput.enablePrompt = flowBox.numChildren == 1;
 			}

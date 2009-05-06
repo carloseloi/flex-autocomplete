@@ -44,7 +44,7 @@
 				var string:String = item.name + " &lt;" + item.email + "&gt;";
 				var searchStr:String = autocomplete.searchText;
 				
-				var returnStr:String = StringUtils.highlighMatch( string, searchStr );
+				var returnStr:String = StringUtils.highlighMatch( string, searchStr, AutoComplete.MATCH_WORD );
 				
 				if (autocomplete.selectedItems.getItemIndex( item ) >= 0)
     			{
@@ -52,11 +52,6 @@
     			}
     			
     			return returnStr;
-			}
-
-			private function filterFunction( item:Object, searchStr:String ):Boolean
-			{
-				return StringUtils.contains( item.name + item.email, searchStr );
 			}
 			
 		]]>
@@ -67,8 +62,8 @@
 		<mx:FormItem label="To: ">				
 			<components:AutoComplete id="autocomplete" dataProvider="{ _contacts }" width="350"
 				allowMultipleSelection="true" allowNewValues="true" allowEditingNewValues="true"
-				labelField="name" dropDownLabelFunction="dropDownLabelFunction" 
-				filterFunction="filterFunction" selectedItemStyleName="macMail"/>
+				labelField="name" dropDownLabelFunction="dropDownLabelFunction" matchType="word" 
+				selectedItemStyleName="macMail"/>
 		</mx:FormItem>
 		<mx:FormItem label="Subject: ">
 			<mx:TextInput width="350"/>
