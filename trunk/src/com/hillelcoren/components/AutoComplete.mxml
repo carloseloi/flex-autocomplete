@@ -14,7 +14,7 @@
 		[IconFile("icon.png")]
 		
 		/**
-		 * Dispatched when an item is selected or de-selelcted
+		 * Dispatched when the selected items are changed by the user
 		 */
 		[Event(name="change")]
 		/**
@@ -22,7 +22,7 @@
 		 */
 		[Event(name="searchChange")]
 		/**
-		 * Dispatched when focusing out of the comment
+		 * Dispatched when the selected items are changed either by the user or programmitcally
 		 */
 		[Event(name="valueCommit")]
 		
@@ -177,6 +177,11 @@
 					dropDownLabelFunction = defaultDropDownLabelFunction;
 				}
 				
+				if (!width)
+				{
+					width = DEFAULT_MEASURED_WIDTH;
+				}
+				
 				addEventListener( MoveEvent.MOVE, handleMove );
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );
@@ -194,9 +199,6 @@
 			
 			private function handleFocusOut( event:FocusEvent ):void
 			{
-				var commitEvent:Event = new Event( FlexEvent.VALUE_COMMIT );
-				dispatchEvent( commitEvent );
-				
 				if (event.relatedObject && contains( event.relatedObject))
 				{
 					return;
@@ -392,6 +394,9 @@
 					
 					searchText = null;									
 				}
+				
+				var commitEvent:Event = new Event( FlexEvent.VALUE_COMMIT );
+				dispatchEvent( commitEvent );				
 			}
 			
 			private function checkIfDuplicate( searchFor:Object ):Boolean
