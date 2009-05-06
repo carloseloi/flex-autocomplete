@@ -317,13 +317,12 @@
 				
 				if (_inlineButton)
 				{
-					_inlineButtonCanvas.width = _inlineButton.width + sidePadding;
+					_inlineButtonCanvas.width = _inlineButton.width;
 					_inlineButtonCanvas.height = textInput.height;
 					
-					_inlineButtonCanvas.x = width - _inlineButtonCanvas.width;
+					_inlineButtonCanvas.x = width - _inlineButtonCanvas.width - 1;
 					_inlineButtonCanvas.y = textInput.y + vm.top;
 					
-					_inlineButton.x = vm.left;
 					_inlineButton.y = _inlineButtonCanvas.height - _inlineButton.height - ((textInput.height - _inlineButton.height) / 2);
 				}				
 			}           

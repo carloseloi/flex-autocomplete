@@ -67,6 +67,13 @@
 					
 			private var _actionsMenu:ActionsMenu;
 			
+			[Embed(source="/com/hillelcoren/assets/icons/actionsUp.png")]
+			private var _upIcon:Class;
+			[Embed(source="/com/hillelcoren/assets/icons/actionsDown.png")]
+			private var _downIcon:Class;
+			[Embed(source="/com/hillelcoren/assets/icons/actionsOver.png")]
+			private var _overIcon:Class;
+						
 			private function init():void
 			{
 				addEventListener( MoveEvent.MOVE, handleMove );
@@ -102,6 +109,9 @@
 					if (_actionsMenuDataProvider)
 					{
 						var button:Button = new Button();
+						button.setStyle( "upIcon", _upIcon );				
+						button.setStyle( "downIcon", _downIcon );				
+						button.setStyle( "overIcon", _overIcon );				
 						button.setStyle( "styleName", "actionsMenuButton" );
 						button.addEventListener( MouseEvent.CLICK, handleButtonClick );
 						

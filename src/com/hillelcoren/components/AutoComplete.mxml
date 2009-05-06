@@ -546,7 +546,7 @@
 				_dropDown.labelFunction = _dropDownLabelFunction;
 				_dropDown.itemRenderer  = _dropDownItemRenderer ? _dropDownItemRenderer : new ClassFactory( DropDownItemRenderer );
 				_dropDown.addEventListener( ListEvent.ITEM_CLICK, handleDropDownItemClick );
-
+				
 				systemManager.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseDown );
 			}
 			
