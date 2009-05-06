@@ -301,6 +301,14 @@
 							child.y = prevChild.y;
 						}
 					}
+					
+					if (child is PromptTextInput)
+					{
+						if (child.width + sidePadding > width)
+						{
+							child.width = width - sidePadding;
+						}
+					}
 				}
 				
 				if (_inlineButton)
@@ -320,7 +328,7 @@
 		]]>
 	</mx:Script>
 	
-	<components:PromptTextInput id="textInput" enableClearIcon="false" width="100%" minWidth="10"
+	<components:PromptTextInput id="textInput" enableClearIcon="false" width="100%"
 		change="handleChange(event)" drawFocusBorder="false" borderStyle="none"/>
 		
 </mx:Canvas>

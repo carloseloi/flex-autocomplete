@@ -114,6 +114,11 @@
 				clearStyle( "fontStyle" );
 			}
 			
+			override public function get minWidth():Number
+			{
+				return measureText( text ).width + 10;
+			}
+			
 			public function set prompt( value:String ):void
 			{
 				_prompt = value;
