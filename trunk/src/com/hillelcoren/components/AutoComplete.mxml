@@ -358,7 +358,7 @@
 			{
 				var item:Object;
 				
-				flowBox.buttonTextInput.buttonVisible = false;
+				flowBox.buttonVisible = false;
 				
 				if (event.kind == CollectionEventKind.REMOVE)
 				{
@@ -970,7 +970,7 @@
 			public function handleChange( event:Event ):void
 			{
 				flowBox.invalidateDisplayList();
-				flowBox.buttonTextInput.buttonVisible = false;
+				flowBox.buttonVisible = false;
 				
 				if (selectedItem && !_allowMultipleSelection)
 				{
@@ -1276,7 +1276,7 @@
 			
 			public function get textInput():PromptTextInput
 			{
-				return flowBox.buttonTextInput.textInput;
+				return flowBox.textInput;
 			}
 			
 			public function set dataProvider( value:ArrayCollection ):void
