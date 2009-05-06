@@ -321,7 +321,7 @@
 					_inlineButtonCanvas.height = textInput.height;
 					
 					_inlineButtonCanvas.x = width - _inlineButtonCanvas.width - 1;
-					_inlineButtonCanvas.y = textInput.y + vm.top;
+					_inlineButtonCanvas.y = height - textInput.height - vm.bottom;
 					
 					_inlineButton.y = _inlineButtonCanvas.height - _inlineButton.height - ((textInput.height - _inlineButton.height) / 2);
 				}				
