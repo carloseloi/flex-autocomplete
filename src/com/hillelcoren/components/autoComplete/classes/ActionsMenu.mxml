@@ -48,12 +48,13 @@
 				_menu.setStyle( "openDuration", 0 );
 				_menu.setStyle( "dropShadowEnabled", false );
 				_menu.setStyle( "borderStyle", "none" );				
-				_menu.show( 0, 0 );
 				
 				_menu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
 				_menu.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );
 				_menu.addEventListener( MenuEvent.ITEM_CLICK, handleItemClick );
 				
+				_menu.show( 0, 0 );
+								
 				_button = new Button();
 				_button.setStyle( "styleName", "actionsMenuButton" );
 				_button.x = _parentWidth - NUB_WIDTH;
