@@ -42,23 +42,27 @@
 			{
 				addEventListener( MouseEvent.CLICK, handleClick );
 				
-				systemManager.addEventListener( MouseEvent.MOUSE_MOVE, handleMouseMove );
-								
+				addEventListener( MouseEvent.MOUSE_MOVE, handleMouseMove );
+				addEventListener( MouseEvent.ROLL_OVER, handleRollOver );
+				addEventListener( MouseEvent.ROLL_OUT, handleRollOut );
+				
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );		
 			}
 			
 			private function handleMouseMove( event:MouseEvent ):void
 			{
-				var visible:Boolean;
-				
-				if (event.localX >= 0 && event.localX <= width 
-					&& event.localY >= 0 && event.localY <= height)
-				{
-					visible = true;
-				} 				
-					
-				buttonVisible = visible; 			
+				buttonVisible = true; 			
+			}
+			
+			private function handleRollOver( event:Event ):void
+			{
+				buttonVisible = true;	
+			}
+			
+			private function handleRollOut( event:Event ):void
+			{
+				buttonVisible = false;	
 			}
 			
 			private function handleClick( event:MouseEvent ):void
