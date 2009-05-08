@@ -1051,7 +1051,7 @@
 					
 					if (_autoSelectFunction != null)
 					{
-						if (_autoSelectFunction( item, searchText ))
+						if (_autoSelectFunction( item, _searchText ))
 						{
 							_selectedItems.addItem( item );
 							dispatchEvent( new Event( Event.CHANGE ) );
@@ -1062,7 +1062,7 @@
 					{
 						var str:String = _labelFunction( item );
 						
-						if (str.toLowerCase() == searchText.toLowerCase())
+						if (str.toLowerCase() == _searchText.toLowerCase())
 						{
 							_selectedItems.addItem( item );
 							dispatchEvent( new Event( Event.CHANGE ) );
