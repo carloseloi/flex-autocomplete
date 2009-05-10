@@ -77,8 +77,6 @@
 			private function init():void
 			{
 				addEventListener( MoveEvent.MOVE, handleMove );
-				
-				systemManager.addEventListener( ResizeEvent.RESIZE, handleResize );
 			}							
 			
 			override protected function commitProperties():void
@@ -210,11 +208,6 @@
 			}								
 					
 			private function handleMove( event:Event ):void
-			{
-				callLater( positionActionsMenu );
-			}
-			
-			private function handleResize( event:Event ):void
 			{
 				callLater( positionActionsMenu );
 			}
