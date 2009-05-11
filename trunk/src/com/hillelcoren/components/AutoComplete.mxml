@@ -137,9 +137,7 @@
 			
 			private var _keyField:String = "id";
 			private var _listData:DataGridListData;
-						
-			
-			private static const ROW_COUNT:uint = 5; 
+			private var _dropDownRowCount:uint = 5;
 			
 			public static const SEARCH_CHANGE:String = "searchChange";
 			
@@ -199,6 +197,9 @@
 			
 			private function handleFocusOut( event:FocusEvent ):void
 			{
+				var commitEvent:Event = new Event( FlexEvent.VALUE_COMMIT );
+				dispatchEvent( commitEvent );				
+
 				if (event.relatedObject && contains( event.relatedObject))
 				{
 					return;
@@ -548,10 +549,10 @@
 			private function createDropDown():void
 			{
 				_dropDown = new List();
-				_dropDown.rowCount		= ROW_COUNT;
 				_dropDown.focusEnabled 	= false;
 				_dropDown.dataProvider 	= _dataProvider;
 				_dropDown.labelFunction = _dropDownLabelFunction;
+				_dropDown.rowCount		= _dropDownRowCount;
 				_dropDown.itemRenderer  = _dropDownItemRenderer ? _dropDownItemRenderer : new ClassFactory( DropDownItemRenderer );
 				_dropDown.addEventListener( ListEvent.ITEM_CLICK, handleDropDownItemClick );
 				
@@ -841,7 +842,7 @@
 				
 				if (flowBox.numChildren == 2 && !_allowMultipleSelection)
 				{
-					return;							
+					selectedItems.removeItemAt( 0 );				
 				}
 				
 				var isNew:Boolean = item is String && (!_dataProvider || _dataProvider.getItemIndex( item ) == -1);
@@ -1034,7 +1035,7 @@
 				if (isDropDownVisible())
 				{
 					callLater( highlightFirstItem );
-					_dropDown.rowCount = (_dataProvider.length < ROW_COUNT ? _dataProvider.length : ROW_COUNT);					
+					_dropDown.rowCount = (_dataProvider.length < _dropDownRowCount ? _dataProvider.length : _dropDownRowCount);					
 				}	
 			}
 			
@@ -1512,6 +1513,15 @@
 			public function isItemSelected( item:Object ):Boolean
 			{
 				return _selectedItems.getItemIndex( item ) >= 0;
+			}
+			
+			/**
+			 * The number of rows to show in the dropDown which
+			 * appears when searching
+			 */
+			public function set dropDownRowCount( value:uint ):void
+			{
+				_dropDownRowCount = value;
 			}
 
 		]]>
