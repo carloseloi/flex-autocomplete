@@ -208,6 +208,7 @@
 				if (searchText.length > 0 && _allowNewValues)
 				{
 					_selectedItems.addItem( searchText );
+					dispatchEvent( new Event( Event.CHANGE ) );
 				}	
 			}
 						
@@ -897,6 +898,7 @@
 				} 
 				
 				_selectedItems.removeItemAt( index );
+				dispatchEvent( new Event( Event.CHANGE ) );
 			}
 			
 			private function handleItemTextInput( event:TextEvent ):void
