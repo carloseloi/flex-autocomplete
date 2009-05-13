@@ -103,7 +103,7 @@
 				
 				var showComma:String = getStyle( "showComma" );
 				
-				if (showComma == "yes" && _allowMultipleSelection)
+				if (showComma == "yes" && _allowMultipleSelection && label.length > 1)
 				{
 					format.underline = false;
 					textField.setTextFormat( format, label.length - 1, label.length );

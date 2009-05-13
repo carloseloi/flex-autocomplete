@@ -183,6 +183,7 @@
 				addEventListener( MoveEvent.MOVE, handleMove );
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );
+				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );
 			}
 			
 			private function handleMove( event:MoveEvent ):void
@@ -210,6 +211,14 @@
 					_selectedItems.addItem( searchText );
 					dispatchEvent( new Event( Event.CHANGE ) );
 				}	
+			}
+			
+			private function handleFocusIn( event:FocusEvent ):void
+			{
+				if (focusManager.getFocus() == _inlineButton)
+				{
+					setFocus();
+				}
 			}
 						
 			override protected function commitProperties():void
