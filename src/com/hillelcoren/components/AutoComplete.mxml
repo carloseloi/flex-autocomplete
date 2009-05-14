@@ -162,6 +162,8 @@
 				_selectedItems = new ArrayCollection();
 				_selectedItems.addEventListener( CollectionEvent.COLLECTION_CHANGE, handleSelectedItemsChange );
 				
+				_unavailableItems = new ArrayCollection();
+				
 				if (_labelFunction == null)
 				{
 					labelFunction = defaultLabelFunction;
@@ -442,11 +444,6 @@
 			
 			private function checkIfUnavailable( item:Object ):Boolean
 			{
-				if (!_unavailableItems)
-				{
-					return false;
-				}
-				
 				var index:int = _unavailableItems.getItemIndex( item );
 				
 				if (index >= 0)
@@ -570,7 +567,7 @@
 
 				var returnStr:String = StringUtils.highlighMatch( string, searchStr, _matchType );
 				
-				if (_selectedItems.getItemIndex( item ) >= 0)
+				if (_selectedItems.getItemIndex( item ) >= 0 || _unavailableItems.getItemIndex( item ) >= 0)
     			{
     				returnStr = "<font color='" + Consts.COLOR_TEXT_DISABLED + "'>" + returnStr + "</font>";
     			}

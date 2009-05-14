@@ -258,6 +258,21 @@
 				
 				rightList.selectedItems = tmp;
 			}
+			
+			public function set browserFields( value:Array ):void
+			{
+				// do nothing (just here for the IBrowser interface)
+			}
+			
+			public function set allowMultipleSelection( value:Boolean ):void
+			{
+				// do nothing (just here for the IBrowser interface)
+			}
+
+			public function set searchStr( value:String ):void
+			{
+				// do nothing (just here for the IBrowser interface)
+			}
 	
 		]]>
 	</mx:Script>
