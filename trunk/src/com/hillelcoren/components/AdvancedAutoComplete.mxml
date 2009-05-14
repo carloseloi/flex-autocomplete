@@ -234,8 +234,8 @@
 				else
 				{
 					_browser = new _browserClass();
-					Browser( _browser ).browserFields = _browserFields;
-					Browser( _browser ).allowMultipleSelection = _allowMultipleSelection;					
+					IBrowser( _browser ).browserFields = _browserFields;
+					IBrowser( _browser ).allowMultipleSelection = _allowMultipleSelection;					
 				}
 				
 				var dp:ArrayCollection = new ArrayCollection( _dataProvider.source );
@@ -260,7 +260,7 @@
 				
 				if (!useListBuilder && _selectedItems.length == 0)
 				{
-					Browser( _browser ).searchStr = searchText;
+					IBrowser( _browser ).searchStr = searchText;
 				}													
 			}
 			

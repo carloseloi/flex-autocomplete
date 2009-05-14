@@ -13,5 +13,8 @@ package com.hillelcoren.components.autoComplete.interfaces
 		function set dataProvider( value:ArrayCollection ):void
 		function set labelFunction( value:Function ):void
 		function set originalSelectedItems( value:ArrayCollection ):void
+		function set browserFields( value:Array ):void;
+		function set allowMultipleSelection( value:Boolean ):void
+		function set searchStr( value:String ):void
 	}
 }
