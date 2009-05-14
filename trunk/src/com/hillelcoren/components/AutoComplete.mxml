@@ -129,6 +129,8 @@
 			protected var _selectedItemId:Number;
 			private var _selectedItemIdChanged:Boolean;
 			
+			private var _unavailableItems:ArrayCollection;
+			
 			protected var _inlineButton:Button;
 			private var _inlineButtonChanged:Boolean;
 						
@@ -392,14 +394,16 @@
 							silentlyRemove( item );
 						}
 						
-						if (!_allowDuplicates)
+						if (checkIfDuplicate( item ))
 						{
-							if (checkIfDuplicate( item ))
-							{
-								continue;
-							}
+							continue;
 						}
-				
+						
+						if (checkIfUnavailable( item ))
+						{
+							continue;
+						}
+						
 						addItem( item );											
 					}
 					
@@ -412,6 +416,11 @@
 			
 			private function checkIfDuplicate( searchFor:Object ):Boolean
 			{
+				if (_allowDuplicates)
+				{
+					return false;
+				}
+				
 				var count:int;
 				
 				for each (var item:Object in _selectedItems)
@@ -421,8 +430,26 @@
 						count++;
 					}
 				} 
-				
+								
 				if (count > 1)
+				{
+					silentlyRemove( item );
+					return true;
+				}
+				
+				return false;
+			}
+			
+			private function checkIfUnavailable( item:Object ):Boolean
+			{
+				if (!_unavailableItems)
+				{
+					return false;
+				}
+				
+				var index:int = _unavailableItems.getItemIndex( item );
+				
+				if (index >= 0)
 				{
 					silentlyRemove( item );
 					return true;
@@ -1310,6 +1337,15 @@
 				_selectedItemIdChanged = true;
 				
 				invalidateProperties();
+			}
+			
+			/**
+			 * An items in this list will be considered unavailable for selection. This
+			 * allows you to apply unqiue logic across multiple AutoCompletes
+			 */
+			public function set unavailableItems( value:ArrayCollection ):void
+			{
+				_unavailableItems = value;
 			}
 			
 			public function set dropDownWidth( value:int ):void
