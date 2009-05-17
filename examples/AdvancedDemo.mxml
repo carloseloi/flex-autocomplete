@@ -227,7 +227,8 @@
 		showBrowseButton="{ showBrowse.selected }" showOrderButtons="{ showOrder.selected }"
 		allowMultipleSelection="true" selectionLayout="vertical" change="handleAutoCompleteChange()"
 		dropDownItemRenderer="{ dropDownItemRenderer }" itemClick="handleItemClick(event)"
-		actionsMenuDataProvider="{ menuData }" showRemoveButton="{ showRemove.selected }"/> 
+		actionsMenuDataProvider="{ menuData }" showRemoveButton="{ showRemove.selected }"
+		browserFields="{ ['name','hex'] }"/> 
 	<mx:Spacer width="100%"/>
 	
 </mx:HBox>

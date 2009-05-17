@@ -34,18 +34,15 @@
 			private var _inlineButton:Button;
 			private var _inlineButtonChanged:Boolean;
 			private var _inlineButtonCanvas:Canvas;
-			private var _inlineButtonEnabled:Boolean;
 			
 			private var _enableMultiRow:Boolean;
 			
 						
 			private function init():void
 			{
-				addEventListener( MouseEvent.CLICK, handleClick );
+				addEventListener( MouseEvent.MOUSE_DOWN, handleMouseDown );
 				
-				addEventListener( MouseEvent.MOUSE_MOVE, handleMouseMove );
-				addEventListener( MouseEvent.ROLL_OVER, handleRollOver );
-				addEventListener( MouseEvent.ROLL_OUT, handleRollOut );
+				systemManager.addEventListener( MouseEvent.MOUSE_MOVE, handleMouseMove );
 				
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );		
@@ -56,34 +53,22 @@
 				buttonVisible = true; 			
 			}
 			
-			private function handleRollOver( event:Event ):void
-			{
-				buttonVisible = true;	
-			}
-			
-			private function handleRollOut( event:Event ):void
-			{
-				buttonVisible = false;	
-			}
-			
-			private function handleClick( event:MouseEvent ):void
+			private function handleMouseDown( event:MouseEvent ):void
 			{
 				buttonVisible = false;
 			}
 			
 			public function set buttonEnabled( value:Boolean ):void
 			{
-				_inlineButtonEnabled = value;
+				if (_inlineButton)
+				{
+					_inlineButtonCanvas.enabled = value;
+				}
 			}
 			
 			public function set buttonVisible( value:Boolean ):void
 			{
 				if (!_inlineButton)
-				{
-					return;
-				}
-				
-				if (!_inlineButtonEnabled && value)
 				{
 					return;
 				}
@@ -129,12 +114,11 @@
 					
 					if (_inlineButton)
 					{
-						_inlineButtonEnabled = true;
 						_inlineButton.tabEnabled = false;
+						_inlineButton.addEventListener( MouseEvent.MOUSE_DOWN, handleButtonMouseDown );
 						_inlineButton.addEventListener( MouseEvent.CLICK, handleButtonClick );
 						
 						_inlineButtonCanvas = new Canvas();
-						_inlineButtonCanvas.visible = false;
 						_inlineButtonCanvas.setStyle( "backgroundColor", "#FFFFFF" );
 						_inlineButtonCanvas.addChild( _inlineButton );
 						
@@ -143,6 +127,11 @@
 				}				
 			}
 						
+			private function handleButtonMouseDown( event:Event ):void
+			{
+				event.stopPropagation();
+			}
+			
 			private function handleButtonClick( event:Event ):void
 			{
 				var event:Event = new Event( "buttonClick" );

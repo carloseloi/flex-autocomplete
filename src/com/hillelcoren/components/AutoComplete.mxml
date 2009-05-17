@@ -129,7 +129,7 @@
 			protected var _selectedItemId:Number;
 			private var _selectedItemIdChanged:Boolean;
 			
-			private var _unavailableItems:ArrayCollection;
+			private var _disabledItems:ArrayCollection;
 			
 			protected var _inlineButton:Button;
 			private var _inlineButtonChanged:Boolean;
@@ -162,7 +162,7 @@
 				_selectedItems = new ArrayCollection();
 				_selectedItems.addEventListener( CollectionEvent.COLLECTION_CHANGE, handleSelectedItemsChange );
 				
-				_unavailableItems = new ArrayCollection();
+				_disabledItems = new ArrayCollection();
 				
 				if (_labelFunction == null)
 				{
@@ -205,6 +205,8 @@
 				var commitEvent:Event = new Event( FlexEvent.VALUE_COMMIT );
 				dispatchEvent( commitEvent );				
 
+				flowBox.buttonVisible = true;
+				
 				if (event.relatedObject && contains( event.relatedObject))
 				{
 					return;
@@ -444,7 +446,7 @@
 			
 			private function checkIfUnavailable( item:Object ):Boolean
 			{
-				var index:int = _unavailableItems.getItemIndex( item );
+				var index:int = _disabledItems.getItemIndex( item );
 				
 				if (index >= 0)
 				{
@@ -567,7 +569,7 @@
 
 				var returnStr:String = StringUtils.highlighMatch( string, searchStr, _matchType );
 				
-				if (_selectedItems.getItemIndex( item ) >= 0 || _unavailableItems.getItemIndex( item ) >= 0)
+				if (_selectedItems.getItemIndex( item ) >= 0 || _disabledItems.getItemIndex( item ) >= 0)
     			{
     				returnStr = "<font color='" + Consts.COLOR_TEXT_DISABLED + "'>" + returnStr + "</font>";
     			}
@@ -1340,9 +1342,9 @@
 			 * An items in this list will be considered unavailable for selection. This
 			 * allows you to apply unqiue logic across multiple AutoCompletes
 			 */
-			public function set unavailableItems( value:ArrayCollection ):void
+			public function set disabledItems( value:ArrayCollection ):void
 			{
-				_unavailableItems = value;
+				_disabledItems = value;
 			}
 			
 			public function set dropDownWidth( value:int ):void
