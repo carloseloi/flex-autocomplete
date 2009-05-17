@@ -56,7 +56,8 @@
 				_menu.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );
 				_menu.addEventListener( MenuEvent.ITEM_CLICK, handleItemClick );
 				
-				_menu.show( 0, 0 );
+				var point:Point = getMenuPosition();
+				_menu.show( point.x, point.y );
 								
 				_button = new Button();
 				_button.setStyle( "styleName", "actionsMenuButton" );
@@ -85,8 +86,8 @@
 			{
 				dispatchEvent( event );
 			}
-						
-			private function positionMenu():void
+			
+			private function getMenuPosition():Point
 			{
 				var localPoint:Point = new Point( 0, 0 );
 				var globalPoint:Point = localToGlobal( localPoint ); 
@@ -94,7 +95,13 @@
 				var x:int = globalPoint.x + (_parentWidth - _menu.width - RIGHT_PADDING);
 				var y:int = globalPoint.y + _rowHeight + MENU_PADDING + TOP_PADDING;
 
-				_menu.move( x, y );				
+				return new Point( x, y );
+			}
+			
+			private function positionMenu():void
+			{
+				var point:Point = getMenuPosition();
+				_menu.move( point.x, point.y );				
 			}
 		
 			private function handleMove( event:Event ):void
@@ -181,21 +188,6 @@
 				
 				this.filters = [gf, ds];				
 			}
-			
-			/*
-			override public function hitTestPoint( x:Number, y:Number, shapeFlag:Boolean=false):Boolean
-			{
-				var globalPoint:Point = new Point( x, y );
-				var localPoint:Point = globalToLocal( globalPoint ); 
-				
-				if (localPoint.x < width - NUB_WIDTH && localPoint.y < _rowHeight)
-				{
-					return false;
-				}
-				
-				return super.hitTestPoint( x, y, shapeFlag );
-			}
-			*/
 						
 		]]>
 	</mx:Script>

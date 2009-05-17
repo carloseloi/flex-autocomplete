@@ -8,7 +8,7 @@
 	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
 	
 	<mx:Metadata>
-		[Event("change")]
+		[Event(name="change")]
 		[Style(name="promptColor", type="uint", format="Color", inherit="yes")]
 	</mx:Metadata>
 	

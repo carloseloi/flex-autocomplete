@@ -103,6 +103,32 @@ package com.hillelcoren.utils
 			return newString.toUpperCase();
 		}
 		
+		/**
+		 * This will separate the words in a camel caps string (ie, ringGroup becomes Ring Group)
+		 */
+		public static function seperateWords( string:String ):String
+		{
+			var newString:String = "";
+			
+			for (var x:uint = 0; x < string.length; x++)
+			{
+				var char:String = string.charAt( x );
+				
+				// is letter upper case
+				if (char.charCodeAt() <= 90 && newString.length > 0)
+				{
+					newString += " ";
+				}
+				
+				newString += char;
+				
+			}
+			
+			return StringUtils.capitalizeWords( newString.toLowerCase() );
+		}
+		
+		
+		
 		public static function toCamelCaps( string:String ):String
 		{
 			var returnStr:String = "";

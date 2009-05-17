@@ -186,12 +186,7 @@
 			private function handleMenuHide( event:Event ):void
 			{
 				flowBox.buttonEnabled = true;
-				/*
-				if (focusManager.getFocus() == _inlineButton)
-				{
-					stage.focus = null;
-				}
-				*/
+
 				dispatchEvent( event );
 			}
 			

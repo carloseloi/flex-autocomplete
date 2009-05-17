@@ -73,7 +73,7 @@
 						for each (var field:String in _browserFields)
 						{
 							var column:DataGridColumn = new DataGridColumn( field );
-							column.headerText = StringUtils.capitalizeWords( field );
+							column.headerText = StringUtils.seperateWords( field );
 							columns.push( column );
 						}
 
