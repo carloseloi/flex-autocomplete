@@ -38,11 +38,14 @@
 					delayTimer = new Timer( 500, 1 );
 					delayTimer.addEventListener(TimerEvent.TIMER, showComboAll);
 					delayTimer.start();
+					
+					autoComplete.enabled = false;
 				}
 			}
 			
 			private function showComboAll( event:TimerEvent ):void
 			{
+				autoComplete.enabled = true;
 				colors.addItem( { "name":"Almond", "hex":0xEED9C4 } );
 				
 				autoComplete.search();

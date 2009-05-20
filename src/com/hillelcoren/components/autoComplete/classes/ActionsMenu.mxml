@@ -41,7 +41,11 @@
 			private function init():void
 			{
 				addEventListener( MoveEvent.MOVE, handleMove, false, 0, true );
-				systemManager.addEventListener( ResizeEvent.RESIZE, handleResize, false, 0, true );
+				
+				if (systemManager)
+				{
+					systemManager.addEventListener( ResizeEvent.RESIZE, handleResize, false, 0, true );
+				}
 				
 				var localPoint:Point = new Point( 0, 0 );
 				var globalPoint:Point = localToGlobal( localPoint ); 
