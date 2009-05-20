@@ -42,7 +42,10 @@
 			{
 				addEventListener( MouseEvent.MOUSE_DOWN, handleMouseDown );
 				
-				systemManager.addEventListener( MouseEvent.MOUSE_MOVE, handleMouseMove );
+				if (systemManager)
+				{
+					systemManager.addEventListener( MouseEvent.MOUSE_MOVE, handleMouseMove );
+				}
 				
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );		
