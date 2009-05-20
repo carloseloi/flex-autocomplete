@@ -25,7 +25,6 @@
 		 * Dispatched when the selected items are changed either by the user or programmitcally
 		 */
 		[Event(name="valueCommit")]
-		
 		/**
 		 * The color for the prompt shown when no value is set
 		 */

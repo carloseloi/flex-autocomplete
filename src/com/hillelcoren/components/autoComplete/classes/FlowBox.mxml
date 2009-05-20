@@ -124,6 +124,7 @@
 						_inlineButtonCanvas = new Canvas();
 						_inlineButtonCanvas.setStyle( "backgroundColor", "#FFFFFF" );
 						_inlineButtonCanvas.addChild( _inlineButton );
+						_inlineButton.hitArea = _inlineButtonCanvas;
 						
 						rawChildren.addChild( _inlineButtonCanvas );
 					}
