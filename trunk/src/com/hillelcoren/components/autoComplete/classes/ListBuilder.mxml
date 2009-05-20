@@ -282,7 +282,7 @@
 		
 			<mx:VBox width="45%" height="100%">
 				<hc:PromptTextInput prompt="Filter Items" id="leftTextInput" change="handleLeftSearchChange()" width="100%"/>
-				<mx:List id="leftList" dataProvider="{ _dataProvider }" labelFunction="{ _labelFunction }" allowMultipleSelection="true" rowCount="10" width="100%"
+				<mx:List id="leftList" dataProvider="{ _dataProvider }" labelFunction="{ _labelFunction }" allowMultipleSelection="true" height="100%" width="100%"
 					dragEnabled="true" dropEnabled="true" variableRowHeight="true" dragDrop="handleLeftDrop(event)" doubleClickEnabled="true" doubleClick="handleLeftDoubleClick()"/>				
 			</mx:VBox>
 		
@@ -300,12 +300,13 @@
 		
 			<mx:VBox width="45%" height="100%">
 				<hc:PromptTextInput prompt="Filter Selected" id="rightTextInput" change="handleRightSearchChange()" width="100%"/>
-				<mx:List id="rightList" dataProvider="{ _selectedItems }" labelFunction="{ _labelFunction }" allowMultipleSelection="true" rowCount="10" width="100%"
+				<mx:List id="rightList" dataProvider="{ _selectedItems }" labelFunction="{ _labelFunction }" allowMultipleSelection="true" height="100%" width="100%"
 					dragEnabled="true" dropEnabled="true" dragMoveEnabled="true" variableRowHeight="true" dragDrop="handleRightDrop(event)" doubleClickEnabled="true" doubleClick="handleRightDoubleClick()"/>	
 			</mx:VBox>
 			
 		</mx:HBox>
-		<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" paddingRight="10" paddingLeft="10">
+		<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle" 
+			paddingRight="10" paddingLeft="10" paddingTop="15" paddingBottom="15">
 			<mx:Button label="Cancel" width="{ Consts.BUTTON_WIDTH }" click="handleCancelClick()"/>
 			<mx:Button id="okButton" label="OK" width="{ Consts.BUTTON_WIDTH }" click="handleOkClick()"/>
 		</mx:HBox>
