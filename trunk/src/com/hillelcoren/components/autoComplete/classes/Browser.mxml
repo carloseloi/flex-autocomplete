@@ -257,8 +257,8 @@
 			<mx:Label text="Search"/>
 			<mx:TextInput id="searchTextInput" change="handleSearchChange()"/>
 			<mx:Spacer width="100%"/>
-			<mx:Button label="Cancel" click="handleCancelClick()" width="{ Consts.BUTTON_WIDTH }"/>
-			<mx:Button id="selectButton" label="Select" click="handleSelectClick()" enabled="{ _list.selectedIndex > -1 } " width="{ Consts.BUTTON_WIDTH }"/>
+			<mx:Button label="Cancel" click="handleCancelClick()" minWidth="{ Consts.BUTTON_WIDTH }"/>
+			<mx:Button id="selectButton" label="Select" click="handleSelectClick()" enabled="{ _list.selectedIndex > -1 } " minWidth="{ Consts.BUTTON_WIDTH }"/>
 		</mx:HBox>
 	</mx:VBox>
 	

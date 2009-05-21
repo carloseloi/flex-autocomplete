@@ -307,8 +307,8 @@
 		</mx:HBox>
 		<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle" 
 			paddingRight="10" paddingLeft="10" paddingTop="15" paddingBottom="15">
-			<mx:Button label="Cancel" width="{ Consts.BUTTON_WIDTH }" click="handleCancelClick()"/>
-			<mx:Button id="okButton" label="OK" width="{ Consts.BUTTON_WIDTH }" click="handleOkClick()"/>
+			<mx:Button label="Cancel" minWidth="{ Consts.BUTTON_WIDTH }" click="handleCancelClick()"/>
+			<mx:Button id="okButton" label="OK" minWidth="{ Consts.BUTTON_WIDTH }" click="handleOkClick()"/>
 		</mx:HBox>
 	</mx:VBox>
 	
