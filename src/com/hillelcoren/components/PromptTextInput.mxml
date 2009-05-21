@@ -33,6 +33,7 @@
 			private var _textChanged:Boolean;
 			
 			private var _promptColor:String;
+			private var _textPadding:int = 10;
 			
 			private function init():void
 			{
@@ -114,9 +115,14 @@
 				clearStyle( "fontStyle" );
 			}
 			
+			public function set textPadding( value:int ):void
+			{
+				_textPadding = value;
+			}
+			
 			override public function get minWidth():Number
 			{
-				return measureText( text ).width + 10;
+				return measureText( text ).width + _textPadding;
 			}
 			
 			public function set prompt( value:String ):void

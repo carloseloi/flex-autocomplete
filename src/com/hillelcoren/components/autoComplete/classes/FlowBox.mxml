@@ -40,25 +40,8 @@
 						
 			private function init():void
 			{
-				addEventListener( MouseEvent.MOUSE_DOWN, handleMouseDown );
-				
-				if (systemManager)
-				{
-					systemManager.addEventListener( MouseEvent.MOUSE_MOVE, handleMouseMove );
-				}
-				
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );		
-			}
-			
-			private function handleMouseMove( event:MouseEvent ):void
-			{
-				buttonVisible = true; 			
-			}
-			
-			private function handleMouseDown( event:MouseEvent ):void
-			{
-				buttonVisible = false;
 			}
 			
 			public function set buttonEnabled( value:Boolean ):void
@@ -67,16 +50,6 @@
 				{
 					_inlineButtonCanvas.enabled = value;
 				}
-			}
-			
-			public function set buttonVisible( value:Boolean ):void
-			{
-				if (!_inlineButton)
-				{
-					return;
-				}
-				
-				_inlineButtonCanvas.visible = value;				
 			}
 			
 			private function handleFocusIn( event:FocusEvent ):void
@@ -318,6 +291,8 @@
 					_inlineButtonCanvas.y = height - textInput.height - vm.bottom;
 					
 					_inlineButton.y = _inlineButtonCanvas.height - _inlineButton.height - ((textInput.height - _inlineButton.height) / 2);
+					
+					textInput.textPadding = _inlineButtonCanvas.width + vm.right;
 				}				
 			}           
 

@@ -203,8 +203,6 @@
 			{
 				var commitEvent:Event = new Event( FlexEvent.VALUE_COMMIT );
 				dispatchEvent( commitEvent );				
-
-				flowBox.buttonVisible = true;
 				
 				if (event.relatedObject && contains( event.relatedObject))
 				{
@@ -375,8 +373,6 @@
 			private function handleSelectedItemsChange( event:CollectionEvent ):void
 			{
 				var item:Object;
-				
-				flowBox.buttonVisible = false;
 				
 				if (event.kind == CollectionEventKind.REMOVE)
 				{
@@ -996,7 +992,6 @@
 			public function handleChange( event:Event ):void
 			{
 				flowBox.invalidateDisplayList();
-				flowBox.buttonVisible = false;
 				
 				if (selectedItem && !_allowMultipleSelection)
 				{

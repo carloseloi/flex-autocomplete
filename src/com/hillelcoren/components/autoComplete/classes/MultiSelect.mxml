@@ -127,7 +127,7 @@
 	<mx:GridItem>
 		<mx:VBox height="100%">
 			<mx:Button id="removeButton" label="{ _removeLabel }" click="handleRemoveClick()" 
-				width="{ Consts.BUTTON_WIDTH }" visible="{ _showRemoveButton }" includeInLayout="{ _showRemoveButton }"/>
+				minWidth="{ Consts.BUTTON_WIDTH }" visible="{ _showRemoveButton }" includeInLayout="{ _showRemoveButton }"/>
 			<mx:Spacer height="100%"/>
 			<mx:VBox id="orderingButtons" visible="{ _showOrderButtons }" includeInLayout="{ _showOrderButtons }">
 				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/top.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_TOP ) }" toolTip="Move to top"/>

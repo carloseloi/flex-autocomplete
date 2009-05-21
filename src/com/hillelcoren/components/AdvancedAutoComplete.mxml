@@ -295,7 +295,7 @@
 				{
 					_browseButton = new Button();
 					_browseButton.label = _browseLabel;
-					_browseButton.width = Consts.BUTTON_WIDTH;
+					_browseButton.minWidth = Consts.BUTTON_WIDTH;
 					_browseButton.addEventListener( MouseEvent.CLICK, handleBrowseClick );
 				}
 				
