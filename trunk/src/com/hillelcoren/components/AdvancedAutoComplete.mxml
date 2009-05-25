@@ -179,6 +179,11 @@
 				var vm:EdgeMetrics = flowBox.viewMetricsAndPadding;
 	        	var textHeight:int = textInput.height + vm.top + vm.bottom;
 	        	
+	        	if (flowBox.verticalScrollBar)
+	        	{
+	        		globalPoint.x -= 16;
+	        	}
+	        	
 	        	_actionsMenu.x = globalPoint.x;
 				_actionsMenu.y = globalPoint.y + (height - textHeight);			
 			}

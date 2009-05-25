@@ -290,6 +290,11 @@
 					_inlineButtonCanvas.x = width - _inlineButtonCanvas.width - 1;
 					_inlineButtonCanvas.y = height - textInput.height - vm.bottom;
 					
+					if (verticalScrollBar)
+					{
+						_inlineButtonCanvas.x -= 16;
+					}
+					
 					_inlineButton.y = _inlineButtonCanvas.height - _inlineButton.height - ((textInput.height - _inlineButton.height) / 2);
 					
 					textInput.textPadding = _inlineButtonCanvas.width + vm.right;
