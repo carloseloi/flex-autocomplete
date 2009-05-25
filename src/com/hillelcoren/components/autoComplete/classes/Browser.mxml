@@ -138,7 +138,7 @@
 			private function handleSelectClick():void
 			{
 				var changeEvent:Event = new Event( Event.CHANGE );
-				dispatchEvent( changeEvent );				
+				dispatchEvent( changeEvent );	
 			}
 			
 			public function set originalSelectedItems( value:ArrayCollection ):void

@@ -38,6 +38,8 @@
 			private var _showOrderButtons:Boolean;
 			private var _showOrderButtonsChanged:Boolean;
 			
+			private var _isChanged:Boolean;
+			
 			public function init():void
 			{
 				okButton.setFocus();
@@ -133,12 +135,20 @@
 			private function handleSelectedItemsChange( event:Event ):void
 			{
 				_dataProvider.refresh();
+				_isChanged = true;
 			}
 			
 			private function handleOkClick():void
 			{
-				var changeEvent:Event = new Event( Event.CHANGE );
-				dispatchEvent( changeEvent );
+				if (_isChanged)
+				{
+					var changeEvent:Event = new Event( Event.CHANGE );
+					dispatchEvent( changeEvent );
+				}
+				else
+				{
+					handleCancelClick();
+				}
 			}
 			
 			private function handleCancelClick():void

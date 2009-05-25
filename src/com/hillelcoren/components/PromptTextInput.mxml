@@ -35,6 +35,9 @@
 			private var _promptColor:String;
 			private var _textPadding:int = 10;
 			
+			[Bindable]
+			public var displayAsPassword:Boolean;
+			
 			private function init():void
 			{
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );
@@ -372,7 +375,7 @@
 		]]>
 	</mx:Script>
 	
-	<classes:ShorterTextInput id="textInput" width="100%" borderStyle="none"/> 
+	<classes:ShorterTextInput id="textInput" width="100%" borderStyle="none" displayAsPassword="{ displayAsPassword }"/> 
 	<mx:Image id="clearIcon" source="@Embed('/com/hillelcoren/assets/icons/clear.png')" verticalAlign="middle" 
 		visible="false" includeInLayout="{ _enableClearIcon }" click="handleClearClick()"/>
 			

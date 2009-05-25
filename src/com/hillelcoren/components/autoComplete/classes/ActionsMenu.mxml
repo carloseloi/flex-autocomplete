@@ -60,8 +60,11 @@
 				_menu.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );
 				_menu.addEventListener( MenuEvent.ITEM_CLICK, handleItemClick );
 				
-				var point:Point = getMenuPosition();
-				_menu.show( point.x, point.y );
+				// the challeng we have is that we want to right align the menu
+				// with the component however we don't know how wide the menu is
+				// going to be until we show it. the wordaround is to initially place
+				// it off screen and then (once we know it's size) we'll position it
+				_menu.show( -1000, -1000 );
 								
 				_button = new Button();
 				_button.setStyle( "styleName", "actionsMenuButton" );
