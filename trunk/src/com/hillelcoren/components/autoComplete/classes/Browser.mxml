@@ -12,6 +12,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.collections.ListCollectionView;
 			import mx.controls.listClasses.ListBase;
 			import mx.controls.List;
 			import mx.controls.DataGrid;
@@ -27,7 +28,7 @@
 			import mx.managers.PopUpManager;
 					
 			[Bindable]
-			private var _dataProvider:ArrayCollection;		
+			private var _dataProvider:ListCollectionView;		
 			private var _dataProviderChanged:Boolean;
 			
 			private var _allowMultipleSelection:Boolean;	
@@ -162,7 +163,7 @@
 				return _list.selectedItems;	
 			}
 			
-			public function set dataProvider( value:ArrayCollection ):void
+			public function set dataProvider( value:ListCollectionView ):void
 			{
 				_dataProvider = value;
 				_dataProviderChanged = true;

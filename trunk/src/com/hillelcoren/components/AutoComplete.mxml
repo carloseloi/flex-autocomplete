@@ -39,6 +39,7 @@
 		
 	<mx:Script>
 		<![CDATA[
+			import mx.collections.ListCollectionView;
 			import mx.controls.Button;
 			import mx.events.MenuEvent;
 			import com.hillelcoren.components.autoComplete.classes.IconButton;
@@ -78,7 +79,7 @@
 			private var _matchType:String = MATCH_WORD;
 			
 			[Bindable]
-			protected var _dataProvider:ArrayCollection;
+			protected var _dataProvider:ListCollectionView;
 			private var _dataProviderChanged:Boolean;
 			
 			private var _searchText:String;
@@ -307,7 +308,7 @@
 					_selectedItemIdChanged = false;
 					_selectedItems.removeAll();
 					
-					for each (item in _dataProvider.source)
+					for each (item in _dataProvider.list)
 					{
 						if (item.hasOwnProperty( _keyField ) && item[ _keyField ] == _selectedItemId)
 						{
@@ -327,7 +328,7 @@
 					{
 						var foundItem:Object = null;
 						
-						for each (item in _dataProvider.source)
+						for each (item in _dataProvider.list)
 						{
 							if (item == selectedItem)
 							{
@@ -1300,7 +1301,7 @@
 				return flowBox.textInput;
 			}
 			
-			public function set dataProvider( value:ArrayCollection ):void
+			public function set dataProvider( value:ListCollectionView ):void
 			{
 				if (value != _dataProvider)
 				{
@@ -1316,7 +1317,7 @@
 				}
 			}
 			
-			public function get dataProvider():ArrayCollection
+			public function get dataProvider():ListCollectionView
 			{
 				return _dataProvider;
 			}
@@ -1490,6 +1491,21 @@
 			{
 				textInput.setFocus();
 			}
+			
+			override public function drawFocus( isFocused:Boolean ):void
+			{
+				flowBox.drawFocus( isFocused );
+			}
+			
+			override public function styleChanged( styleProp:String ):void
+			{
+				super.styleChanged( styleProp );
+				
+				if ( styleProp == "borderColor" )
+				{
+					flowBox.setStyle( styleProp, getStyle( styleProp ) );
+				}
+			}			
 			
 			override public function set errorString( value:String ):void
 			{

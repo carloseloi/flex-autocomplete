@@ -18,6 +18,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.collections.ListCollectionView;
 			import mx.controls.LinkButton;
 			import mx.controls.Button;
 			import mx.core.EdgeMetrics;
@@ -238,7 +239,7 @@
 					IBrowser( _browser ).allowMultipleSelection = _allowMultipleSelection;					
 				}
 				
-				var dp:ArrayCollection = new ArrayCollection( _dataProvider.source );
+				var dp:ListCollectionView = new ListCollectionView( _dataProvider.list );
 				dp.sort = _dataProvider.sort;
 				dp.refresh();
 				
