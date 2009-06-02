@@ -2,9 +2,10 @@
 <hc:CloseableTitleWindow
 	xmlns:hc="com.hillelcoren.components.*"
 	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:classes="com.hillelcoren.components.autoComplete.classes.*"
 	implements="com.hillelcoren.components.autoComplete.interfaces.IBrowser"
 	layout="absolute" width="500" height="350" 
-	showCloseButton="false" xmlns:classes="com.hillelcoren.components.autoComplete.classes.*">
+	showCloseButton="false">
 	
 	<mx:Metadata>
 		[Event("change")]
@@ -35,7 +36,7 @@
 			private var _allowMultipleSelectionChanged:Boolean;
 					
 			[Bindable]
-			private var _originalSelectedItems:ArrayCollection;
+			private var _originalSelectedItems:Array;
 			
 			private var _browserFields:Array;
 			
@@ -142,9 +143,14 @@
 				dispatchEvent( changeEvent );	
 			}
 			
-			public function set originalSelectedItems( value:ArrayCollection ):void
+			public function set selectedItems( value:Array ):void
 			{
 				_originalSelectedItems = value;	
+			}
+			
+			public function set originalSelectedItems( value:Array ):void
+			{
+				// do nothing (here to just remove binding warning)
 			}
 			
 			public function set itemRenderer( value:IFactory ):void
@@ -153,14 +159,14 @@
 			}
 			
 			[Bindable]
-			public function get originalSelectedItems():ArrayCollection
+			public function get originalSelectedItems():Array
 			{
 				return _originalSelectedItems;
 			}
 			
 			public function get selectedItems():Array
 			{
-				return _list.selectedItems;	
+				return _list.selectedItems;
 			}
 			
 			public function set dataProvider( value:ListCollectionView ):void
