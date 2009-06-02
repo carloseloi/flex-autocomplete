@@ -12,6 +12,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.collections.ListCollectionView;
 			import com.hillelcoren.utils.StringUtils;
 			import com.hillelcoren.utils.ArrayCollectionUtils;
 			import mx.events.CollectionEvent;
@@ -24,7 +25,7 @@
 			import com.hillelcoren.components.AutoComplete;
 			
 			[Bindable]
-			private var _dataProvider:ArrayCollection;
+			private var _dataProvider:ListCollectionView;
 			private var _dataProviderChanged:Boolean;
 						
 			[Bindable]
@@ -53,7 +54,7 @@
 				_selectedItems.addEventListener( CollectionEvent.COLLECTION_CHANGE, handleSelectedItemsChange );
 			}
 			
-			public function set dataProvider( value:ArrayCollection ):void
+			public function set dataProvider( value:ListCollectionView ):void
 			{
 				_dataProvider = value;
 				_dataProviderChanged = true;
