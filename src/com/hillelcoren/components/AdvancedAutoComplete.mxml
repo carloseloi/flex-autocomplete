@@ -46,7 +46,7 @@
 			private var _useListBuilder:Boolean;
 			private var _browserFields:Array;
 			protected var _browserClass:Class = Browser;
-			protected var _listBuilderClass:Class = ListBuilder;
+			protected var _listBuilderClass:Class = ListBuilderBrowser;
 			private var _browserItemRenderer:IFactory;
 			private var _browseButtonGridItem:GridItem;
 			
@@ -230,7 +230,7 @@
 				if (useListBuilder)
 				{
 					_browser = new _listBuilderClass();	
-					ListBuilder( _browser ).showOrderButtons = _showOrderButtons;
+					ListBuilderBrowser( _browser ).showOrderButtons = _showOrderButtons;
 				}
 				else
 				{
@@ -251,7 +251,7 @@
 				
 				if (_allowMultipleSelection || useListBuilder)
 				{
-					_browser.originalSelectedItems = _selectedItems;
+					_browser.selectedItems = _selectedItems.source;
 				}
 							
 				PopUpManager.addPopUp( IFlexDisplayObject( _browser ), DisplayObject( Application.application), true );

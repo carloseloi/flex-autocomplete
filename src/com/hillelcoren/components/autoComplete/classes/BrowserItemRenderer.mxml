@@ -3,11 +3,10 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.collections.ArrayCollection;
 			
-			private var _selectedItems:ArrayCollection;
+			private var _selectedItems:Array;
 			
-			public function set selectedItems( value:ArrayCollection ):void
+			public function set selectedItems( value:Array ):void
 			{
 				_selectedItems = value;
 			}
@@ -16,7 +15,7 @@
 			{
 				super.data = item;
 				
-				if (item && _selectedItems && _selectedItems.getItemIndex( item ) >= 0)
+				if (item && _selectedItems && _selectedItems.indexOf( item ) >= 0)
 				{
 					this.setStyle( "color", Consts.COLOR_TEXT_DISABLED );
 				}

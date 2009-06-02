@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<hc:CloseableTitleWindow
-	xmlns:hc="com.hillelcoren.components.*"
-	xmlns:mx="http://www.adobe.com/2006/mxml"
-	implements="com.hillelcoren.components.autoComplete.interfaces.IBrowser"
-	layout="absolute" width="450" height="350" 
-	showCloseButton="false">
+<mx:HBox
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:components="com.hillelcoren.components.*"
+	initialize="init()">
 	
 	<mx:Metadata>
 		[Event("change")]
@@ -36,22 +34,39 @@
 			[Bindable]
 			private var _labelFunction:Function;
 			
+			[Bindable]
+			private var _labelField:String;
+			
 			private var _showOrderButtons:Boolean;
 			private var _showOrderButtonsChanged:Boolean;
 			
 			private var _isChanged:Boolean;
 			
-			public function init():void
+			private function init():void
 			{
-				okButton.setFocus();
+				if (_labelFunction == null)
+				{
+					labelFunction = defaultLabelFunction;
+				}
+
+				if (_filterFunction == null)
+				{
+					filterFunction = defaultFilterFunction;
+				}				
+				
+				if (_selectedItems == null)
+				{
+					_selectedItems = new ArrayCollection();
+					_selectedItems.addEventListener( CollectionEvent.COLLECTION_CHANGE, handleSelectedItemsChange );
+				}
 			}
 			
-			public function set originalSelectedItems( value:ArrayCollection ):void
+			public function set selectedItems( value:Array ):void
 			{
 				// we're going to copy the data so the user has to click
 				// ok for the items to be copied over
-				_selectedItems = new ArrayCollection( value.toArray() );
-				_selectedItems.addEventListener( CollectionEvent.COLLECTION_CHANGE, handleSelectedItemsChange );
+				_selectedItems = new ArrayCollection( value.slice() );
+				_selectedItems.addEventListener( CollectionEvent.COLLECTION_CHANGE, handleSelectedItemsChange );				
 			}
 			
 			public function set dataProvider( value:ListCollectionView ):void
@@ -62,6 +77,7 @@
 				invalidateProperties();
 			}
 			
+			[Inspectable(enumeration="false,true")]
 			public function set showOrderButtons( value:Boolean ):void
 			{
 				_showOrderButtons = value;
@@ -101,9 +117,20 @@
 				_labelFunction = value;
 			}
 			
+			public function set labelField( value:String ):void
+			{
+				_labelField = value;
+			}
+			
+			[Bindable(event="change")]
 			public function get selectedItems():Array
 			{
 				return _selectedItems.toArray();
+			}
+			
+			public function get isChanged():Boolean
+			{
+				return _isChanged;
 			}
 			
 			private function rightFilterFunctionWrapper( item:Object ):Boolean
@@ -121,6 +148,30 @@
 				return _filterFunction( item, leftTextInput.text ); 
 			}
 			
+			private function defaultFilterFunction( item:Object, searchStr:String ):Boolean
+			{
+				if (searchStr.length == 0)
+				{
+					return true;
+				}
+				
+				var str:String = _labelFunction( item );
+				
+				return StringUtils.beginsWith( str, searchStr );
+			}						
+					
+			private function defaultLabelFunction( item:Object ):String
+			{
+				if (_labelField && item.hasOwnProperty( _labelField ))
+				{
+					return item[ _labelField ];
+				}
+				else
+				{
+					return item.toString();
+				}
+			}
+						
 			private function handleLeftSearchChange():void
 			{
 				_dataProvider.refresh();
@@ -137,25 +188,7 @@
 			{
 				_dataProvider.refresh();
 				_isChanged = true;
-			}
-			
-			private function handleOkClick():void
-			{
-				if (_isChanged)
-				{
-					var changeEvent:Event = new Event( Event.CHANGE );
-					dispatchEvent( changeEvent );
-				}
-				else
-				{
-					handleCancelClick();
-				}
-			}
-			
-			private function handleCancelClick():void
-			{
-				var event:CloseEvent = new CloseEvent( CloseEvent.CLOSE );
-				dispatchEvent( event );
+				dispatchEvent( new Event( Event.CHANGE ) );
 			}
 			
 			private function handleLeftDrop( event:DragEvent ):void
@@ -185,8 +218,10 @@
 					}										
 				}
 				
-				rightTextInput.text = null;	
+				rightTextInput.text = null;
+				
 				_selectedItems.refresh();
+				_dataProvider.refresh();
 			}
 			
 			private function handleRightDrop( event:DragEvent ):void
@@ -258,7 +293,9 @@
 				}
 				
 				rightTextInput.text = null;
+				
 				_selectedItems.refresh();
+				_dataProvider.refresh();
 			}
 			
 			private function moveItems( moveTo:String ):void
@@ -288,40 +325,28 @@
 		]]>
 	</mx:Script>
 	
-	<mx:VBox width="100%" height="100%">
-		<mx:HBox width="100%" height="100%" horizontalAlign="center">
-		
-			<mx:VBox width="45%" height="100%">
-				<hc:PromptTextInput prompt="Filter Items" id="leftTextInput" change="handleLeftSearchChange()" width="100%"/>
-				<mx:List id="leftList" dataProvider="{ _dataProvider }" labelFunction="{ _labelFunction }" allowMultipleSelection="true" height="100%" width="100%"
-					dragEnabled="true" dropEnabled="true" variableRowHeight="true" dragDrop="handleLeftDrop(event)" doubleClickEnabled="true" doubleClick="handleLeftDoubleClick()"/>				
-			</mx:VBox>
-		
-			<mx:VBox verticalAlign="middle" height="100%">
-				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/right.png')" width="50" click="handleAddSelectedClick()" toolTip="Add Selected"/>
-				<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/left.png')" width="50" click="handleRemoveSelectedClick()" toolTip="Remove Selected"/> 
-				<mx:VBox id="orderingButtons">
-					<mx:Spacer height="20"/>
-					<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/top.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_TOP ) }" toolTip="Move to top"/>
-					<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/up.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_UP ) }" toolTip="Move up"/>
-					<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/down.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_DOWN ) }" toolTip="Move down"/>
-					<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/bottom.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_BOTTOM ) }" toolTip="Move to bottom"/>	
-				</mx:VBox>							
-			</mx:VBox>
-		
-			<mx:VBox width="45%" height="100%">
-				<hc:PromptTextInput prompt="Filter Selected" id="rightTextInput" change="handleRightSearchChange()" width="100%"/>
-				<mx:List id="rightList" dataProvider="{ _selectedItems }" labelFunction="{ _labelFunction }" allowMultipleSelection="true" height="100%" width="100%"
-					dragEnabled="true" dropEnabled="true" dragMoveEnabled="true" variableRowHeight="true" dragDrop="handleRightDrop(event)" doubleClickEnabled="true" doubleClick="handleRightDoubleClick()"/>	
-			</mx:VBox>
-			
-		</mx:HBox>
-		<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle" 
-			paddingRight="10" paddingLeft="10" paddingTop="15" paddingBottom="15">
-			<mx:Button label="Cancel" minWidth="{ Consts.BUTTON_WIDTH }" click="handleCancelClick()"/>
-			<mx:Button id="okButton" label="OK" minWidth="{ Consts.BUTTON_WIDTH }" click="handleOkClick()"/>
-		</mx:HBox>
+	<mx:VBox width="45%" height="100%">
+		<components:PromptTextInput prompt="Filter Items" id="leftTextInput" change="handleLeftSearchChange()" width="100%"/>
+		<mx:List id="leftList" dataProvider="{ _dataProvider }" labelFunction="{ _labelFunction }" labelField="{ _labelField }" allowMultipleSelection="true" height="100%" width="100%"
+			dragEnabled="true" dropEnabled="true" variableRowHeight="true" dragDrop="handleLeftDrop(event)" doubleClickEnabled="true" doubleClick="handleLeftDoubleClick()"/>				
+	</mx:VBox>
+
+	<mx:VBox verticalAlign="middle" height="100%">
+		<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/right.png')" width="50" click="handleAddSelectedClick()" toolTip="Add Selected"/>
+		<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/left.png')" width="50" click="handleRemoveSelectedClick()" toolTip="Remove Selected"/> 
+		<mx:VBox id="orderingButtons">
+			<mx:Spacer height="20"/>
+			<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/top.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_TOP ) }" toolTip="Move to top"/>
+			<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/up.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_UP ) }" toolTip="Move up"/>
+			<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/down.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_DOWN ) }" toolTip="Move down"/>
+			<mx:Button icon="@Embed(source='/com/hillelcoren/assets/icons/bottom.png')" width="50" click="{ moveItems( ArrayCollectionUtils.MOVE_BOTTOM ) }" toolTip="Move to bottom"/>	
+		</mx:VBox>							
+	</mx:VBox>
+
+	<mx:VBox width="45%" height="100%">
+		<components:PromptTextInput prompt="Filter Selected" id="rightTextInput" change="handleRightSearchChange()" width="100%"/>
+		<mx:List id="rightList" dataProvider="{ _selectedItems }" labelFunction="{ _labelFunction }" labelField="{ _labelField }" allowMultipleSelection="true" height="100%" width="100%"
+			dragEnabled="true" dropEnabled="true" dragMoveEnabled="true" variableRowHeight="true" dragDrop="handleRightDrop(event)" doubleClickEnabled="true" doubleClick="handleRightDoubleClick()"/>	
 	</mx:VBox>
 	
-	
-</hc:CloseableTitleWindow>
+</mx:HBox>
