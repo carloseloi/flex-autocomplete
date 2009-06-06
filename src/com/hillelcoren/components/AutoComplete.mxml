@@ -162,7 +162,10 @@
 				_selectedItems = new ArrayCollection();
 				_selectedItems.addEventListener( CollectionEvent.COLLECTION_CHANGE, handleSelectedItemsChange );
 				
-				_disabledItems = new ArrayCollection();
+				if (!_disabledItems)
+				{
+					_disabledItems = new ArrayCollection();
+				}
 				
 				if (_labelFunction == null)
 				{
@@ -384,7 +387,7 @@
 					removeAll();
 				}	
 				else if (event.kind == CollectionEventKind.ADD)
-				{				
+				{
 					hideDropDown();
 					
 					for each (item in event.items)

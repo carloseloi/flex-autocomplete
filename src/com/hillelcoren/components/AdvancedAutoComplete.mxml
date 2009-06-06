@@ -94,7 +94,7 @@
 				{
 					_selectionLayoutChanged = false;
 					
-					_selectedItems.removeAll();
+					//_selectedItems.removeAll();
 					_showSelectedItems = _selectionLayout == LAYOUT_HORIZONTAL;
 					
 					var showMultiSelect:Boolean = (_selectionLayout == LAYOUT_VERTICAL && _allowMultipleSelection);
@@ -338,7 +338,7 @@
 					removeChild( _multiSelect );					
 				}
 				
-				_selectedItems.removeAll();											
+				//_selectedItems.removeAll();											
 			}
 			
 			[Inspectable(enumeration="horizontal,vertical")]
