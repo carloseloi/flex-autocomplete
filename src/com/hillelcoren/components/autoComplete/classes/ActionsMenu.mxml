@@ -136,6 +136,11 @@
 				_rowHeight = value;
 			}			
 			
+			public function highlightFirstRow():void
+			{
+				_menu.selectedIndex = 0;
+			}
+			
 			private function drawShape( g:Graphics, width:int, height:int, point:Point, radius:int ):void
 			{
 				g.moveTo( 0, point.y + radius);

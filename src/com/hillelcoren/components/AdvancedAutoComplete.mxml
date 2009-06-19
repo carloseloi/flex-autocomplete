@@ -78,7 +78,22 @@
 			private function init():void
 			{
 				addEventListener( MoveEvent.MOVE, handleMove );
+				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
 			}							
+			
+			override protected function handleKeyDown( event:KeyboardEvent ):void
+			{
+				super.handleKeyDown( event );
+				
+				if (!isDropDownVisible())
+				{
+					if (event.keyCode == Keyboard.DOWN)
+					{
+						handleButtonClick();						
+						_actionsMenu.highlightFirstRow();
+					}
+				}
+			}
 			
 			override protected function commitProperties():void
 			{
@@ -146,7 +161,7 @@
 				}				
 			}
 			
-			private function handleButtonClick( event:Event ):void
+			private function handleButtonClick( event:Event = null ):void
 			{
 				var vm:EdgeMetrics = flowBox.viewMetricsAndPadding;
 	        	var textHeight:int = textInput.height + vm.top + vm.bottom;
@@ -164,7 +179,10 @@
 				
 				PopUpManager.addPopUp( _actionsMenu, this );
 				
-				event.stopPropagation();
+				if (event)
+				{
+					event.stopPropagation();
+				}
 			}
 			
 			private function positionActionsMenu():void
