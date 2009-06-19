@@ -594,7 +594,7 @@
 				systemManager.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseDown );				
 			}
 			
-			private function handleKeyDown( event:KeyboardEvent ):void
+			protected function handleKeyDown( event:KeyboardEvent ):void
 			{
 				if (isDropDownVisible())
 				{
@@ -1428,7 +1428,7 @@
 				}
 			}
 			
-			private function isDropDownVisible():Boolean
+			protected function isDropDownVisible():Boolean
 			{
 				return _dropDown && _dropDown.parent;
 			}
