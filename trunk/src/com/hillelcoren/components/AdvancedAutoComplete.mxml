@@ -41,6 +41,7 @@
 			private var _showBrowseButton:Boolean;
 			private var _showBrowseButtonChanged:Boolean;
 			private var _browseButton:Button;
+			private var _browseButtonWidth:uint = Consts.BUTTON_WIDTH;
 			
 			private var _browser:IBrowser;
 			private var _useListBuilder:Boolean;
@@ -319,7 +320,7 @@
 				{
 					_browseButton = new Button();
 					_browseButton.label = _browseLabel;
-					_browseButton.minWidth = Consts.BUTTON_WIDTH;
+					_browseButton.minWidth = _browseButtonWidth;
 					_browseButton.addEventListener( MouseEvent.CLICK, handleBrowseClick );
 				}
 				
@@ -333,6 +334,16 @@
 				{
 					mainGridRow.removeChild( _browseButtonGridItem );
 				}			
+			}
+			
+			public function get browseButtonWidth():uint
+			{
+				return _browseButtonWidth;
+			}
+			 
+			public function set browseButtonWidth( value:uint ):void
+			{
+				_browseButtonWidth = value;
 			}
 			
 			private function showMultiSelectList( show:Boolean ):void
