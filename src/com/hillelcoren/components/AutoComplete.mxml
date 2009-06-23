@@ -205,7 +205,7 @@
 			
 			private function handleFocusOut( event:FocusEvent ):void
 			{
-				var commitEvent:Event = new Event( FlexEvent.VALUE_COMMIT );
+				var commitEvent:FlexEvent = new FlexEvent( FlexEvent.VALUE_COMMIT );
 				dispatchEvent( commitEvent );				
 				
 				if (event.relatedObject && contains( event.relatedObject))
