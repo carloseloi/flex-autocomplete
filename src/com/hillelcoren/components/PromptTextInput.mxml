@@ -21,6 +21,8 @@
 			import mx.states.SetStyle;
 			
 			private var _prompt:String;
+			private var _promptChanged:Boolean;
+			
 			private var _isPromptSet:Boolean;
 			private var _drawFocusBorder:Boolean = true;
 			
@@ -47,9 +49,7 @@
 				
 				textInput.addEventListener( Event.CHANGE, handleChange );				
 				
-				_promptColor = getStyle( "promptColor" ) ? getStyle( "promptColor" ) : Consts.COLOR_TEXT_DISABLED;
-				
-				showPrompt();
+				_promptColor = getStyle( "promptColor" ) ? getStyle( "promptColor" ) : Consts.COLOR_TEXT_DISABLED;				
 			}
 			
 			override protected function commitProperties():void
@@ -60,6 +60,16 @@
 				{
 					_textChanged = false;
 					setNewText();
+				}
+				
+				if (_promptChanged)
+				{
+					_promptChanged = false;
+					
+					if (!_text)	
+					{
+						showPrompt();
+					}
 				}
 			}						
 			
@@ -131,8 +141,9 @@
 			public function set prompt( value:String ):void
 			{
 				_prompt = value;
+				_promptChanged = true;
 				
-				showPrompt();
+				invalidateProperties();
 			}
 			
 			public function set enableClearIcon( value:Boolean ):void
@@ -207,7 +218,7 @@
 				
 				textInput.validateNow();
 			}
-						
+					
 			public function setTextSelected( value:Boolean ):void
 			{
 				var startPos:uint = value ? 0 : text.length;

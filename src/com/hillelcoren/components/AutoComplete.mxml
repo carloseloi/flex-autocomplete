@@ -39,6 +39,8 @@
 		
 	<mx:Script>
 		<![CDATA[
+			import mx.events.FlexMouseEvent;
+			import mx.events.ScrollEvent;
 			import mx.collections.ListCollectionView;
 			import mx.controls.Button;
 			import mx.events.MenuEvent;
@@ -413,7 +415,7 @@
 					searchText = null;									
 				}
 				
-				var commitEvent:Event = new Event( FlexEvent.VALUE_COMMIT );
+				var commitEvent:FlexEvent = new FlexEvent( FlexEvent.VALUE_COMMIT );
 				dispatchEvent( commitEvent );				
 			}
 			
@@ -589,10 +591,29 @@
 				_dropDown.labelFunction = _dropDownLabelFunction;
 				_dropDown.rowCount		= _dropDownRowCount;
 				_dropDown.itemRenderer  = _dropDownItemRenderer ? _dropDownItemRenderer : new ClassFactory( DropDownItemRenderer );
-				_dropDown.addEventListener( ListEvent.ITEM_CLICK, handleDropDownItemClick );
+				_dropDown.addEventListener( ListEvent.ITEM_CLICK, handleDropDownItemClick );				
 				
 				systemManager.addEventListener( MouseEvent.MOUSE_DOWN, handleMouseDown );				
 			}
+			
+			/**
+			 * If the list is visible and we click somewhere else we're going to close it
+			 */
+			private function handleMouseDown( event:MouseEvent ):void
+			{
+				if (!isDropDownVisible())
+				{
+					return;
+				}
+				
+				var p:Point = _dropDown.localToGlobal( new Point( 0, 0 ) );
+				var rect:Rectangle = new Rectangle( p.x, p.y, _dropDown.width, _dropDown.height );
+				
+				if (!rect.contains( event.stageX, event.stageY ))
+				{
+					hideDropDown();
+				}
+			}			
 			
 			protected function handleKeyDown( event:KeyboardEvent ):void
 			{
@@ -975,23 +996,6 @@
 				_selectedItems.addItem( _dropDown.selectedItem );
 				dispatchEvent( new Event( Event.CHANGE ) );
 			}
-			
-			/**
-			 * If the list is visible and we click somewhere else
-			 * we're going to close it
-			 */
-			private function handleMouseDown( event:MouseEvent ):void
-			{
-				if (!isDropDownVisible())
-				{
-					return;
-				}
-				
-				if (!_dropDown.hitTestPoint( event.stageX, event.stageY ))
-				{
-					hideDropDown();
-				}
-			}			
 			
 			public function handleChange( event:Event ):void
 			{
