@@ -88,7 +88,7 @@
 				
 				if (!isDropDownVisible())
 				{
-					if (event.keyCode == Keyboard.DOWN)
+					if (event.keyCode == Keyboard.DOWN && _actionsMenuDataProvider)
 					{
 						handleButtonClick();						
 						_actionsMenu.highlightFirstRow();
@@ -109,9 +109,6 @@
 				if (_selectionLayoutChanged)
 				{
 					_selectionLayoutChanged = false;
-					
-					//_selectedItems.removeAll();
-					_showSelectedItems = _selectionLayout == LAYOUT_HORIZONTAL;
 					
 					var showMultiSelect:Boolean = (_selectionLayout == LAYOUT_VERTICAL && _allowMultipleSelection);
 					showMultiSelectList( showMultiSelect );																			
@@ -380,6 +377,14 @@
 			{
 				_selectionLayout = value;
 				_selectionLayoutChanged = true;
+				
+				if (value == LAYOUT_VERTICAL)
+				{
+					allowMultipleSelection = true;
+					
+				}
+				
+				_showSelectedItems = _selectionLayout == LAYOUT_HORIZONTAL;
 				
 				invalidateProperties();
 			}
