@@ -50,6 +50,7 @@
 			protected var _listBuilderClass:Class = ListBuilderBrowser;
 			private var _browserItemRenderer:IFactory;
 			private var _browseButtonGridItem:GridItem;
+			private var _browserFilterFunction:Function;
 			
 			private var _browseLabel:String = "Browse";
 			private var _removeLabel:String = "Remove";	
@@ -260,7 +261,7 @@
 				dp.refresh();
 				
 				_browser.dataProvider = dp;
-				_browser.filterFunction = _filterFunction;
+				_browser.filterFunction = browserFilterFunctionWrapper;
 				_browser.title = "Browse";
 				_browser.labelFunction = _labelFunction;
 				_browser.addEventListener( Event.CHANGE, handleBrowserChange );
@@ -331,6 +332,29 @@
 				{
 					mainGridRow.removeChild( _browseButtonGridItem );
 				}			
+			}
+			
+			public function set browserFilterFunction( value:Function ):void
+			{
+				_browserFilterFunction = value;
+			}
+			
+			public function browserFilterFunctionWrapper( item:Object, searchStr:String ):Boolean
+			{
+				if (_browserFilterFunction != null)
+				{
+					if (!_browserFilterFunction( item, searchStr))
+					{
+						return false;
+					}
+				}
+				
+				if (!_filterFunction( item, searchStr ))
+				{
+					return false;
+				}
+				
+				return true;
 			}
 			
 			public function get browseButtonWidth():uint

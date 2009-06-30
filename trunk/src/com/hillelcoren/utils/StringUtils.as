@@ -1,15 +1,14 @@
 package com.hillelcoren.utils
 {
-	import com.hillelcoren.components.AutoComplete;
-	
+	import com.hillelcoren.components.AutoComplete;	
 	import mx.utils.StringUtil;
 	
 	public class StringUtils
 	{
 		/**
-		 * Check if the string begins with the searchStr
+		 * Check if the string begins with the pattern
 		 */
-		public static function beginsWith( string:String, searchStr:String):Boolean
+		public static function beginsWith( string:String, pattern:String):Boolean
 		{
 			if (!string)
 			{
@@ -17,9 +16,9 @@ package com.hillelcoren.utils
 			}
 			
 			string  = string.toLowerCase();
-			searchStr = searchStr.toLowerCase();
+			pattern = pattern.toLowerCase();
 			
-			return searchStr == string.substr( 0, searchStr.length );
+			return pattern == string.substr( 0, pattern.length );
 		}
 		
 		public static function contains( string:String, searchStr:String ):Boolean
@@ -28,15 +27,15 @@ package com.hillelcoren.utils
 			
 			return regExp.test( string );			
 		}
-		
-		public static function anyWordBeginsWith( string:String, searchStr:String ):Boolean
+				
+		public static function anyWordBeginsWith( string:String, pattern:String ):Boolean
 		{
 			if (!string)
 			{
 				return false;
 			}
 			
-			if (beginsWith( string, searchStr ))
+			if (beginsWith( string, pattern ))
 			{
 				return true;
 			}
@@ -46,7 +45,7 @@ package com.hillelcoren.utils
 			
 			for each (var word:String in words)
 			{
-				if (beginsWith( word, searchStr ))
+				if (beginsWith( word, pattern ))
 				{
 					return true;
 				}
@@ -72,7 +71,7 @@ package com.hillelcoren.utils
 
 			return newWords.join( " " ); 
 		}
-						
+				
 		public static function unCapitalize( string:String ):String
 		{
 			return string.charAt(0).toLowerCase() + string.substring( 1, string.length );
@@ -103,6 +102,27 @@ package com.hillelcoren.utils
 			return newString.toUpperCase();
 		}
 		
+		public static function getFirstWord( string:String ):String
+		{
+			var newString:String = "";
+			
+			for (var x:uint = 0; x < string.length; x++)
+			{
+				var char:String = string.charAt( x );
+				
+				// is letter upper case
+				if (char.charCodeAt() <= 90 && newString.length > 0)
+				{
+					return newString;
+				}
+				
+				newString += char;
+				
+			}
+			
+			return newString;			
+		}
+		
 		/**
 		 * This will separate the words in a camel caps string (ie, ringGroup becomes Ring Group)
 		 */
@@ -125,9 +145,7 @@ package com.hillelcoren.utils
 			}
 			
 			return StringUtils.capitalizeWords( newString.toLowerCase() );
-		}
-		
-		
+		}		
 		
 		public static function toCamelCaps( string:String ):String
 		{
@@ -150,23 +168,36 @@ package com.hillelcoren.utils
 			return returnStr;		
 		}
 		
+		/* given a string it will return true, iff it is "true", everything else will be false */
+		public static function toBoolean( value:String ):Boolean
+		{
+			value = value.toLowerCase();
+			
+			if (value == "true" || value == "yes")
+			{
+				return true;
+			}
+			
+			return false;			
+		}
+		
 		public static function trimCommas( value:String ):String
 		{
 			value = StringUtil.trim( value );
 			
-			while (value.length > 0 && value.charAt( 0 ) == ",")
+			while (value.length > 0 && value.charAt(0) == ",")
 			{
 				value = value.substring( 1, value.length );
 			}
 			
 			while (value.length > 0 && value.charAt( value.length - 1 ) == ",")
 			{
-				value = value.substring( 0, value.length - 1 );
+				value = value.substring( 0, value.length - 1);
 			}
 			
 			return value;
 		}
-		
+				
 		public static function highlighMatch( string:String, searchStr:String, matchType:String = "" ):String
 		{
 			if (!matchType)
@@ -174,7 +205,13 @@ package com.hillelcoren.utils
 				matchType = AutoComplete.MATCH_ANY_PART;
 			}
 			
-			var matchPos:int = string.toLowerCase().indexOf( searchStr.toLowerCase() );
+			var regExp:RegExp = new RegExp( searchStr, "i" );
+			var matchPos:int = string.search( regExp );
+			
+			if (matchPos == -1)
+			{
+				return string;
+			}
 			
 			// if we're matching on word then we need to make sure 
 			// we're highliting the right part (ie, search for "st" in "Test String" 
@@ -183,20 +220,16 @@ package com.hillelcoren.utils
 			{
 				if (matchPos > 0 && string.charAt( matchPos - 1 ) != " ")
 				{
-					matchPos = string.toLowerCase().indexOf( " " + searchStr.toLowerCase() ) + 1;	
+					regExp = new RegExp( " " + searchStr, "i" );
+					matchPos = string.search( regExp ) + 1;			
 				}
 			}
 			
 			var returnStr:String = string.substring( 0, matchPos );
-			var matchedPart:String = string.substr( matchPos, searchStr.length);
-			
-			// there are problems using ">"s and "<"s
-			matchedPart = matchedPart.replace( "<", "&lt;" ).replace( ">", "&gt;" );
-			
-			returnStr += "<b><u>" + matchedPart + "</u></b>";
+			returnStr += "<b><u>" + string.substr( matchPos, searchStr.length) + "</u></b>";
 			returnStr += string.substr( matchPos + searchStr.length, string.length ) + " ";		
-			
+
 			return returnStr;
-		}
+		}		
 	}
 }

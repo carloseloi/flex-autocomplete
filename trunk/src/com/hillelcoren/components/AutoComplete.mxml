@@ -158,7 +158,7 @@
 			public static const MATCH_BEGINNING:String 	= "beginning";
 			public static const MATCH_WORD:String		= "word";
 			public static const MATCH_ANY_PART:String	= "anyPart";
-						
+			
 			private function init():void
 			{
 				_selectedItems = new ArrayCollection();
@@ -1432,7 +1432,7 @@
 				}
 			}
 			
-			protected function isDropDownVisible():Boolean
+			public function isDropDownVisible():Boolean
 			{
 				return _dropDown && _dropDown.parent;
 			}
