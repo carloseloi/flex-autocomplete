@@ -415,10 +415,12 @@
 					searchText = null;									
 				}
 				
+				/*
 				if (_selectedItems.length == 0)
 				{
 					searchText = null;
 				}
+				*/
 				
 				var commitEvent:FlexEvent = new FlexEvent( FlexEvent.VALUE_COMMIT );
 				dispatchEvent( commitEvent );				
