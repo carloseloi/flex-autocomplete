@@ -284,7 +284,7 @@
 				
 				if (_inlineButton)
 				{
-					_inlineButtonCanvas.width = _inlineButton.width;
+					_inlineButtonCanvas.width = _inlineButton.measuredWidth;
 					_inlineButtonCanvas.height = textInput.height;
 					
 					_inlineButtonCanvas.x = width - _inlineButtonCanvas.width - 1;
@@ -295,7 +295,7 @@
 						_inlineButtonCanvas.x -= 16;
 					}
 					
-					_inlineButton.y = _inlineButtonCanvas.height - _inlineButton.height - ((textInput.height - _inlineButton.height) / 2);
+					_inlineButton.y = _inlineButtonCanvas.height - _inlineButton.measuredHeight - ((textInput.height - _inlineButton.measuredHeight) / 2);
 					
 					textInput.textPadding = _inlineButtonCanvas.width + vm.right;
 				}				
