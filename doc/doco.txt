@@ -1,0 +1,86 @@
+Flex Autocomplete
+
+Getting started
+Usability settings
+Working with the data
+Look and feel
+Using it as an item editor
+AdvancedAutoComplete
+Custom skins
+Odds and ends
+
+Getting started
+
+Thanks for checking out the documentation for this component. Hopefully you find it useful. 
+
+The best way to figure this thing out is to use the Demo to see what options are available and then reference the source code for the examples to how it's implemented. It's also a good idea to skim through the methods and properties in the ASDoc file (as the demo doesn't use every property/method available). Here are the two files: AutoComplete and AdvancedAutoComplete.
+
+Although the component doesn't extend from the ComboBox class, it's designed to have as similar an interface as possible. For example, it implements the filterFunction, labelFunction and selectedItems properties as well as others.
+
+Here's the simplest possible implementation of the component.
+
+[ch01ex01]
+
+While there are a fair number of settings you can adjust, I'd like to start by the showing the way I generally use the component.
+
+[ch01ex02]
+
+Working with the data
+
+The first topic we'll cover is filtering the data. You can either use the built in options by setting the "matchType" property or create a custom filter by setting a value for the "filterFunction" property. The built in options are:
+
+- beginning: Only match the beginning of the string 
+- word: Match the beginning of any of the words in the string
+- anyPart: Matches any part of the string
+
+All of the built in options perform a case-insensitive search. Here's how you could use the filterFunction property to implement a case-sensisitve search.
+
+[ch02ex01]
+
+By default, the component requires the user to select an item from the list. You can allow the user to enter their own values by setting "allowNewValues" to true. You can then control where or new the new items are editable by setting the "allowEditingNewValues" property.
+
+You can use either an ArrayCollection or an XMLListCollection as the dataProvider. We showed you an example with an ArrayCollection in the last chapter, here's an example using an XMLListCollection.
+
+[ch02ex03]
+
+
+allowDuplicates
+allowMultipleSelection
+autoSelectEnabled 
+autoSelectFunction
+backspaceAction
+dropDownItemRenderer
+dropDownLabelFunction
+dropDownRowCount
+dropDownWidth
+enableClearIcon
+inlineButton
+keyField
+labelField
+labelFunction
+prompt
+searchText
+selectedItem
+selectedItemId
+selectedItems
+showRemoveIcon 
+text
+actionsMenuDataProvider 
+browseLabel 
+browserClass
+browserFields 
+selectionLayout 
+showBrowseButton
+showOrderButtons 
+showRemoveButton 
+useListBuilder
+events
+isItemSelected
+isSettingValue
+isDrowDownVisible
+search
+showDropDown
+hideDropDown
+getNextItems
+first class components
+utility classes
