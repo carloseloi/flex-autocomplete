@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:components="com.hillelcoren.components.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			[Bindable]
+			private var _data:ArrayCollection = new ArrayCollection( ["one", "two", "three"] );
+			
+		]]>
+	</mx:Script>
+	
+	<components:AutoComplete dataProvider="{ _data }" prompt="Please select"
+		selectedItemStyleName="underline" backspaceAction="remove"/>
+	
+</mx:Application>

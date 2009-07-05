@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:components="com.hillelcoren.components.*">
+	
+	<mx:XML format="e4x" id="xml">  
+		<items>  
+			<item>one</item>  
+			<item>two</item>
+			<item>three</item>  
+		</items>  
+	</mx:XML>  
+	   
+	<mx:XMLListCollection id="xmlList" source="{ xml.item }"/>   	
+	<components:AutoComplete dataProvider="{ xmlList }"/>
+	
+</mx:Application>
