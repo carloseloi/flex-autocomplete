@@ -416,6 +416,9 @@
 				}
 				
 				/*
+				This caused the component to lose the key typed when there
+				was already a value selected. The purpose was to show the prompt
+				if there are no selected items
 				if (_selectedItems.length == 0)
 				{
 					searchText = null;
@@ -483,7 +486,7 @@
 			public function search():void
 			{
 				validateNow();
-				handleChange( null );
+				handleFlowBoxChange( null );
 			}			
 			
 			public function get listData():BaseListData
@@ -662,7 +665,6 @@
 					{
 						_selectedItems.addItem( _dropDown.selectedItem );
 						dispatchEvent( new Event( Event.CHANGE ) );
-						return;											
 					}
 				}
 				else
@@ -938,7 +940,7 @@
 						selectedItem.showRemoveIcon = _showRemoveIcon;
 						selectedItem.addEventListener( SelectedItem.REMOVE_ITEM, handleItemRemove, false, 0, true );
 						selectedItem.addEventListener( TextEvent.TEXT_INPUT, handleItemTextInput );
-						flowBox.addChildAt( selectedItem, flowBox.numChildren - 1 );
+						flowBox.addChildAt( selectedItem, flowBox.numChildren - 1 );						
 					}
 				}
 				
@@ -973,7 +975,7 @@
 				
 				textInput.setFocus();
 				textInput.setTextSelected(false);
-				handleChange( null ); 
+				handleFlowBoxChange( null ); 
 			}
 			
 			private function handleEditableItemChange( event:Event ):void
@@ -1004,11 +1006,11 @@
 				dispatchEvent( new Event( Event.CHANGE ) );
 			}
 			
-			public function handleChange( event:Event ):void
+			public function handleFlowBoxChange( event:Event ):void
 			{
 				flowBox.invalidateDisplayList();
 				
-				if (selectedItem && !_allowMultipleSelection)
+				if (selectedItem && !_allowMultipleSelection && searchText)
 				{
 					_selectedItems.removeAll();							
 				}
@@ -1599,7 +1601,7 @@
 	
 	<mx:GridRow id="mainGridRow" width="100%" height="100%">
 		<mx:GridItem id="mainGridItem" width="100%" height="100%">
-			<classes:FlowBox id="flowBox" width="100%" height="100%" change="handleChange(event)" resize="handleFlowBoxResize()"/>
+			<classes:FlowBox id="flowBox" width="100%" height="100%" change="handleFlowBoxChange(event)" resize="handleFlowBoxResize()"/>
 		</mx:GridItem>
 	</mx:GridRow>
 	
