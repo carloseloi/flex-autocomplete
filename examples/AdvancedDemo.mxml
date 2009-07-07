@@ -11,6 +11,9 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.utils.ObjectUtil;
+			import mx.controls.PopUpButton;
+			import mx.managers.PopUpManager;
 			import mx.events.MenuEvent;
 			import com.hillelcoren.components.AutoComplete;
 			import mx.core.Application;
@@ -196,8 +199,30 @@
 						break;
 					case "remove":
 						autoComplete.selectedItems.removeAll();
-						break;		
+						break;	
+					case "add":
+						showAddColorForm();	
 				}
+			}
+			
+			private function showAddColorForm():void
+			{
+				var colorForm:ColorForm = new ColorForm();
+				colorForm.addEventListener( ColorEvent.NEW_COLOR, handleNewColor );
+				
+				PopUpManager.addPopUp( colorForm, this, true );
+				PopUpManager.centerPopUp( colorForm ); 	
+			}
+			
+			private function handleNewColor( event:ColorEvent ):void
+			{
+				var color:Object = new Object();
+				color.name = event.name;
+				color.hex  = event.hex;
+				
+				colors.addItem( color );
+				autoComplete.selectedItems.addItem( color );
+				handleAutoCompleteChange();				
 			}
 			
 		]]>
@@ -210,6 +235,7 @@
     <mx:XML format="e4x" id="menuData">
 		<root>
 			<menuitem data="browse" label="Browse..."/>
+			<menuitem data="add" label="Add Color..."/>
 			<menuitem data="remove" label="Remove All"/>
 		</root>
 	</mx:XML>
