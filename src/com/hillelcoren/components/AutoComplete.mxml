@@ -1165,7 +1165,14 @@
 				
 				PopUpManager.addPopUp( _dropDown, this );
 
+				callLater( initDropDown );
 				callLater( callLater, [positionDropDown] );
+			}
+			
+			private function initDropDown():void
+			{
+				_dropDown.selectedIndex = 0;
+				_dropDown.rowCount = (_dataProvider.length < _dropDownRowCount ? _dataProvider.length : _dropDownRowCount);							
 			}
 			
 			public function positionDropDown():void
