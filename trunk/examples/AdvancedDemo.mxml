@@ -210,7 +210,7 @@
 				var colorForm:ColorForm = new ColorForm();
 				colorForm.addEventListener( ColorEvent.NEW_COLOR, handleNewColor );
 				
-				PopUpManager.addPopUp( colorForm, this, true );
+				PopUpManager.addPopUp( colorForm, this );
 				PopUpManager.centerPopUp( colorForm ); 	
 			}
 			

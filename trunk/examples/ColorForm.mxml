@@ -14,7 +14,7 @@
 			
 			private function init():void
 			{
-				okButton.setFocus();
+				textInput.setFocus();
 			}
 			
 			private function handleOkClick():void
@@ -45,7 +45,7 @@
 	
 	<mx:Form defaultButton="{ okButton }">		
 		<mx:HBox>
-			<components:PromptTextInput id="textInput" prompt="Color Name" width="150"/>
+			<components:PromptTextInput id="textInput" prompt="Name for the Color" width="150"/>
 			<mx:ColorPicker id="colorPicker"/>
 			<mx:Button id="okButton" label="OK" width="{ Consts.BUTTON_WIDTH }" click="handleOkClick()"/>	
 		</mx:HBox>
