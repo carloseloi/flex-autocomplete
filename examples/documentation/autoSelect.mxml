@@ -10,10 +10,14 @@
 			[Bindable]
 			private var _data:ArrayCollection = new ArrayCollection( ["one", "two", "three"] );
 			
+			private function selectFunction( item:String, searchStr:String ):Boolean
+			{
+				return true;
+			}
+			
 		]]>
 	</mx:Script>
 	
-	<components:AutoComplete dataProvider="{ _data }" prompt="Please select"
-		backspaceAction="remove"/>
+	<components:AutoComplete dataProvider="{ _data }" autoSelectFunction="selectFunction" />
 	
 </mx:Application>

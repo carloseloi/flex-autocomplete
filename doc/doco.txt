@@ -1,12 +1,13 @@
 Flex Autocomplete
 
 Getting started
-Usability settings
 Working with the data
+Usability settings
 Look and feel
 Using it as an item editor
 AdvancedAutoComplete
 Custom skins
+Useful stuff from comments
 Odds and ends
 
 Getting started
@@ -25,9 +26,19 @@ While there are a fair number of settings you can adjust, I'd like to start by t
 
 [ch01ex02]
 
+I've set three properties which I'll review quickly here.
+selectedItemStyleName: Controls the look of the selected items. There are three choices: macMail, facebook and underline. 
+prompt: A string to display when no value is set.
+backSpaceAction : Determines what to do when a user clicks backspace. By default we focus the item (ala Mac Mail) but this can be changed to remove it.
+	
+
 Working with the data
 
-The first topic we'll cover is filtering the data. You can either use the built in options by setting the "matchType" property or create a custom filter by setting a value for the "filterFunction" property. The built in options are:
+The first topic we'll cover is working with objects. Just like most other Flex components you can set either the labelField of labelFunction property. By default this will control how the item is displayed through out the component (in the drop down, once selected and in the browsers). 
+
+You have a couple of choices for customizing the drop down label. You can set the dropDownLabelFunction which can return an HTML string to handle formatting the item. This is used in the email demo to display the person's email address (ie, Homer Simpson <homer@gmail.com>) in the drop down. If you'd like greater control you can set a dropDownItemRenderer. This can be seen in the Color Chooser demo.
+
+To filter the data you can either use the built in options by setting the "matchType" property or create a custom filter by setting a value for the "filterFunction" property. The built in options are:
 
 - beginning: Only match the beginning of the string 
 - word: Match the beginning of any of the words in the string
@@ -43,14 +54,18 @@ You can use either an ArrayCollection or an XMLListCollection as the dataProvide
 
 [ch02ex03]
 
+Usability settings
+
+AutoSelect
+
+The AutoSelect functionality will automatically select an item if it matches a case-insensitive string comparison and is the only match found. This feature can be disabled by setting autoSelectEnabled to false. 
+
+If you'd like to use a custom function to determine if an item should be auto-selected you can set a value for the autoSelectFunction property. Here's an example where we use this property to auto-select once when there is a single match. For example, typing "o" will select "one" right away.
+
+
 
 allowDuplicates
 allowMultipleSelection
-autoSelectEnabled 
-autoSelectFunction
-backspaceAction
-dropDownItemRenderer
-dropDownLabelFunction
 dropDownRowCount
 dropDownWidth
 enableClearIcon
@@ -58,7 +73,6 @@ inlineButton
 keyField
 labelField
 labelFunction
-prompt
 searchText
 selectedItem
 selectedItemId
