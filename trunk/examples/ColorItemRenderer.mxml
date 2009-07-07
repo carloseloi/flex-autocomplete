@@ -35,7 +35,7 @@
 				_list = owner as List;
 				
 				nameLabel.htmlText = _list.labelFunction( value );
-				hexLabel.htmlText = "Hex: " + value.hex;								
+				hexLabel.htmlText = "Hex: " + value.hex;						
 				colorBox.setStyle( "backgroundColor", value.hex );
 				
 				if (_selectedItems && _selectedItems.getItemIndex( value ) >= 0)
