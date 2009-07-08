@@ -10,11 +10,13 @@ Custom skins
 Useful stuff from comments
 Odds and ends
 
-Getting started
+=====================
+== Getting started ==
+=====================
 
-Thanks for checking out the documentation for this component. Hopefully you find it useful. 
+Thanks for checking out the documentation for this component. The source code for the examples is in the download.
 
-The best way to figure this thing out is to use the Demo to see what options are available and then reference the source code for the examples to how it's implemented. It's also a good idea to skim through the methods and properties in the ASDoc file (as the demo doesn't use every property/method available). Here are the two files: AutoComplete and AdvancedAutoComplete.
+The best way to figure this thing out is to use the Demo to see what options are available and then reference the source code to understand how it's implemented. It's also a good idea to skim through the methods and properties in the ASDoc file (as the demo doesn't use every property/method available). Here are the two files: AutoComplete and AdvancedAutoComplete.
 
 Although the component doesn't extend from the ComboBox class, it's designed to have as similar an interface as possible. For example, it implements the filterFunction, labelFunction and selectedItems properties as well as others.
 
@@ -30,13 +32,14 @@ I've set three properties which I'll review quickly here.
 selectedItemStyleName: Controls the look of the selected items. There are three choices: macMail, facebook and underline. 
 prompt: A string to display when no value is set.
 backSpaceAction : Determines what to do when a user clicks backspace. By default we focus the item (ala Mac Mail) but this can be changed to remove it.
-	
 
-Working with the data
+===========================
+== Working with the data ==
+===========================
 
 The first topic we'll cover is working with objects. Just like most other Flex components you can set either the labelField of labelFunction property. By default this will control how the item is displayed through out the component (in the drop down, once selected and in the browsers). 
 
-You have a couple of choices for customizing the drop down label. You can set the dropDownLabelFunction which can return an HTML string to handle formatting the item. This is used in the email demo to display the person's email address (ie, Homer Simpson <homer@gmail.com>) in the drop down. If you'd like greater control you can set a dropDownItemRenderer. This can be seen in the Color Chooser demo.
+You have a couple of choices for customizing the drop down label. You can set the dropDownLabelFunction which returns an HTML string to handle formatting the item. This is used in the email demo to display the person's email address (ie, Homer Simpson <homer@gmail.com>) in the drop down. If you'd like greater control you can set a dropDownItemRenderer. This can be seen in the Color Chooser demo.
 
 To filter the data you can either use the built in options by setting the "matchType" property or create a custom filter by setting a value for the "filterFunction" property. The built in options are:
 
@@ -48,13 +51,21 @@ All of the built in options perform a case-insensitive search. Here's how you co
 
 [ch02ex01]
 
-By default, the component requires the user to select an item from the list. You can allow the user to enter their own values by setting "allowNewValues" to true. You can then control where or new the new items are editable by setting the "allowEditingNewValues" property.
+To select items you have three options, you can use either selectedItem, selectedItems or selectedItemId. The first two options are pretty standard so I won't cover them here. Setting the selectedItemId property will cause the component to search the items in the dataProvider for an object with a matching id. By defualt, it looks for a field called "id" on the item but you can set a custom field using the <code>keyField</code> property.
+
+By default, the component requires the user to select an item from the list. You can allow the user to enter their own values by setting "allowNewValues" to true. You can then control whether or new the new items are editable by setting the "allowEditingNewValues" property. Additionally, you can set the "allowDuplicates" property to control whether or not to allow an item to be selected more than once.
 
 You can use either an ArrayCollection or an XMLListCollection as the dataProvider. We showed you an example with an ArrayCollection in the last chapter, here's an example using an XMLListCollection.
 
 [ch02ex03]
 
-Usability settings
+========================
+== Usability settings ==
+========================
+
+Multiple Selection
+
+This is the one feature which separates the component from other the AutoCompletes out there, setting the "allowMultipleSelection" enables the user to select more than one value. The AdvancedAutoComplete extends this feature by adding a "selectionLayout" property which when set to vertical causes the selected items to be displayed in a List component.
 
 AutoSelect
 
@@ -62,32 +73,52 @@ The AutoSelect functionality will automatically select an item if it matches a c
 
 If you'd like to use a custom function to determine if an item should be auto-selected you can set a value for the autoSelectFunction property. Here's an example where we use this property to auto-select once when there is a single match. For example, typing "o" will select "one" right away.
 
+Clear Icon
+
+The core of the component is the PromptTextInput class. This class provides two main features: the prompt and the clear icon. We covered the prompt earlier but the clear icon is a little gray x which appears if there is text in the component. Note, this feature only works if <code>allowMultipleSelection</code> is set to false.
+
+===================
+== Look and Feel ==
+===================
+
+Drop Down
+
+The number of items displayed in the drop down is controlled by the <code>dropDownRowCount</code> property. By defualt, the width of the drop down will 
+be set to match the width of the TextInput. However this can be overriden using the <code>dropDownWidth</code> property.
+
+==========================
+== AdvancedAutoComplete ==
+==========================
+
+The challenge in building a component with lots of features is keeping it as streamlined as possible. In order to support adding more advanced functionality while not bloating the component I've created an AdvancedAutoComplete class which extends the AutoComplete component. 
+
+Selection Layout
+
+As discussed earlier, setting the <code>selectionLayout</code> to vertical causes the items to be displayed in a List. When using the vertical layout you can use the <code>showRemoveButton</code> property to control whether or not to show a remove button.
+
+Browsing
+
+This can be enabled by either setting the <code>showBrowseButton</code> property to true, or by adding an options to the action menu (as is demonstrated in the Color Chooser Demo). By default we show a pop window which contains a searchable DataGrid. You can control which fields of the data to display in the grid using the <code>browserFields</code> property. If multiple selection is enabled, you can set the <code>useListBuilder</code> property to true to display a two column browser instead. If you'd like to implement your own browser you can either extends one the existing ones are create a component which implements the IBrowser interface. You'll then need to set the <code>browserClass</code> property to your new class.
+
+Ordering
+
+If the <code>selectionLayout</code> is set to vertical you can enable the user to order the items in the list by setting the <code>showOrderButtons</code> property to true. If using the List Builder the ordering buttons will also be displayed in it.
+
+Actions Menu
+
+To enable the action menu you need to set a value for the <code>actionsMenuDataProvider</code>. This is just a regular Flex Menu component so all the usual features are supported (ie, using checkboxes). Here's a link to the supported menu attributes. http://livedocs.adobe.com/flex/2/docs/wwhelp/wwhimpl/common/html/wwhelp.htm?context=LiveDocs_Parts&file=00000571.html. You can see an example of how to use this feature in the code for the AdvancedDemo. If enabled the menu can be displayed by pressing the down button while the component has focus.
+
+===================
+== Odds and Ends ==
+===================
+
+Inline Button
+
+You can use the <code>inlineButton</code> property to set a button to appear at the end of the component. This feature is used in the AdvancedAutoComplete for the button used to display the actions menu. Here's an example of how you can use this property to display a button which causes the drop down to appear (ala a regular ComboBox)
 
 
-allowDuplicates
-allowMultipleSelection
-dropDownRowCount
-dropDownWidth
-enableClearIcon
-inlineButton
-keyField
-labelField
-labelFunction
 searchText
-selectedItem
-selectedItemId
-selectedItems
-showRemoveIcon 
 text
-actionsMenuDataProvider 
-browseLabel 
-browserClass
-browserFields 
-selectionLayout 
-showBrowseButton
-showOrderButtons 
-showRemoveButton 
-useListBuilder
 events
 isItemSelected
 isSettingValue
