@@ -13,7 +13,6 @@
 		]]>
 	</mx:Script>
 	
-	<components:AutoComplete dataProvider="{ _data }" prompt="Please select"
-		backspaceAction="remove"/>
+	<components:AutoComplete dataProvider="{ _data }" prompt="Please select" backspaceAction="remove"/>
 	
 </mx:Application>

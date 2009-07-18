@@ -52,7 +52,7 @@
 			
 			    measuredHeight = Math.max(h, DEFAULT_MEASURED_MIN_HEIGHT);
 			    measuredMinHeight = DEFAULT_MEASURED_MIN_HEIGHT;
-			}
+			}			
 			
 		]]>
 	</mx:Script>
