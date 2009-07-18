@@ -89,7 +89,8 @@
 				
 				if (!isDropDownVisible())
 				{
-					if (event.keyCode == Keyboard.DOWN && _actionsMenuDataProvider)
+					if (event.keyCode == Keyboard.DOWN && _actionsMenuDataProvider 
+						&& determineFocus() == textInput)
 					{
 						handleButtonClick();						
 						_actionsMenu.highlightFirstRow();

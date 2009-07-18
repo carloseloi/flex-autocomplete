@@ -18,7 +18,6 @@
 				else
 				{
 					autoComplete.search();
-					autoComplete.showDropDown();
 				}
 			}
 
