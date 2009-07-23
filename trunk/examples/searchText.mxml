@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <mx:Application 
+ 	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:components="com.hillelcoren.components.*"
+	verticalAlign="middle" horizontalAlign="center">
+ 
+    <mx:Script>
+        <![CDATA[
+            import mx.collections.ArrayCollection;
+ 
+            [Bindable]
+            private var _data:ArrayCollection = new ArrayCollection( ["one", "two", "three"] );
+ 			
+        ]]>
+    </mx:Script>
+ 
+ 	<mx:Panel width="220" height="200" title="searchText demo" 
+ 		verticalAlign="middle" horizontalAlign="center">
+	 	<mx:Grid width="180">
+			<mx:GridRow height="60">
+				<mx:GridItem colSpan="2">
+					<components:AutoComplete id="autoComplete" dataProvider="{ _data }" 
+						allowMultipleSelection="true" width="100%"/>            					
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow>
+				<mx:GridItem horizontalAlign="right">
+					<mx:Label text="text:"/>
+				</mx:GridItem>
+				<mx:GridItem>
+					<mx:Label text="{ autoComplete.text }" minWidth="100"/>
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow>
+				<mx:GridItem horizontalAlign="right">
+					<mx:Label text="searchText:"/>
+				</mx:GridItem>
+				<mx:GridItem>
+					<mx:Label text="{ autoComplete.searchText }"/>
+				</mx:GridItem>
+			</mx:GridRow>
+		</mx:Grid>		 		
+ 	</mx:Panel>
+	
+</mx:Application>
