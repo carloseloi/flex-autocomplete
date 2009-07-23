@@ -23,6 +23,8 @@ The first topic we'll cover is working with objects. Just like most other Flex c
 
 You have a couple of choices for customizing the drop down label. You can set the dropDownLabelFunction which returns an HTML string to handle formatting the item. This is used in the email demo to display the person's email address (ie, Homer Simpson <homer@gmail.com>) in the drop down. If you'd like greater control you can set a dropDownItemRenderer. This can be seen in the Color Chooser demo.
 
+If multiple selection is enabled the component can contain both selected items and a search string. Because of this I've need to add a <code>searchText</code> property which can be used to get/set the search string. The <code>text</code> property returns a string representation of the selected items. Here's a simple demo which demonstrates the difference between the two properties.
+
 To filter the data you can either use the built in options by setting the "matchType" property or create a custom filter by setting a value for the "filterFunction" property. The built in options are:
 
 <ul>
@@ -97,9 +99,6 @@ Inline Button
 
 You can use the <code>inlineButton</code> property to set a button to appear at the end of the component. This feature is used in the AdvancedAutoComplete for the button used to display the actions menu. Here's an example of how you can use this property to display a button which causes the drop down to appear (ala a regular ComboBox)
 
-
-searchText
-text
 events
 first class components
 utility classes
