@@ -72,10 +72,24 @@
 					{
 						var columns:Array = [];
 						
-						for each (var field:String in _browserFields)
+						for each (var obj:Object in _browserFields)
 						{
+							var field:String;
+							var label:String;
+							
+							if (obj is String)
+							{
+								field = obj as String;
+								label =	StringUtils.seperateWords( field );					
+							}
+							else if (obj is Object)
+							{
+								field = obj.field;
+								label = obj.label;								
+							}
+							
 							var column:DataGridColumn = new DataGridColumn( field );
-							column.headerText = StringUtils.seperateWords( field );
+							column.headerText = label; 
 							columns.push( column );
 						}
 
