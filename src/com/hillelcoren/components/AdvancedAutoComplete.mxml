@@ -477,6 +477,11 @@
 				return _browserClass;
 			}
 			
+			public function set listBuilderBrowserClass( value:Class ):void
+			{
+				_listBuilderClass = value;
+			}
+			
 			public function set browserClass( value:Class ):void
 			{
 				_browserClass = value;

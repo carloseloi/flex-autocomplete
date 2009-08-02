@@ -510,11 +510,23 @@
 					return;
 				}
 				
-				callLater( callLater, [_setData] );
+				callLater( callLater, [_setData] );				
+            }
+            
+            public function get selectedItemId():Number
+            {
+            	if (selectedItem && selectedItem.hasOwnProperty( _keyField ))
+            	{
+            		return selectedItem[ _keyField ];
+            	}	
+            	
+            	return NaN;
             }
             
             private function _setData():void
             {
+            	//selectedItemId = data[ _listData.dataField ];
+            	
             	var value:Object = data[ _listData.dataField ];
             	
             	if (value is Array)
@@ -528,7 +540,7 @@
             	else
             	{
             		selectedItem = value;
-            	}            	
+            	}           	
             }			
 			
 			private function defaultFilterFunction( item:Object, searchStr:String ):Boolean
@@ -1352,7 +1364,7 @@
 			{
 				_selectedItemId = value;
 				_selectedItemIdChanged = true;
-				
+
 				invalidateProperties();
 			}
 			
