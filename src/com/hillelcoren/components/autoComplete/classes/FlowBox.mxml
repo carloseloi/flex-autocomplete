@@ -36,7 +36,9 @@
 			private var _inlineButtonCanvas:Canvas;
 			
 			private var _enableMultiRow:Boolean;
-			
+
+			[Bindable]
+			public var showSpinner:Boolean;								
 						
 			private function init():void
 			{
@@ -306,6 +308,6 @@
 	</mx:Script>
 	
 	<components:PromptTextInput id="textInput" enableClearIcon="false" width="100%"
-		change="handleChange(event)" drawFocusBorder="false" borderStyle="none"/>
+		change="handleChange(event)" drawFocusBorder="false" borderStyle="none" showSpinner="{ showSpinner }"/>
 		
 </mx:Canvas>

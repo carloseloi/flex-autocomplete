@@ -43,7 +43,7 @@
 			private var _browseButton:Button;
 			private var _browseButtonWidth:uint = Consts.BUTTON_WIDTH;
 			
-			private var _browser:IBrowser;
+			protected var _browser:IBrowser;
 			private var _useListBuilder:Boolean;
 			private var _browserFields:Array;
 			protected var _browserClass:Class = Browser;
@@ -277,10 +277,12 @@
 				
 				_browser.init();
 				
+				/*
 				if (!useListBuilder && _selectedItems.length == 0)
 				{
 					IBrowser( _browser ).searchStr = searchText;
-				}													
+				}
+				*/													
 			}
 			
 			private function handleBrowserChange( event:Event ):void
