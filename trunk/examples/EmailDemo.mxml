@@ -44,7 +44,7 @@
 				var string:String = item.name + " &lt;" + item.email + "&gt;";
 				var searchStr:String = autocomplete.searchText;
 				
-				var returnStr:String = StringUtils.highlighMatch( string, searchStr, AutoComplete.MATCH_WORD );
+				var returnStr:String = StringUtils.highlighMatch( string, searchStr );
 				
 				if (autocomplete.selectedItems.getItemIndex( item ) >= 0)
     			{

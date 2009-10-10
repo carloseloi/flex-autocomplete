@@ -143,6 +143,12 @@
 			private var _listData:DataGridListData;
 			private var _dropDownRowCount:uint = 5;
 			
+			private var _maxHeight:Number;
+			private var _maxHeightChanged:Boolean;
+
+			[Bindable]
+			public var showSpinner:Boolean;
+						
 			public static const SEARCH_CHANGE:String = "searchChange";
 			
 			public static const STYLE_UNDERLINE:String 	= "underline";
@@ -282,7 +288,17 @@
 				{
 					_errorStrChanged = false;
 					flowBox.errorString = _errorStr;
+					
+					var focused:DisplayObject = focusManager.getFocus() as DisplayObject;
+					var drawFocus:Boolean = focused && flowBox.contains( focused );
+					flowBox.drawFocus( drawFocus );					
 				}
+				
+				if (_maxHeightChanged)
+				{
+					_maxHeightChanged = false;
+					flowBox.maxHeight = _maxHeight;
+				}				
 				
 				if (_dataProviderChanged && _dataProvider)
 				{
@@ -300,7 +316,7 @@
 				if (_selectedItemChanged && _dataProvider)
 				{
 					_selectedItemChanged = false;
-					_selectedItems.removeAll();
+					clear();
 					
 					if (_selectedItem)
 					{
@@ -513,20 +529,8 @@
 				callLater( callLater, [_setData] );				
             }
             
-            public function get selectedItemId():Number
-            {
-            	if (selectedItem && selectedItem.hasOwnProperty( _keyField ))
-            	{
-            		return selectedItem[ _keyField ];
-            	}	
-            	
-            	return NaN;
-            }
-            
             private function _setData():void
             {
-            	//selectedItemId = data[ _listData.dataField ];
-            	
             	var value:Object = data[ _listData.dataField ];
             	
             	if (value is Array)
@@ -543,6 +547,16 @@
             	}           	
             }			
 			
+            public function get selectedItemId():Number
+            {
+            	if (selectedItem && selectedItem.hasOwnProperty( _keyField ))
+            	{
+            		return selectedItem[ _keyField ];
+            	}	
+            	
+            	return NaN;
+            }
+            
 			private function defaultFilterFunction( item:Object, searchStr:String ):Boolean
 			{
 				if (searchStr.length == 0)
@@ -587,10 +601,15 @@
 				var string:String = _labelFunction( item );
 				var searchStr:String = searchText;
 				
+				if (string == null)
+				{
+					return "";
+				}
+								
 				// there are problems using ">"s and "<"s in HTML
 				string = string.replace( "<", "&lt;" ).replace( ">", "&gt;" );				
 
-				var returnStr:String = StringUtils.highlighMatch( string, searchStr, _matchType );
+				var returnStr:String = StringUtils.highlighMatch( string, searchStr );
 				
 				if (_selectedItems.getItemIndex( item ) >= 0 || _disabledItems.getItemIndex( item ) >= 0)
     			{
@@ -883,6 +902,13 @@
 				return null;
 			}
 			
+			public function clear():void
+			{
+				textInput.enablePrompt = true;
+				searchText = null;
+				selectedItems.removeAll();				
+			}
+						
 			public function removeItemAt( index:int ):void
 			{
 				if (!_showSelectedItems)
@@ -1205,7 +1231,7 @@
 				// check if it will fit below the textInput 
 				if (fitsBelow || !fitsAbove)	
 				{
-					_dropDown.y = globalPoint.y + flowBox.height;
+					_dropDown.y = globalPoint.y + flowBox.measuredHeight;
 				}
 				else
 				{
@@ -1615,12 +1641,21 @@
 				_dropDownRowCount = value;
 			}
 
+			override public function set maxHeight( value:Number ):void
+			{
+				_maxHeight = value;
+				_maxHeightChanged = true;
+				
+				invalidateProperties();
+			}
+
 		]]>
 	</mx:Script>
 	
 	<mx:GridRow id="mainGridRow" width="100%" height="100%">
 		<mx:GridItem id="mainGridItem" width="100%" height="100%">
-			<classes:FlowBox id="flowBox" width="100%" height="100%" change="handleFlowBoxChange(event)" resize="handleFlowBoxResize()"/>
+			<classes:FlowBox id="flowBox" width="100%" height="100%" showSpinner="{ showSpinner }" 
+				change="handleFlowBoxChange(event)" resize="handleFlowBoxResize()"/>
 		</mx:GridItem>
 	</mx:GridRow>
 	

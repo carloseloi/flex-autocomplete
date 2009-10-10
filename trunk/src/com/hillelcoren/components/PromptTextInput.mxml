@@ -22,14 +22,17 @@
 			
 			private var _prompt:String;
 			private var _promptChanged:Boolean;
+			private var _enablePrompt:Boolean = true;
 			
 			private var _isPromptSet:Boolean;
 			private var _drawFocusBorder:Boolean = true;
 			
 			[Bindable]
 			private var _enableClearIcon:Boolean = true;
-			private var _enablePrompt:Boolean = true;
 			private var _isMouseOver:Boolean;
+			
+			[Bindable]
+			public var showSpinner:Boolean;
 			
 			private var _text:String;
 			private var _textChanged:Boolean;
@@ -387,7 +390,12 @@
 	</mx:Script>
 	
 	<classes:ShorterTextInput id="textInput" width="100%" borderStyle="none" displayAsPassword="{ displayAsPassword }"/> 
-	<mx:Image id="clearIcon" source="@Embed('/com/hillelcoren/assets/icons/clear.png')" verticalAlign="middle" 
-		visible="false" includeInLayout="{ _enableClearIcon }" click="handleClearClick()"/>
+
+	<mx:Canvas>
+		<mx:Image id="clearIcon" source="@Embed('/com/hillelcoren/assets/icons/clear.png')" verticalAlign="middle" 
+			visible="false" includeInLayout="{ _enableClearIcon }" click="handleClearClick()"/>
+		<mx:Image id="spinner" source="@Embed('/com/hillelcoren/assets/spinner.swf')" 
+			visible="{ showSpinner }" includeInLayout="{ showSpinner }" height="{ textInput.height - 4 }" top="2" right="0"/>
+	</mx:Canvas>
 			
 </mx:HBox>
