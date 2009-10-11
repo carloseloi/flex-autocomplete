@@ -559,7 +559,7 @@
             
 			private function defaultFilterFunction( item:Object, searchStr:String ):Boolean
 			{
-				if (searchStr.length == 0)
+				if (!searchStr || searchStr.length == 0)
 				{
 					return true;
 				}
@@ -1120,8 +1120,9 @@
 				
 				if (isDropDownVisible())
 				{
+					_dropDown.rowCount = (_dataProvider.length < _dropDownRowCount ? _dataProvider.length : _dropDownRowCount);
 					callLater( highlightFirstItem );
-					_dropDown.rowCount = (_dataProvider.length < _dropDownRowCount ? _dataProvider.length : _dropDownRowCount);					
+					callLater( positionDropDown );									
 				}	
 			}
 			
@@ -1225,7 +1226,7 @@
 								
 				_dropDown.x = globalPoint.x;
 				
-				var fitsBelow:Boolean = Application.application.height - globalPoint.y > dropDown.height;
+				var fitsBelow:Boolean = Application.application.height - globalPoint.y - mainGridRow.height > dropDown.height;
 				var fitsAbove:Boolean = globalPoint.y > dropDown.height;
 				
 				// check if it will fit below the textInput 
@@ -1647,6 +1648,16 @@
 				_maxHeightChanged = true;
 				
 				invalidateProperties();
+			}
+
+			override public function set tabIndex( index:int ):void
+			{
+				flowBox.textInput.textInput.tabIndex = index;
+			}
+			
+			override public function get tabIndex():int
+			{
+				return flowBox.textInput.textInput.tabIndex;
 			}
 
 		]]>

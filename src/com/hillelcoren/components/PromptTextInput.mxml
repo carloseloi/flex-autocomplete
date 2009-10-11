@@ -86,7 +86,7 @@
 					
 					if (_isPromptSet)
 					{
-						setStyle( "color", _promptColor );
+						textInput.setStyle( "color", _promptColor );
 					}
 				}
 			}
@@ -113,9 +113,9 @@
 				
 				_isPromptSet = true;
 				textInput.text = _prompt;
-
-				setStyle( "color", _promptColor );
-				setStyle( "fontStyle", "italic" );
+				
+				textInput.setStyle( "color", _promptColor );
+				textInput.setStyle( "fontStyle", "italic" );
 			}
 			
 			private function hidePrompt():void
@@ -127,8 +127,8 @@
 				
 				_isPromptSet = false;
 				
-				clearStyle( "color" );
-				clearStyle( "fontStyle" );
+				textInput.clearStyle( "color" );
+				textInput.clearStyle( "fontStyle" );
 			}
 			
 			public function set textPadding( value:int ):void
@@ -186,7 +186,14 @@
 						validateNow();
 					}
 					
-					return textInput.text;
+					if (_textChanged)
+					{
+						return _text;
+					}
+					else
+					{
+						return textInput.text;
+					}
 				}
 			}
 			

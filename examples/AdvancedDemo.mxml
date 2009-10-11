@@ -200,31 +200,9 @@
 					case "remove":
 						autoComplete.selectedItems.removeAll();
 						break;	
-					case "add":
-						showAddColorForm();	
 				}
 			}
-			
-			private function showAddColorForm():void
-			{
-				var colorForm:ColorForm = new ColorForm();
-				colorForm.addEventListener( ColorEvent.NEW_COLOR, handleNewColor );
-				
-				PopUpManager.addPopUp( colorForm, this );
-				PopUpManager.centerPopUp( colorForm ); 	
-			}
-			
-			private function handleNewColor( event:ColorEvent ):void
-			{
-				var color:Object = new Object();
-				color.name = event.name;
-				color.hex  = event.hex;
-				
-				colors.addItem( color );
-				autoComplete.selectedItems.addItem( color );
-				handleAutoCompleteChange();				
-			}
-			
+						
 		]]>
 	</mx:Script>
 	
@@ -235,7 +213,6 @@
     <mx:XML format="e4x" id="menuData">
 		<root>
 			<menuitem data="browse" label="Browse..."/>
-			<menuitem data="add" label="Add Color..."/>
 			<menuitem data="remove" label="Remove All"/>
 		</root>
 	</mx:XML>
