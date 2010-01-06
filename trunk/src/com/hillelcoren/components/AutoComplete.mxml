@@ -1242,12 +1242,17 @@
 			
 			public function hideDropDown():void
 			{
+				PopUpManager.removePopUp( _dropDown );
+				
+				callLater( enableDefaultButton );
+			}
+			
+			private function enableDefaultButton():void
+			{
 				if (focusManager)
 				{
 					focusManager.defaultButtonEnabled = true;
-				}				
-				
-				PopUpManager.removePopUp( _dropDown );
+				}												
 			}
 			
 			public function get dropDown():List
@@ -1433,10 +1438,13 @@
 			 */
 			public function set selectedItem( value:Object ):void
 			{
-				_selectedItem = value;
-				_selectedItemChanged = true;
+				if (_selectedItem != value)
+				{
+					_selectedItem = value;
+					_selectedItemChanged = true;
 				
-				invalidateProperties();
+					invalidateProperties();
+				}
 			}
 			
 			[Bindable(event="change")]
