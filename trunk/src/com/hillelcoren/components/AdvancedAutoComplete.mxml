@@ -272,7 +272,7 @@
 					_browser.selectedItems = _selectedItems.source;
 				}
 							
-				PopUpManager.addPopUp( IFlexDisplayObject( _browser ), DisplayObject( Application.application), true );
+				PopUpManager.addPopUp( IFlexDisplayObject( _browser ), DisplayObject( parentApplication ), true );
 				PopUpManager.centerPopUp( IFlexDisplayObject( _browser ) );
 				
 				_browser.init();
