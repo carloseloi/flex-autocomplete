@@ -94,6 +94,7 @@
 			private var _dropDownWidth:int;
 			
 			private var _backspaceAction:String;
+			private var _delimiter:String = ",";
 			
 			private var _autoSelectEnabled:Boolean = true;
 			private var _autoSelectFunction:Function;	
@@ -722,7 +723,8 @@
 					{
 						hideDropDown();
 					}
-					else if (event.keyCode == Keyboard.ENTER || event.keyCode == Keyboard.TAB || event.charCode == 44)
+					else if (event.keyCode == Keyboard.ENTER || event.keyCode == Keyboard.TAB 
+						|| (String.fromCharCode(event.charCode) == _delimiter && _allowMultipleSelection))
 					{
 						_selectedItems.addItem( _dropDown.selectedItem );
 						dispatchEvent( new Event( Event.CHANGE ) );
@@ -887,7 +889,8 @@
 							}
 						}
 					}
-					else if (event.keyCode == Keyboard.ENTER || event.charCode == 44)
+					else if (event.keyCode == Keyboard.ENTER 
+							|| (String.fromCharCode(event.charCode) == _delimiter && _allowMultipleSelection))
 					{
 						if (target is EditableItem)
 						{
@@ -991,7 +994,7 @@
 					{
 						var editableItem:EditableItem = new EditableItem();
 						editableItem.allowMultipleSelection = _allowMultipleSelection;
-						editableItem.text = item + (_allowMultipleSelection ? "," : "");
+						editableItem.text = item + (_allowMultipleSelection ? _delimiter : "");
 						editableItem.width = measureText( item as String ).width + 10;
 						editableItem.height = textInput.height;
 						editableItem.item = item;
@@ -1035,7 +1038,7 @@
 			
 			private function handleItemTextInput( event:TextEvent ):void
 			{
-				if (event.text != ",")
+				if (event.text != _delimiter)
 				{
 					textInput.text = event.text;
 					textInput.validateNow();
@@ -1094,9 +1097,18 @@
 					return;
 				}				
 				
-				// we're splitting by comma to handle the case where the 
+				// we're splitting by a delimeter to handle the case where the 
 				// user enters a comma separated list of values
-				var parts:Array = searchText.split( "," );
+				var parts:Array;
+				
+				if (_delimiter != null && _allowMultipleSelection)
+				{
+					parts = searchText.split( _delimiter );
+				}
+				else
+				{
+					parts = [ searchText ];
+				}
 				
 				for each (var searchStr:String in parts)
 				{
@@ -1149,11 +1161,11 @@
 				}
 				else
 				{
-					if (_searchText.length > 0 && _dataProvider.length > 0)
+					if (_searchText && _searchText.length > 0 && _dataProvider.length > 0)
 					{
 						showDropDown();	
 					}
-				}			
+				}
 				
 				if (isDropDownVisible())
 				{
@@ -1210,6 +1222,8 @@
 			
 			public function set searchText( value:String ):void
 			{
+				_searchText = value;
+				
 				textInput.text = value;
 				textInput.validateNow();
 				
@@ -1714,6 +1728,11 @@
 			override public function get tabIndex():int
 			{
 				return flowBox.textInput.textInput.tabIndex;
+			}
+			
+			public function set delimiter( value:String ):void
+			{
+				_delimiter = value;
 			}
 
 		]]>
