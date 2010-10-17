@@ -198,7 +198,7 @@
 		]]>
 	</mx:Script>
 	
-	<classes:ShorterTextInput id="textInput" width="5" borderStyle="none" 
+	<classes:ShorterTextInput id="textInput" width="5" borderStyle="none" borderSkin="{null}" paddingLeft="0" paddingRight="0" 
 		focusThickness="0" textInput="handleTextInput(event)"/>
 	<classes:IconButton id="button" showRemoveIcon="{ _showRemoveIcon }" 
 		click="handleClick()" removeClick="handleRemoveClick()" toggle="true"/>

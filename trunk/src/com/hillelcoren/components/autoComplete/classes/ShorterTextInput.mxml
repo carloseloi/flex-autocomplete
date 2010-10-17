@@ -53,6 +53,11 @@
 			    measuredHeight = Math.max(h, DEFAULT_MEASURED_MIN_HEIGHT);
 			    measuredMinHeight = DEFAULT_MEASURED_MIN_HEIGHT;
 			}			
+
+			override protected function focusInHandler(event:FocusEvent):void
+			{
+				// prevent the border from beeing drawn
+			}
 			
 		]]>
 	</mx:Script>
