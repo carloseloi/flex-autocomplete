@@ -12,8 +12,8 @@
 			
 			private function init():void
 			{
-				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
-				addEventListener( CloseEvent.CLOSE, handleClose );
+				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown, false, 0, true );
+				addEventListener( CloseEvent.CLOSE, handleClose, false, 0, true );
 			}
 			
 			private function handleClose( event:CloseEvent ):void
