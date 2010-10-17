@@ -22,13 +22,11 @@
 		]]>
 	</mx:Script>
 	
-	<mx:Panel width="530" height="320" headerHeight="10" backgroundColor="#DDDDDD">
-		<mx:TabNavigator width="100%" height="100%" focusEnabled="false" mouseDown="{ handleMouseDown() }">
-			<local:ColorDemo label="AutoComplete"/>
-			<local:DataGridDemo label="DataGrid Demo"/>
-			<local:EmailDemo label="Email Demo"/>			
-			<local:AdvancedDemo label="Advanced AutoComplete"/>
-		</mx:TabNavigator>
-	</mx:Panel>
+	<mx:TabNavigator width="530" height="320" focusEnabled="false" mouseDown="{ handleMouseDown() }">
+		<local:ColorDemo label="AutoComplete"/>
+		<local:DataGridDemo label="DataGrid Demo"/>
+		<local:EmailDemo label="Email Demo"/>			
+		<local:AdvancedDemo label="Advanced AutoComplete"/>
+	</mx:TabNavigator>
 		
 </mx:Application>

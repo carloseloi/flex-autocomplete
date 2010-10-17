@@ -39,43 +39,43 @@
 		
 	<mx:Script>
 		<![CDATA[
-			import mx.events.FlexMouseEvent;
-			import mx.events.ScrollEvent;
+			import com.hillelcoren.components.AutoComplete;
+			import com.hillelcoren.components.PromptTextInput;
+			import com.hillelcoren.components.autoComplete.classes.DropDownItemRenderer;
+			import com.hillelcoren.components.autoComplete.classes.EditableItem;
+			import com.hillelcoren.components.autoComplete.classes.IconButton;
+			import com.hillelcoren.components.autoComplete.classes.SelectedItem;
+			import com.hillelcoren.components.autoComplete.interfaces.iComboItem;
+			import com.hillelcoren.utils.KeyboardUtil;
+			import com.hillelcoren.utils.StringUtils;
+			
+			import mx.collections.ArrayCollection;
 			import mx.collections.ListCollectionView;
 			import mx.controls.Button;
-			import mx.events.MenuEvent;
-			import com.hillelcoren.components.autoComplete.classes.IconButton;
-			import mx.events.CollectionEventKind;
-			import mx.controls.dataGridClasses.DataGridListData;
-			import mx.events.MoveEvent;
-			import mx.controls.listClasses.BaseListData;
-			import com.hillelcoren.components.autoComplete.classes.DropDownItemRenderer;
-			import com.hillelcoren.components.autoComplete.classes.SelectedItem;
-			import com.hillelcoren.components.autoComplete.classes.EditableItem;
-			import mx.managers.FocusManager;
-			import mx.events.ResizeEvent;
-			import com.hillelcoren.components.AutoComplete;
-			import com.hillelcoren.components.autoComplete.interfaces.iComboItem;
+			import mx.controls.List;
 			import mx.controls.Text;
 			import mx.controls.TextArea;
-			import com.hillelcoren.utils.KeyboardUtil;
-			import mx.core.UITextField;
-			import com.hillelcoren.components.PromptTextInput;
-			import mx.utils.ObjectUtil;
-			import mx.effects.easing.Back;
-			import mx.utils.StringUtil;
-			import com.hillelcoren.utils.StringUtils;
 			import mx.controls.TextInput;
-			import mx.managers.CursorManager;
-			import mx.events.ListEvent;
-			import mx.events.CollectionEvent;
-			import mx.events.MenuEvent;
-			import mx.events.FlexEvent;
-			import mx.managers.PopUpManager;
-			import mx.core.UIComponent;
+			import mx.controls.dataGridClasses.DataGridListData;
+			import mx.controls.listClasses.BaseListData;
 			import mx.core.Application;
-			import mx.collections.ArrayCollection;
-			import mx.controls.List;
+			import mx.core.UIComponent;
+			import mx.core.UITextField;
+			import mx.effects.easing.Back;
+			import mx.events.CollectionEvent;
+			import mx.events.CollectionEventKind;
+			import mx.events.FlexEvent;
+			import mx.events.FlexMouseEvent;
+			import mx.events.ListEvent;
+			import mx.events.MenuEvent;
+			import mx.events.MoveEvent;
+			import mx.events.ResizeEvent;
+			import mx.events.ScrollEvent;
+			import mx.managers.CursorManager;
+			import mx.managers.FocusManager;
+			import mx.managers.PopUpManager;
+			import mx.utils.ObjectUtil;
+			import mx.utils.StringUtil;
 			
 			private var _dropDown:List;
 			private var _matchType:String = MATCH_WORD;
@@ -145,7 +145,10 @@
 			
 			private var _maxHeight:Number;
 			private var _maxHeightChanged:Boolean;
-
+			
+			private var _tabIndex:int;
+			private var _tabIndexChanged:Boolean;
+			
 			[Bindable]
 			public var showSpinner:Boolean;
 						
@@ -284,16 +287,6 @@
 					flowBox.showRemoveIcon = _showRemoveIcon;
 				}		
 				
-				if (_errorStrChanged)
-				{
-					_errorStrChanged = false;
-					flowBox.errorString = _errorStr;
-					
-					var focused:DisplayObject = focusManager.getFocus() as DisplayObject;
-					var drawFocus:Boolean = focused && flowBox.contains( focused );
-					flowBox.drawFocus( drawFocus );					
-				}
-				
 				if (_maxHeightChanged)
 				{
 					_maxHeightChanged = false;
@@ -375,6 +368,22 @@
 							_selectedItems.addItem( selectedItem );																		
 						}
 					}
+				}
+				
+				if (_tabIndexChanged)
+				{
+					_tabIndexChanged = false;
+					flowBox.tabIndex = _tabIndex;
+				}
+				
+				if (_errorStrChanged)
+				{
+					_errorStrChanged = false;
+					flowBox.errorString = _errorStr;
+					
+					var focused:DisplayObject = focusManager.getFocus() as DisplayObject;
+					var drawFocus:Boolean = focused && flowBox.contains( focused );
+					flowBox.drawFocus( drawFocus );					
 				}				
 			}
 
@@ -456,7 +465,7 @@
 				
 				var count:int;
 				
-				for each (var item:Object in _selectedItems)
+				for each (var item:Object in _selectedItems.source)
 				{
 					if (item == searchFor)
 					{
@@ -1668,9 +1677,12 @@
 				invalidateProperties();
 			}
 
-			override public function set tabIndex( index:int ):void
+			override public function set tabIndex(value:int):void
 			{
-				flowBox.textInput.textInput.tabIndex = index;
+				_tabIndex = value;
+				_tabIndexChanged = true;
+				
+				invalidateProperties();
 			}
 			
 			override public function get tabIndex():int

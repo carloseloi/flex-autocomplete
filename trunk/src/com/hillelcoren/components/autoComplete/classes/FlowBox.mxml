@@ -14,19 +14,20 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.hillelcoren.components.autoComplete.interfaces.iComboItem;
+			
 			import mx.containers.Canvas;
 			import mx.controls.Button;
-			import mx.events.ResizeEvent;
-			import mx.events.MoveEvent;
-			import mx.events.FlexEvent;
-			import mx.events.MenuEvent;
-			import mx.managers.PopUpManager;
-			import mx.core.UIComponent;
 			import mx.controls.VRule;
 			import mx.core.Container;
 			import mx.core.EdgeMetrics;
 			import mx.core.IUIComponent;
-			import com.hillelcoren.components.autoComplete.interfaces.iComboItem;
+			import mx.core.UIComponent;
+			import mx.events.FlexEvent;
+			import mx.events.MenuEvent;
+			import mx.events.MoveEvent;
+			import mx.events.ResizeEvent;
+			import mx.managers.PopUpManager;
 			
 			private var _showRemoveIcon:Boolean;
 			private var _showRemoveIconChanged:Boolean;
@@ -36,10 +37,13 @@
 			private var _inlineButtonCanvas:Canvas;
 			
 			private var _enableMultiRow:Boolean;
-
+			
+			private var _tabIndex:int;
+			private var _tabIndexChanged:Boolean;
+			
 			[Bindable]
 			public var showSpinner:Boolean;								
-						
+			
 			private function init():void
 			{
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
@@ -103,7 +107,13 @@
 						
 						rawChildren.addChild( _inlineButtonCanvas );
 					}
-				}				
+				}
+				
+				if (_tabIndexChanged)
+				{
+					_tabIndexChanged = false;
+					textInput.tabIndex = _tabIndex;
+				}
 			}
 						
 			private function handleButtonMouseDown( event:Event ):void
@@ -117,6 +127,14 @@
 				dispatchEvent( event );
 			}			
 			
+			override public function set tabIndex(value:int):void
+			{
+				_tabIndex = value;
+				_tabIndexChanged = true;
+				
+				invalidateProperties();
+			}
+
 			public function getItemPosition( comboItem:iComboItem ):Point
 			{
 				var lastY:int;

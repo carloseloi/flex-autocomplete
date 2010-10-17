@@ -40,6 +40,9 @@
 			private var _promptColor:String;
 			private var _textPadding:int = 10;
 			
+			private var _tabIndex:int;
+			private var _tabIndexChanged:Boolean;
+			
 			[Bindable]
 			public var displayAsPassword:Boolean;
 			
@@ -73,6 +76,12 @@
 					{
 						showPrompt();
 					}
+				}
+				
+				if (_tabIndexChanged)
+				{
+					_tabIndexChanged = false;
+					textInput.tabIndex = _tabIndex;
 				}
 			}						
 			
@@ -134,6 +143,14 @@
 			public function set textPadding( value:int ):void
 			{
 				_textPadding = value;
+			}
+			
+			override public function set tabIndex(value:int):void
+			{
+				_tabIndex = value;
+				_tabIndexChanged = true;
+				
+				invalidateProperties();
 			}
 			
 			override public function get minWidth():Number
