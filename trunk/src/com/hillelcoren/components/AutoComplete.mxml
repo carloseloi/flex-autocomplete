@@ -139,6 +139,7 @@
 						
 			private var _allowDuplicates:Boolean;
 			private var _allowEditingNewValues:Boolean;
+			private var _allowEditingSelectedValues:Boolean;
 			
 			private var _keyField:String = "id";
 			private var _listData:DataGridListData;
@@ -784,13 +785,26 @@
 								return;
 							}
 							
-							if (_backspaceAction == AutoComplete.BACKSPACE_REMOVE)
+							if (_allowEditingSelectedValues)
+							{
+								item = _selectedItems.getItemAt( index - 1 );
+								
+								_selectedItems.removeItemAt( index - 1 );
+								dispatchEvent( new Event( Event.CHANGE ) );
+								
+								var label:String = labelFunction( item ); 
+								searchText = label.substr( 0, label.length - 1 );
+								
+								textInput.setFocus();
+								textInput.setTextSelected(false);
+							}
+							else if (_backspaceAction == AutoComplete.BACKSPACE_REMOVE)
 							{
 								_selectedItems.removeItemAt( index - 1 );
 								dispatchEvent( new Event( Event.CHANGE ) );																														
 								iComboItem( flowBox.getChildAt( index - 1 ) ).setTextFocus();
 							}
-							else
+							else if (_backspaceAction == AutoComplete.BACKSPACE_FOCUS)
 							{
 								var prevItem:UIComponent = flowBox.getChildAt( index - 1 ) as UIComponent;
 								prevItem.setFocus();
@@ -1182,6 +1196,11 @@
 			
 			private function isPerfectMatch():Boolean
 			{
+				if (!_searchText)
+				{
+					return false;
+				}
+				
 				if (_dataProvider && _dataProvider.length == 1)
 				{
 					var item:Object = _dataProvider.getItemAt( 0 );
@@ -1677,6 +1696,15 @@
 			public function set allowEditingNewValues( value:Boolean ):void
 			{
 				_allowEditingNewValues = value;
+			}
+			
+			[Inspectable(enumeration="true,false")]
+			/**
+			 * A flag that indicates whether or not you can edit an item after it's been selected.
+			 */			
+			public function set allowEditingSelectedValues( value:Boolean ):void
+			{
+				_allowEditingSelectedValues = value;
 			}
 			
 			public function set inlineButton( value:Button ):void
