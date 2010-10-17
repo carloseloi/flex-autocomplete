@@ -181,7 +181,7 @@
 				
 				if (color != null && color.hasOwnProperty( "hex" ))
 				{
-					Application.application.setStyle( "backgroundColor", color.hex );
+					parentApplication.setStyle( "backgroundColor", color.hex );
 				}
 			}			
 

@@ -442,7 +442,7 @@
 				*/
 				
 				var commitEvent:FlexEvent = new FlexEvent( FlexEvent.VALUE_COMMIT );
-				dispatchEvent( commitEvent );				
+				callLater( dispatchEvent, [ commitEvent ] );				
 			}
 			
 			private function checkIfDuplicate( searchFor:Object ):Boolean
@@ -1448,12 +1448,14 @@
 			}
 			
 			[Bindable(event="change")]
+			[Bindable(event="valueCommit")]
 			public function get selectedItems():ArrayCollection
 			{
 				return _selectedItems;
 			}
 			
 			[Bindable(event="change")]
+			[Bindable(event="valueCommit")]
 			public function get selectedItem():*
 			{
 				if (_selectedItems.length > 0)
@@ -1467,6 +1469,7 @@
 			}
 			
 			[Bindable(event="change")]
+			[Bindable(event="valueCommit")]
 			public function get text():String
 			{
 				var str:String = "";
