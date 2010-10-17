@@ -322,6 +322,8 @@
 					{
 						_selectedItems.addItem( _selectedItem );
 					}
+					
+					_selectedItem = null;
 				}
 				
 				if (_selectedItemIdChanged && _dataProvider)
@@ -1188,6 +1190,11 @@
 			
 			public function showDropDown():void
 			{
+				if (isDropDownVisible())
+				{
+					return;
+				}
+				
 				if (_dropDown == null)
 				{
 					createDropDown();
