@@ -54,8 +54,14 @@
 				_menu.labelField="@label";
 				_menu.setStyle( "openDuration", 0 );
 				_menu.setStyle( "dropShadowEnabled", false );
-				_menu.setStyle( "borderStyle", "none" );				
+								
+				// FLEX3
+				_menu.setStyle( "borderStyle", "none" );
 				
+				// FLEX4
+				//_menu.setStyle( "borderAlpha", 0.0 ); 
+				//_menu.setStyle( "dropShadowVisible", false );
+												
 				_menu.addEventListener( MenuEvent.MENU_HIDE, handleMenuHide );
 				_menu.addEventListener( MenuEvent.MENU_SHOW, handleMenuShow );
 				_menu.addEventListener( MenuEvent.ITEM_CLICK, handleItemClick );
