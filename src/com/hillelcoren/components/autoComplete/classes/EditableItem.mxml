@@ -3,7 +3,7 @@
 	implements="com.hillelcoren.components.autoComplete.interfaces.iComboItem"
 	xmlns:mx="http://www.adobe.com/2006/mxml" paddingLeft="0"
 	initialize="init()" tabChildren="false" tabEnabled="false"
-	borderStyle="none" focusThickness="0">
+	borderStyle="none" borderSkin="{null}" focusThickness="0">
 	
 	<mx:Script>
 		<![CDATA[
