@@ -153,11 +153,6 @@
 			
 			private var _clearSearchOnFocusOut:Boolean = true;
 			
-			/*
-			[Bindable]
-			public var showSpinner:Boolean;
-			*/
-			
 			public static const SEARCH_CHANGE:String = "searchChange";
 			
 			public static const STYLE_UNDERLINE:String 	= "underline";
@@ -246,6 +241,11 @@
 			
 			private function handleFocusIn( event:FocusEvent ):void
 			{
+				if (event.relatedObject && contains( event.relatedObject ))
+				{
+					return;
+				}				
+				
 				if (focusManager.getFocus() == _inlineButton)
 				{
 					setFocus();
@@ -645,7 +645,7 @@
 				// there are problems using ">"s and "<"s in HTML
 				string = string.replace( "<", "&lt;" ).replace( ">", "&gt;" );				
 
-				var returnStr:String = StringUtils.highlighMatch( string, searchStr );
+				var returnStr:String = StringUtils.highlightMatch( string, searchStr );
 				
 				if (_selectedItems.getItemIndex( item ) >= 0 || _disabledItems.getItemIndex( item ) >= 0)
     			{
@@ -1130,19 +1130,8 @@
 				
 				for each (var searchStr:String in parts)
 				{
-					searchStr = StringUtil.trim( searchStr );
-					
-					if (!searchStr)
-					{
-						continue;
-					}
-					
-					_searchText = searchStr;
-					
-					//var start:Date = new Date();
+					_searchText = searchStr;					
 					filterData();
-					//var end:Date = new Date();
-					//trace(">> search took: " + (end.getTime() - start.getTime()) + " msecs" );
 					
 					if (_autoSelectEnabled)
 					{
@@ -1205,13 +1194,15 @@
 					return false;
 				}
 				
+				var str:String = StringUtils.trimCommas( _searchText );
+				
 				if (_dataProvider && _dataProvider.length == 1)
 				{
 					var item:Object = _dataProvider.getItemAt( 0 );
 					
 					if (_autoSelectFunction != null)
 					{
-						if (_autoSelectFunction( item, _searchText ))
+						if (_autoSelectFunction( item, str ))
 						{
 							_selectedItems.addItem( item );
 							dispatchEvent( new Event( Event.CHANGE ) );
@@ -1220,9 +1211,9 @@
 					}
 					else
 					{
-						var str:String = _labelFunction( item );
+						var label:String = _labelFunction( item );
 						
-						if (str.toLowerCase() == _searchText.toLowerCase())
+						if (label.toLowerCase() == str.toLowerCase())
 						{
 							_selectedItems.addItem( item );
 							dispatchEvent( new Event( Event.CHANGE ) );
@@ -1240,7 +1231,7 @@
 			 */						
 			public function get searchText():String
 			{
-				return textInput.text;
+				return textInput && textInput.text ? textInput.text : "";
 			}
 			
 			public function set searchText( value:String ):void

@@ -199,7 +199,7 @@ package com.hillelcoren.utils
 			return value;
 		}
 				
-		public static function highlighMatch( string:String, searchStr:String ):String
+		public static function highlightMatch( string:String, searchStr:String ):String
 		{
 			// solution by Jan Reges, 2009-07-17
 			var searchStrPattern:String = "(" + searchStr + ")";
