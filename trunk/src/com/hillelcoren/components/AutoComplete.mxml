@@ -199,6 +199,9 @@
 					width = DEFAULT_MEASURED_WIDTH;
 				}
 				
+				// FLEX4
+				//tabFocusEnabled = true;
+				
 				addEventListener( MoveEvent.MOVE, handleMove );
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );
