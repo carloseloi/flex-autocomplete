@@ -213,7 +213,6 @@
 			<mx:CheckBox id="unique" label="Allow Duplicates" enabled="{ multiselect.selected }"/>
 			<mx:CheckBox id="allowNew" label="Allow New Values" selected="true"/>
 			<mx:CheckBox id="editable" label="Allow Editing New Values" enabled="{ allowNew.selected }"/>
-			<mx:CheckBox id="spinner" label="Show Spinner"/>
 			
 			<mx:Grid paddingTop="10">
 				<mx:GridRow>
@@ -251,7 +250,7 @@
 						 allowNewValues="{ allowNew.selected }" selectedItemStyleName="{ AutoComplete.STYLE_MAC_MAIL }" 
 						 allowDuplicates="{ unique.selected }" allowMultipleSelection="{ multiselect.selected }"
 						 allowEditingNewValues="{ editable.selected }" dropDownItemRenderer="{ dropDownItemRenderer }"
-						 backspaceAction="focus" showSpinner="{ spinner.selected }"/>
+						 backspaceAction="focus"/>
 		
 	</mx:HBox>
 	

@@ -153,9 +153,11 @@
 			
 			private var _clearSearchOnFocusOut:Boolean = true;
 			
+			/*
 			[Bindable]
 			public var showSpinner:Boolean;
-						
+			*/
+			
 			public static const SEARCH_CHANGE:String = "searchChange";
 			
 			public static const STYLE_UNDERLINE:String 	= "underline";
@@ -1787,7 +1789,7 @@
 	
 	<mx:GridRow id="mainGridRow" width="100%" height="100%">
 		<mx:GridItem id="mainGridItem" width="100%" height="100%">
-			<classes:FlowBox id="flowBox" width="100%" height="100%" showSpinner="{ showSpinner }" 
+			<classes:FlowBox id="flowBox" width="100%" height="100%" 
 				change="handleFlowBoxChange(event)" resize="handleFlowBoxResize()"/>
 		</mx:GridItem>
 	</mx:GridRow>
