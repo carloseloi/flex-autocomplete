@@ -151,6 +151,8 @@
 			private var _tabIndex:int;
 			private var _tabIndexChanged:Boolean;
 			
+			private var _clearSearchOnFocusOut:Boolean = true;
+			
 			[Bindable]
 			public var showSpinner:Boolean;
 						
@@ -221,7 +223,7 @@
 				var commitEvent:FlexEvent = new FlexEvent( FlexEvent.VALUE_COMMIT );
 				dispatchEvent( commitEvent );				
 				
-				if (event.relatedObject && contains( event.relatedObject))
+				if (event.relatedObject && contains( event.relatedObject ))
 				{
 					return;
 				}
@@ -233,7 +235,7 @@
 						_selectedItems.addItem( searchText );
 						dispatchEvent( new Event( Event.CHANGE ) );
 					}
-					else
+					else if (_clearSearchOnFocusOut)
 					{	
 						searchText = null;
 					}
@@ -1758,10 +1760,27 @@
 				return flowBox.textInput.textInput.tabIndex;
 			}
 			
+			/**
+			 * The value used to separate items when allowMultipleSelection
+			 * is enabled. The values can also be used to select an item. The
+			 * default value is ","
+			 */
 			public function set delimiter( value:String ):void
 			{
 				_delimiter = value;
 			}
+			
+			[Inspectable(enumeration="true,false")]
+			/**
+			 * This controls whether or not the component will clear the
+			 * search term when the component loses focus (when allowNewValues
+			 * is set to false). The default value is true.
+			 */
+			public function set clearSearchOnFocusOut( value:Boolean ):void
+			{
+				_clearSearchOnFocusOut = value;
+			}
+				
 
 		]]>
 	</mx:Script>
