@@ -25,10 +25,10 @@
 			
 			[Bindable]  
 			[Embed(source="simpsons.txt", mimeType="application/octet-stream")]  
-			private var myFileClass:Class; 
+			protected var myFileClass:Class; 
 
 
-			private function init():void
+			protected function init():void
 			{
 				characters = new ArrayCollection();
 				actors = new ArrayCollection();
@@ -67,7 +67,7 @@
 				characters.refresh();
 			}
 			
-			private function voicedByFunction( item:Object, column:DataGridColumn ):String
+			protected function voicedByFunction( item:Object, column:DataGridColumn ):String
 			{
 				return ArrayCollection( item.voicedBy ).source.join( ", " );
 			}

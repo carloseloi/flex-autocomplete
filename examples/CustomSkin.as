@@ -5,7 +5,7 @@ package
 
 	public class CustomSkin extends ProgrammaticSkin 
 	{
-		private static const RADIUS:int = 20;
+		protected static const RADIUS:int = 20;
 
 		override protected function updateDisplayList( w:Number, h:Number ):void 
 		{	

@@ -14,9 +14,9 @@
 			import mx.controls.List;
 			
 			[Bindable]
-			private var _list:List;
+			protected var _list:List;
 			
-			private var _selectedItems:ArrayCollection;
+			protected var _selectedItems:ArrayCollection;
 			
 			public function set selectedItems( value:ArrayCollection ):void
 			{
@@ -48,7 +48,7 @@
 				}
 			}
 			
-			private function handleUpdate():void
+			protected function handleUpdate():void
 			{
 				// There must be a better way to draw a line between each 
 				// of the items in the list
