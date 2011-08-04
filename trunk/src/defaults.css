@@ -1,17 +1,16 @@
 /* FLEX3 */
+/*
 AutoComplete
 {
 	selected-item-style-name: macMail;
 }
-
+*/
 /* FLEX4 */
-/*
 @namespace components "com.hillelcoren.components.*";
 components|AutoComplete
 {
 	selected-item-style-name: macMail;
 }
-*/
 
 .none 
 {

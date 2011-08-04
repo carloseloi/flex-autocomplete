@@ -13,7 +13,7 @@
 			
 			// There's an issue with the TabNavigator where sometimes the background goes white 
 			// http://www.typeoneerror.com/background-disappearing-with-tabnavigator-in-flex/
-			private function handleMouseDown():void 
+			protected function handleMouseDown():void 
 			{
 				alpha = 0.99; 
 				alpha = 1.0;

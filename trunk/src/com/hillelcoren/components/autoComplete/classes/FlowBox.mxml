@@ -29,22 +29,22 @@
 			import mx.events.ResizeEvent;
 			import mx.managers.PopUpManager;
 			
-			private var _showRemoveIcon:Boolean;
-			private var _showRemoveIconChanged:Boolean;
+			protected var _showRemoveIcon:Boolean;
+			protected var _showRemoveIconChanged:Boolean;
 			
-			private var _inlineButton:Button;
-			private var _inlineButtonChanged:Boolean;
-			private var _inlineButtonCanvas:Canvas;
+			protected var _inlineButton:Button;
+			protected var _inlineButtonChanged:Boolean;
+			protected var _inlineButtonCanvas:Canvas;
 			
-			private var _enableMultiRow:Boolean;
+			protected var _enableMultiRow:Boolean;
 			
-			private var _tabIndex:int;
-			private var _tabIndexChanged:Boolean;
+			protected var _tabIndex:int;
+			protected var _tabIndexChanged:Boolean;
 			
 			[Bindable]
 			public var showSpinner:Boolean;								
 			
-			private function init():void
+			protected function init():void
 			{
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );		
 				addEventListener( FocusEvent.FOCUS_OUT, handleFocusOut );		
@@ -58,17 +58,17 @@
 				}
 			}
 			
-			private function handleFocusIn( event:FocusEvent ):void
+			protected function handleFocusIn( event:FocusEvent ):void
 			{
 				drawFocus( true );													
 			}
 			
-			private function handleFocusOut( event:FocusEvent ):void
+			protected function handleFocusOut( event:FocusEvent ):void
 			{
 				drawFocus( false );
 			}
 			
-			private function handleChange( event:Event ):void
+			protected function handleChange( event:Event ):void
 			{
 				dispatchEvent( event );
 			}			
@@ -116,12 +116,12 @@
 				}
 			}
 						
-			private function handleButtonMouseDown( event:Event ):void
+			protected function handleButtonMouseDown( event:Event ):void
 			{
 				event.stopPropagation();
 			}
 			
-			private function handleButtonClick( event:Event ):void
+			protected function handleButtonClick( event:Event ):void
 			{
 				var event:Event = new Event( "buttonClick" );
 				dispatchEvent( event );
@@ -299,6 +299,8 @@
 						{
 							child.width = width - sidePadding;
 						}
+						
+						child.percentWidth = 100;
 					}
 				}
 				

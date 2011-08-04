@@ -21,7 +21,7 @@
 			[Bindable]
 			public var colors:ArrayCollection;
 			
-			private function init():void
+			protected function init():void
 			{
 				colors = new ArrayCollection(
 					[
@@ -176,7 +176,7 @@
 				
 			}			
 			
-			private function handleAutoCompleteChange():void
+			protected function handleAutoCompleteChange():void
 			{
 				var color:Object = autoComplete.selectedItem;
 				
@@ -186,13 +186,13 @@
 				}				
 			}
 			
-			private function handleStyleChange():void
+			protected function handleStyleChange():void
 			{
 				autoComplete.setStyle( "selectedItemStyleName", style.selectedItem.data );
 				autoComplete.showRemoveIcon = (style.selectedItem.data == AutoComplete.STYLE_FACEBOOK);				
 			}
 			
-			private function handleMatchChange():void
+			protected function handleMatchChange():void
 			{
 				autoComplete.matchType = matchTypeCombo.selectedItem.data;
 			}

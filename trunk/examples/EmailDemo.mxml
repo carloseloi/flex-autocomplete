@@ -15,13 +15,13 @@
 			import mx.collections.ArrayCollection;
 			
 			[Bindable]
-			private var _contacts:ArrayCollection;
+			protected var _contacts:ArrayCollection;
 			
 			[Bindable]  
 			[Embed(source="simpsons.txt", mimeType="application/octet-stream")]  
-			private var myFileClass:Class; 
+			protected var myFileClass:Class; 
 			
-			private function init():void
+			protected function init():void
 			{
 				_contacts = new ArrayCollection();
 				

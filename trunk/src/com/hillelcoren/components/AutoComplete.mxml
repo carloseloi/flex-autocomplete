@@ -77,81 +77,81 @@
 			import mx.utils.ObjectUtil;
 			import mx.utils.StringUtil;
 			
-			private var _dropDown:List;
-			private var _matchType:String = MATCH_WORD;
+			protected var _dropDown:List;
+			protected var _matchType:String = MATCH_WORD;
 			
 			[Bindable]
 			protected var _dataProvider:ListCollectionView;
-			private var _dataProviderChanged:Boolean;
+			protected var _dataProviderChanged:Boolean;
 			
-			private var _searchText:String;
+			protected var _searchText:String;
 			
 			protected var _filterFunction:Function;
 			protected var _labelField:String;
 			protected var _labelFunction:Function;
-			private var _dropDownLabelFunction:Function;
-			private var _dropDownItemRenderer:IFactory;
-			private var _dropDownWidth:int;
+			protected var _dropDownLabelFunction:Function;
+			protected var _dropDownItemRenderer:IFactory;
+			protected var _dropDownWidth:int;
 			
-			private var _backspaceAction:String;
-			private var _delimiter:String = ",";
+			protected var _backspaceAction:String;
+			protected var _delimiter:String = ",";
 			
-			private var _autoSelectEnabled:Boolean = true;
-			private var _autoSelectFunction:Function;	
+			protected var _autoSelectEnabled:Boolean = true;
+			protected var _autoSelectFunction:Function;	
 			
 			protected var _allowMultipleSelection:Boolean;
-			private var _allowMultipleSelectionChanged:Boolean;
+			protected var _allowMultipleSelectionChanged:Boolean;
 			
 			protected var _showSelectedItems:Boolean = true;
 			
-			private var _allowNewValues:Boolean;
+			protected var _allowNewValues:Boolean;
 			
-			private var _prompt:String;
-			private var _promptChanged:Boolean;
+			protected var _prompt:String;
+			protected var _promptChanged:Boolean;
 			
-			private var _text:String;
-			private var _textChanged:Boolean;
+			protected var _text:String;
+			protected var _textChanged:Boolean;
 						
-			private var _enableClearIcon:Boolean;
-			private var _enableClearIconChanged:Boolean;
+			protected var _enableClearIcon:Boolean;
+			protected var _enableClearIconChanged:Boolean;
 			
-			private var _showRemoveIcon:Boolean;
-			private var _showRemoveIconChanged:Boolean;
+			protected var _showRemoveIcon:Boolean;
+			protected var _showRemoveIconChanged:Boolean;
 			
-			private var _errorStr:String;
-			private var _errorStrChanged:Boolean;
+			protected var _errorStr:String;
+			protected var _errorStrChanged:Boolean;
 			
 			[Bindable]
 			protected var _selectedItems:ArrayCollection;
-			private var _selectedItemsChanged:Boolean;
-			private var _initialSelectedItems:ArrayCollection;
+			protected var _selectedItemsChanged:Boolean;
+			protected var _initialSelectedItems:ArrayCollection;
 			
-			private var _selectedItem:Object;
-			private var _selectedItemChanged:Boolean;
+			protected var _selectedItem:Object;
+			protected var _selectedItemChanged:Boolean;
 			
 			protected var _selectedItemId:Number;
-			private var _selectedItemIdChanged:Boolean;
+			protected var _selectedItemIdChanged:Boolean;
 			
-			private var _disabledItems:ArrayCollection;
+			protected var _disabledItems:ArrayCollection;
 			
 			protected var _inlineButton:Button;
-			private var _inlineButtonChanged:Boolean;
+			protected var _inlineButtonChanged:Boolean;
 						
-			private var _allowDuplicates:Boolean;
-			private var _allowEditingNewValues:Boolean;
-			private var _allowEditingSelectedValues:Boolean;
+			protected var _allowDuplicates:Boolean;
+			protected var _allowEditingNewValues:Boolean;
+			protected var _allowEditingSelectedValues:Boolean;
 			
-			private var _keyField:String = "id";
-			private var _listData:DataGridListData;
-			private var _dropDownRowCount:uint = 5;
+			protected var _keyField:String = "id";
+			protected var _listData:DataGridListData;
+			protected var _dropDownRowCount:uint = 5;
 			
-			private var _maxHeight:Number;
-			private var _maxHeightChanged:Boolean;
+			protected var _maxHeight:Number;
+			protected var _maxHeightChanged:Boolean;
 			
-			private var _tabIndex:int;
-			private var _tabIndexChanged:Boolean;
+			protected var _tabIndex:int;
+			protected var _tabIndexChanged:Boolean;
 			
-			private var _clearSearchOnFocusOut:Boolean = true;
+			protected var _clearSearchOnFocusOut:Boolean = true;
 			
 			public static const SEARCH_CHANGE:String = "searchChange";
 			
@@ -200,7 +200,8 @@
 				}
 				
 				// FLEX4
-				//tabFocusEnabled = true;
+				tabFocusEnabled = true;
+				hasFocusableChildren = true;
 				
 				addEventListener( MoveEvent.MOVE, handleMove );
 				addEventListener( KeyboardEvent.KEY_DOWN, handleKeyDown );
@@ -208,17 +209,17 @@
 				addEventListener( FocusEvent.FOCUS_IN, handleFocusIn );
 			}
 			
-			private function handleMove( event:MoveEvent ):void
+			protected function handleMove( event:MoveEvent ):void
 			{
 				positionDropDown();
 			}
 			
-			private function handleFlowBoxResize():void
+			protected function handleFlowBoxResize():void
 			{
 				positionDropDown();
 			}			
 			
-			private function handleFocusOut( event:FocusEvent ):void
+			protected function handleFocusOut( event:FocusEvent ):void
 			{
 				var commitEvent:FlexEvent = new FlexEvent( FlexEvent.VALUE_COMMIT );
 				dispatchEvent( commitEvent );				
@@ -242,7 +243,7 @@
 				}	
 			}
 			
-			private function handleFocusIn( event:FocusEvent ):void
+			protected function handleFocusIn( event:FocusEvent ):void
 			{
 				if (event.relatedObject && contains( event.relatedObject ))
 				{
@@ -412,7 +413,7 @@
 				}				
 			}
 
-			private function handleDataProviderChange( event:CollectionEvent ):void
+			protected function handleDataProviderChange( event:CollectionEvent ):void
 			{
 				if (event.kind == CollectionEventKind.REMOVE)
 				{
@@ -428,7 +429,7 @@
 				}
 			}
 			
-			private function handleSelectedItemsChange( event:CollectionEvent ):void
+			protected function handleSelectedItemsChange( event:CollectionEvent ):void
 			{
 				var item:Object;
 				
@@ -481,7 +482,7 @@
 				callLater( dispatchEvent, [ commitEvent ] );				
 			}
 			
-			private function checkIfDuplicate( searchFor:Object ):Boolean
+			protected function checkIfDuplicate( searchFor:Object ):Boolean
 			{
 				if (_allowDuplicates)
 				{
@@ -510,7 +511,7 @@
 				return false;
 			}
 			
-			private function checkIfUnavailable( item:Object ):Boolean
+			protected function checkIfUnavailable( item:Object ):Boolean
 			{
 				var index:int = _disabledItems.getItemIndex( item );
 				
@@ -523,7 +524,7 @@
 				return false;
 			}
 			
-			private function silentlyRemove( item:Object ):void
+			protected function silentlyRemove( item:Object ):void
 			{
 				_selectedItems.removeEventListener( CollectionEvent.COLLECTION_CHANGE, handleSelectedItemsChange );
 				
@@ -568,7 +569,7 @@
 				callLater( callLater, [_setData] );				
             }
             
-            private function _setData():void
+            protected function _setData():void
             {
             	var value:Object = data[ _listData.dataField ];
             	
@@ -596,7 +597,7 @@
             	return NaN;
             }
             
-			private function defaultFilterFunction( item:Object, searchStr:String ):Boolean
+			protected function defaultFilterFunction( item:Object, searchStr:String ):Boolean
 			{
 				if (!searchStr || searchStr.length == 0)
 				{
@@ -618,7 +619,7 @@
 				return false;
 			}
 									
-			private function defaultLabelFunction( item:Object ):String
+			protected function defaultLabelFunction( item:Object ):String
 			{
 				if (_labelField && item.hasOwnProperty( _labelField ))
 				{
@@ -658,12 +659,12 @@
     			return returnStr;
 			}
 												
-			private function setClearIconEnabled():void
+			protected function setClearIconEnabled():void
 			{
 				textInput.enableClearIcon = _enableClearIcon && !_allowMultipleSelection;
 			}
 			
-			private function createDropDown():void
+			protected function createDropDown():void
 			{
 				_dropDown = new List();
 				_dropDown.focusEnabled 	= false;
@@ -679,7 +680,7 @@
 			/**
 			 * If the list is visible and we click somewhere else we're going to close it
 			 */
-			private function handleMouseDown( event:MouseEvent ):void
+			protected function handleMouseDown( event:MouseEvent ):void
 			{
 				if (!isDropDownVisible())
 				{
@@ -1039,7 +1040,7 @@
 				textInput.enablePrompt = flowBox.numChildren == 1;
 			}
 			
-			private function handleItemRemove( event:Event ):void
+			protected function handleItemRemove( event:Event ):void
 			{
 				var index:int;
 				
@@ -1057,7 +1058,7 @@
 				dispatchEvent( new Event( Event.CHANGE ) );
 			}
 			
-			private function handleItemTextInput( event:TextEvent ):void
+			protected function handleItemTextInput( event:TextEvent ):void
 			{
 				if (event.text != _delimiter)
 				{
@@ -1070,7 +1071,7 @@
 				handleFlowBoxChange( null ); 
 			}
 			
-			private function handleEditableItemChange( event:Event ):void
+			protected function handleEditableItemChange( event:Event ):void
 			{
 				var editableItem:EditableItem = event.currentTarget as EditableItem;
 				var index:int = flowBox.getChildIndex( editableItem );
@@ -1092,7 +1093,7 @@
 				}
 			}
 			
-			private function handleDropDownItemClick( event:ListEvent ):void
+			protected function handleDropDownItemClick( event:ListEvent ):void
 			{
 				_selectedItems.addItem( _dropDown.selectedItem );
 				dispatchEvent( new Event( Event.CHANGE ) );
@@ -1185,12 +1186,12 @@
 				}	
 			}
 			
-			private function highlightFirstItem():void
+			protected function highlightFirstItem():void
 			{
 				_dropDown.selectedIndex = 0;
 			}
 			
-			private function isPerfectMatch():Boolean
+			protected function isPerfectMatch():Boolean
 			{
 				if (!_searchText)
 				{
@@ -1281,7 +1282,7 @@
 				callLater( callLater, [positionDropDown] );
 			}
 			
-			private function initDropDown():void
+			protected function initDropDown():void
 			{
 				_dropDown.selectedIndex = 0;
 				_dropDown.rowCount = (_dataProvider.length < _dropDownRowCount ? _dataProvider.length : _dropDownRowCount);							
@@ -1320,7 +1321,7 @@
 				callLater( enableDefaultButton );
 			}
 			
-			private function enableDefaultButton():void
+			protected function enableDefaultButton():void
 			{
 				if (focusManager)
 				{
@@ -1431,7 +1432,7 @@
 				}
 			}
 			
-			private function filterFunctionWrapper( item:Object ):Boolean
+			protected function filterFunctionWrapper( item:Object ):Boolean
 			{
 				return _filterFunction( item, _searchText );
 			}

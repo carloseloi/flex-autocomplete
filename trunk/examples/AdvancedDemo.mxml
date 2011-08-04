@@ -23,7 +23,7 @@
 			[Bindable]
 			public var colors:ArrayCollection;
 
-			private function init():void
+			protected function init():void
 			{
 				colors = new ArrayCollection(
 				[
@@ -175,7 +175,7 @@
 				] );
 			}			
 			
-			private function handleAutoCompleteChange():void
+			protected function handleAutoCompleteChange():void
 			{
 				var color:Object = autoComplete.selectedItem;
 				
@@ -185,12 +185,12 @@
 				}
 			}			
 
-			private function handleEnableMenuClick():void
+			protected function handleEnableMenuClick():void
 			{
 				autoComplete.actionsMenuDataProvider = enableMenu.selected ? menuData : null;
 			}
 			
-			private function handleItemClick( event:MenuEvent ):void
+			protected function handleItemClick( event:MenuEvent ):void
 			{
 				switch (String(event.item.@data))
 				{
